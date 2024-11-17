@@ -1,8 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString =
-    builder.Configuration.GetConnectionString("LaborConnectionString") ?? throw new InvalidOperationException($"Connection string {nameof(LaborDbContext)} not found.");
+var connectionString = builder.Configuration.GetConnectionString("LaborConnectionString") 
+                            ?? throw new InvalidOperationException($"Connection string {nameof(LaborDbContext)} not found.");
 builder.Services.AddDbContext<LaborDbContext>(options =>
     options.UseSqlServer(connectionString));
 
