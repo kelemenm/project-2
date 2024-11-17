@@ -400,3 +400,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 project-2/project-2/appsettings.Development.json
+project-2/.idea/
