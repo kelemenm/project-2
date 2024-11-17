@@ -16,7 +16,11 @@ public class LaborDbContext : DbContext
     public DbSet<MvTipus> MvTipus { get; set; }
     public DbSet<Parameter> Parameter { get; set; }
     public DbSet<VizsgaloLabor> VizsgaloLabor { get; set; }
-    
+
+    protected LaborDbContext(DbContextOptions<LaborDbContext> options) : base(options)
+    {
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         new AkkrMintavetelConfiguration().Configure(modelBuilder.Entity<AkkrMintavetel>());
