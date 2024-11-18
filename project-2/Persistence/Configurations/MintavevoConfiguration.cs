@@ -10,7 +10,7 @@ public class MintavevoConfiguration : IEntityTypeConfiguration<Mintavevo>
             .HasMaxLength(10)
             .IsRequired(); 
         builder
-            .Property(x => x.MvAkkrszam)
+            .Property(x => x.MvAkkrSzam)
             .HasMaxLength(15)
             .IsRequired(); 
         builder

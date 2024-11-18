@@ -6,7 +6,7 @@ public class MvOkaConfiguration : IEntityTypeConfiguration<MvOka>
     {
         builder.HasIndex(x => x.Id);
         builder
-            .Property(x => x.Oka)
+            .Property(x => x.MvOk)
             .HasMaxLength(10)
             .IsRequired(); 
         builder

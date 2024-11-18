@@ -6,11 +6,11 @@ public class MintaConfiguration : IEntityTypeConfiguration<Minta>
     {
         builder.HasIndex(x => x.Id);
         builder
-            .Property(x => x.labormintakod)
+            .Property(x => x.LaborMintaKod)
             .HasMaxLength(25)
             .IsRequired();
         builder
-            .Property(x => x.Modulkod)
+            .Property(x => x.ModulKod)
             .HasMaxLength(10)
             .IsRequired();
         builder
@@ -26,11 +26,11 @@ public class MintaConfiguration : IEntityTypeConfiguration<Minta>
             .HasMaxLength(10)
             .IsRequired();
         builder
-            .Property(x => x.Labakkrszam)
+            .Property(x => x.LabAkkrSzam)
             .HasMaxLength(15)
             .IsRequired(false);
         builder
-            .Property(x => x.MvOka)
+            .Property(x => x.MvOk)
             .HasMaxLength(10)
             .IsRequired();
         builder

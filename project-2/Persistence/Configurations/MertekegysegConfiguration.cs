@@ -6,7 +6,7 @@ public class MertekegysegConfiguration : IEntityTypeConfiguration<Mertekegyseg>
     {
         builder.HasIndex(x => x.Id);
         builder
-            .Property(x => x.MEgyseg)
+            .Property(x => x.Megyseg)
             .HasMaxLength(15)
             .IsRequired();
         builder

@@ -6,7 +6,7 @@ public class EredmenyConfiguration : IEntityTypeConfiguration<Eredmeny>
     {
         builder.HasIndex(x => x.Id);
         builder
-            .Property(x => x.Parkod)
+            .Property(x => x.ParKod)
             .HasMaxLength(25)
             .IsRequired();
         builder
@@ -18,7 +18,7 @@ public class EredmenyConfiguration : IEntityTypeConfiguration<Eredmeny>
             .HasMaxLength(25)
             .IsRequired();
         builder
-            .Property(x => x.Alsomh)
+            .Property(x => x.AlsoMh)
             .IsRequired(false);
         builder
             .Property(x => x.MaxRange)

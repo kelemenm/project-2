@@ -10,7 +10,7 @@ public class VizsgaloLaborConfiguration : IEntityTypeConfiguration<VizsgaloLabor
             .HasMaxLength(10)
             .IsRequired(); 
         builder
-            .Property(x => x.Labakkrszam)
+            .Property(x => x.LabAkkrSzam)
             .HasMaxLength(15)
             .IsRequired(); 
         builder

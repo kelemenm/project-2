@@ -6,7 +6,7 @@ public class AkkrMintavetelConfiguration : IEntityTypeConfiguration<AkkrMintavet
     {
         builder.HasIndex(x => x.Id);
         builder
-            .Property(x => x.AkkrMintavetelNev)
+            .Property(x => x.AkkrMintavetelStatusz)
             .HasMaxLength(10)
             .IsRequired();
         builder
