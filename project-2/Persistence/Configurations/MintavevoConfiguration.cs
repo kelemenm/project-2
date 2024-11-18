@@ -23,9 +23,9 @@ public class MintavevoConfiguration : IEntityTypeConfiguration<Mintavevo>
             .IsRequired(); 
         builder
             .Property(x => x.ErvKezdete)
-            .IsRequired(false);
+            .IsRequired();
         builder
             .Property(x => x.ErvVege)
-            .IsRequired(false);
+            .IsRequired();
     }
 }

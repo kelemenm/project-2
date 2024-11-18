@@ -4,10 +4,10 @@ namespace Persistence;
 
 public class LaborDbContext : DbContext
 {
-    public DbSet<AkkrMintavetel> AkkrMintavetels { get; set; }
+    public DbSet<AkkrMintavetel> AkkrMintavetel { get; set; }
     public DbSet<Eredmeny> Eredmeny { get; set; }
-    public DbSet<HUMVIfelelos> HumvIfelelos { get; set; }
-    public DbSet<HUMVImodul> HumvImodul { get; set; }
+    public DbSet<HUMVIfelelos> HumviFelelos { get; set; }
+    public DbSet<HUMVImodul> HumviModul { get; set; }
     public DbSet<Mertekegyseg> Mertekegyseg { get; set; }
     public DbSet<Minta> Minta { get; set; }
     public DbSet<Mintavevo> Mintavevo { get; set; }
@@ -17,7 +17,7 @@ public class LaborDbContext : DbContext
     public DbSet<Parameter> Parameter { get; set; }
     public DbSet<VizsgaloLabor> VizsgaloLabor { get; set; }
 
-    protected LaborDbContext(DbContextOptions<LaborDbContext> options) : base(options)
+    public LaborDbContext(DbContextOptions<LaborDbContext> options) : base(options)
     {
     }
 

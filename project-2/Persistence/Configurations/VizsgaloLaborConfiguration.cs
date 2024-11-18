@@ -23,9 +23,9 @@ public class VizsgaloLaborConfiguration : IEntityTypeConfiguration<VizsgaloLabor
             .IsRequired(); 
         builder
             .Property(x => x.ErvKezdete)
-            .IsRequired(false);
+            .IsRequired();
         builder
             .Property(x => x.ErvVege)
-            .IsRequired(false);
+            .IsRequired();
     }
 }

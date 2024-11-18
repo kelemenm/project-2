@@ -10,6 +10,6 @@ public class MvHely : Entity
     public string Telepules { get; set; }
     public string Tipus { get; set; }
     public string HumviRegiNev { get; set; }
-    public float GPS_N_Y { get; set; }
-    public float GPS_E_X { get; set; }
+    public float? GPS_N_Y { get; set; }
+    public float? GPS_E_X { get; set; }
 }

@@ -58,13 +58,19 @@ public class MintaConfiguration : IEntityTypeConfiguration<Minta>
             .HasMaxLength(15)
             .IsRequired(false);
         builder
+            .Property(x => x.MvDatum)
+            .IsRequired();
+        builder
+            .Property(x => x.MintaAtvetel)
+            .IsRequired();
+        builder
             .Property(x => x.VizsgalatKezdete)
-            .IsRequired(false);
+            .IsRequired();
         builder
             .Property(x => x.VizsgalatVege)
-            .IsRequired(false);
+            .IsRequired();
         builder
             .Property(x => x.HUMVIexport)
-            .IsRequired(false);
+            .IsRequired();
     }
 }

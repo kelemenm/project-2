@@ -7,7 +7,7 @@ public class Eredmeny : Entity
     public string ParKod { get; set; }
     public string Megyseg { get; set; }
     public string Ertek { get; set; }
-    public float AlsoMh { get; set; }
-    public float MaxRange { get; set; }
-    public float ErtekHozzarendelt { get; set; }
+    public float? AlsoMh { get; set; }
+    public float? MaxRange { get; set; }
+    public float? ErtekHozzarendelt { get; set; }
 }

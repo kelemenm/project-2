@@ -3,7 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("LaborConnectionString") 
                             ?? throw new InvalidOperationException($"Connection string {nameof(LaborDbContext)} not found.");
 builder.Services.AddDbContext<LaborDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("project-2")));
 
 builder.Services.AddRazorPages();
 
