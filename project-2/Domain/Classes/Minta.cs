@@ -2,17 +2,17 @@
 
 public class Minta : Entity
 {
-    public string labormintakod { get; set; }
-    public string Modulkod { get; set; }
+    public string LaborMintaKod { get; set; }
+    public string ModulKod { get; set; }
     public string Felelos { get; set; }
     public string MvTipus { get; set; }
     public DateTime MvDatum { get; set; }
     public string Labor { get; set; }
-    public string Labakkrszam { get; set; }
-    public DateTime Mintaatvetel { get; set; }
+    public string LabAkkrSzam { get; set; }
+    public DateTime MintaAtvetel { get; set; }
     public DateTime VizsgalatKezdete { get; set; }
     public DateTime VizsgalatVege { get; set; }
-    public string MvOka { get; set; }
+    public string MvOk { get; set; }
     public string MvOkaEgyeb { get; set; }
     public string MvhKod { get; set; }
     public string MvHely { get; set; }
