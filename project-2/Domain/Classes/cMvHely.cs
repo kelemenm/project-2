@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class MvHely : Entity
+public class cMvHely : cEntity
 {
     public string MvhKod { get; set; }
     public string NevSajat { get; set; }
@@ -12,4 +12,6 @@ public class MvHely : Entity
     public string HumviRegiNev { get; set; }
     public float? GPS_N_Y { get; set; }
     public float? GPS_E_X { get; set; }
+
+    public virtual ICollection<cMinta> Minta { get; set; }
 }

@@ -1,8 +1,8 @@
 namespace Persistence.Configurations;
 
-public class MertekegysegConfiguration : IEntityTypeConfiguration<Mertekegyseg>
+public class MertekegysegConfiguration : IEntityTypeConfiguration<cMertekegyseg>
 {
-    public void Configure(EntityTypeBuilder<Mertekegyseg> builder)
+    public void Configure(EntityTypeBuilder<cMertekegyseg> builder)
     {
         builder.HasIndex(x => x.Id);
         builder
@@ -20,7 +20,7 @@ public class MertekegysegConfiguration : IEntityTypeConfiguration<Mertekegyseg>
 
         builder.HasMany(m => m.Eredmeny)
             .WithOne(e => e.Mertekegyseg)
-            .HasForeignKey(equals => equals.Megyseg)
+            .HasForeignKey(e => e.Megyseg)
             .HasPrincipalKey(m => m.Megyseg)   //Megyseg az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //Eredmények törlésekor ne törölje a mértékegységet
 

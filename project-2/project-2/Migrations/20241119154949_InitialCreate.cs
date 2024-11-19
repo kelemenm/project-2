@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace project_2.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreation : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +25,7 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AkkrMintavetel", x => x.Id);
+                    table.UniqueConstraint("AK_AkkrMintavetel_AkkrMintavetelStatusz", x => x.AkkrMintavetelStatusz);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,6 +43,7 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HumviFelelos", x => x.Id);
+                    table.UniqueConstraint("AK_HumviFelelos_Felelos", x => x.Felelos);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,6 +60,7 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HumviModul", x => x.Id);
+                    table.UniqueConstraint("AK_HumviModul_ModulKod", x => x.ModulKod);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,38 +82,6 @@ namespace project_2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Minta",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    LaborMintaKod = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    ModulKod = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Felelos = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    MvTipus = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    MvDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Labor = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    LabAkkrSzam = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    MintaAtvetel = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    VizsgalatKezdete = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    VizsgalatVege = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MvOk = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    MvOkaEgyeb = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    MvhKod = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    MvHely = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    AkkrMintavetel = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    Mintavevo = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    MvAkkrSzam = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    HUMVIexport = table.Column<bool>(type: "bit", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Minta", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Mintavevo",
                 columns: table => new
                 {
@@ -128,6 +99,7 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mintavevo", x => x.Id);
+                    table.UniqueConstraint("AK_Mintavevo_MintavevoAzonosito_MvAkkrSzam", x => new { x.MintavevoAzonosito, x.MvAkkrSzam });
                 });
 
             migrationBuilder.CreateTable(
@@ -136,7 +108,7 @@ namespace project_2.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MvhKod = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
+                    MvhKod = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     NevSajat = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
                     NevTeljes = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
                     VizBazis = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
@@ -152,6 +124,7 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MvHely", x => x.Id);
+                    table.UniqueConstraint("AK_MvHely_MvhKod", x => x.MvhKod);
                 });
 
             migrationBuilder.CreateTable(
@@ -168,6 +141,7 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MvOka", x => x.Id);
+                    table.UniqueConstraint("AK_MvOka_MvOk", x => x.MvOk);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,6 +158,7 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MvTipus", x => x.Id);
+                    table.UniqueConstraint("AK_MvTipus_MvTipusNev", x => x.MvTipusNev);
                 });
 
             migrationBuilder.CreateTable(
@@ -224,6 +199,87 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VizsgaloLabor", x => x.Id);
+                    table.UniqueConstraint("AK_VizsgaloLabor_Labor_LabAkkrSzam", x => new { x.Labor, x.LabAkkrSzam });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Minta",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LaborMintaKod = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    ModulKod = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Felelos = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    MvTipus = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    MvDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Labor = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    LabAkkrSzam = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    MintaAtvetel = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    VizsgalatKezdete = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    VizsgalatVege = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MvOk = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    MvOkaEgyeb = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    MvhKod = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    MvHely = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    AkkrMintavetel = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    Mintavevo = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    MvAkkrSzam = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    HUMVIexport = table.Column<bool>(type: "bit", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Minta", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Minta_AkkrMintavetel_AkkrMintavetel",
+                        column: x => x.AkkrMintavetel,
+                        principalTable: "AkkrMintavetel",
+                        principalColumn: "AkkrMintavetelStatusz",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Minta_HumviFelelos_Felelos",
+                        column: x => x.Felelos,
+                        principalTable: "HumviFelelos",
+                        principalColumn: "Felelos",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Minta_HumviModul_ModulKod",
+                        column: x => x.ModulKod,
+                        principalTable: "HumviModul",
+                        principalColumn: "ModulKod",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Minta_Mintavevo_Mintavevo_MvAkkrSzam",
+                        columns: x => new { x.Mintavevo, x.MvAkkrSzam },
+                        principalTable: "Mintavevo",
+                        principalColumns: new[] { "MintavevoAzonosito", "MvAkkrSzam" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Minta_MvHely_MvhKod",
+                        column: x => x.MvhKod,
+                        principalTable: "MvHely",
+                        principalColumn: "MvhKod",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Minta_MvOka_MvOk",
+                        column: x => x.MvOk,
+                        principalTable: "MvOka",
+                        principalColumn: "MvOk",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Minta_MvTipus_MvTipus",
+                        column: x => x.MvTipus,
+                        principalTable: "MvTipus",
+                        principalColumn: "MvTipusNev",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Minta_VizsgaloLabor_Labor_LabAkkrSzam",
+                        columns: x => new { x.Labor, x.LabAkkrSzam },
+                        principalTable: "VizsgaloLabor",
+                        principalColumns: new[] { "Labor", "LabAkkrSzam" },
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -306,9 +362,49 @@ namespace project_2.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Minta_AkkrMintavetel",
+                table: "Minta",
+                column: "AkkrMintavetel");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Minta_Felelos",
+                table: "Minta",
+                column: "Felelos");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Minta_Id",
                 table: "Minta",
                 column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Minta_Labor_LabAkkrSzam",
+                table: "Minta",
+                columns: new[] { "Labor", "LabAkkrSzam" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Minta_Mintavevo_MvAkkrSzam",
+                table: "Minta",
+                columns: new[] { "Mintavevo", "MvAkkrSzam" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Minta_ModulKod",
+                table: "Minta",
+                column: "ModulKod");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Minta_MvhKod",
+                table: "Minta",
+                column: "MvhKod");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Minta_MvOk",
+                table: "Minta",
+                column: "MvOk");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Minta_MvTipus",
+                table: "Minta",
+                column: "MvTipus");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mintavevo_Id",
@@ -345,10 +441,19 @@ namespace project_2.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AkkrMintavetel");
+                name: "Eredmeny");
 
             migrationBuilder.DropTable(
-                name: "Eredmeny");
+                name: "Mertekegyseg");
+
+            migrationBuilder.DropTable(
+                name: "Minta");
+
+            migrationBuilder.DropTable(
+                name: "Parameter");
+
+            migrationBuilder.DropTable(
+                name: "AkkrMintavetel");
 
             migrationBuilder.DropTable(
                 name: "HumviFelelos");
@@ -370,15 +475,6 @@ namespace project_2.Migrations
 
             migrationBuilder.DropTable(
                 name: "VizsgaloLabor");
-
-            migrationBuilder.DropTable(
-                name: "Mertekegyseg");
-
-            migrationBuilder.DropTable(
-                name: "Minta");
-
-            migrationBuilder.DropTable(
-                name: "Parameter");
         }
     }
 }

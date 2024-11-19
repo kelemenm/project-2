@@ -1,8 +1,8 @@
 namespace Persistence.Configurations;
 
-public class VizsgaloLaborConfiguration : IEntityTypeConfiguration<VizsgaloLabor>
+public class VizsgaloLaborConfiguration : IEntityTypeConfiguration<cVizsgaloLabor>
 {
-    public void Configure(EntityTypeBuilder<VizsgaloLabor> builder)
+    public void Configure(EntityTypeBuilder<cVizsgaloLabor> builder)
     {
         builder.HasIndex(x => x.Id);
         builder
@@ -27,5 +27,11 @@ public class VizsgaloLaborConfiguration : IEntityTypeConfiguration<VizsgaloLabor
         builder
             .Property(x => x.ErvVege)
             .IsRequired();
+
+        builder.HasMany(m => m.Minta)
+            .WithOne(e => e.cVizsgaloLabor)
+            .HasForeignKey(e => new { e.Labor, e.LabAkkrSzam })
+            .HasPrincipalKey(m => new { m.Labor, m.LabAkkrSzam })   //az idegen kulcs alapja
+            .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
     }
 }

@@ -1,8 +1,8 @@
 namespace Persistence.Configurations;
 
-public class MvOkaConfiguration : IEntityTypeConfiguration<MvOka>
+public class MvOkaConfiguration : IEntityTypeConfiguration<cMvOka>
 {
-    public void Configure(EntityTypeBuilder<MvOka> builder)
+    public void Configure(EntityTypeBuilder<cMvOka> builder)
     {
         builder.HasIndex(x => x.Id);
         builder
@@ -12,6 +12,12 @@ public class MvOkaConfiguration : IEntityTypeConfiguration<MvOka>
         builder
             .Property(x => x.Leiras)
             .HasMaxLength(15)
-            .IsRequired(); 
+            .IsRequired();
+
+        builder.HasMany(m => m.Minta)
+            .WithOne(e => e.cMvOka)
+            .HasForeignKey(e => e.MvOk)
+            .HasPrincipalKey(m => m.MvOk)   //az idegen kulcs alapja
+            .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
     }
 }

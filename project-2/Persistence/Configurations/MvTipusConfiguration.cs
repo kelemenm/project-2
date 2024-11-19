@@ -1,8 +1,8 @@
 namespace Persistence.Configurations;
 
-public class MvTipusConfiguration : IEntityTypeConfiguration<MvTipus>
+public class MvTipusConfiguration : IEntityTypeConfiguration<cMvTipus>
 {
-    public void Configure(EntityTypeBuilder<MvTipus> builder)
+    public void Configure(EntityTypeBuilder<cMvTipus> builder)
     {
         builder.HasIndex(x => x.Id);
         builder
@@ -12,6 +12,12 @@ public class MvTipusConfiguration : IEntityTypeConfiguration<MvTipus>
         builder
             .Property(x => x.Leiras)
             .HasMaxLength(50)
-            .IsRequired(); 
+            .IsRequired();
+
+        builder.HasMany(m => m.Minta)
+            .WithOne(e => e.cMvTipus)
+            .HasForeignKey(e => e.MvTipus)
+            .HasPrincipalKey(m => m.MvTipusNev)   //az idegen kulcs alapja
+            .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
     }
 }

@@ -1,8 +1,8 @@
 namespace Persistence.Configurations;
 
-public class EredmenyConfiguration : IEntityTypeConfiguration<Eredmeny>
+public class EredmenyConfiguration : IEntityTypeConfiguration<cEredmeny>
 {
-    public void Configure(EntityTypeBuilder<Eredmeny> builder)
+    public void Configure(EntityTypeBuilder<cEredmeny> builder)
     {
         builder.HasIndex(x => x.Id);
         builder

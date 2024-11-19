@@ -1,13 +1,13 @@
 namespace Persistence.Configurations;
 
-public class MvHelyConfiguration : IEntityTypeConfiguration<MvHely>
+public class MvHelyConfiguration : IEntityTypeConfiguration<cMvHely>
 {
-    public void Configure(EntityTypeBuilder<MvHely> builder)
+    public void Configure(EntityTypeBuilder<cMvHely> builder)
     {
         builder.HasIndex(x => x.Id);
         builder
             .Property(x => x.MvhKod)
-            .HasMaxLength(75)
+            .HasMaxLength(25)
             .IsRequired(); 
         builder
             .Property(x => x.NevSajat)
@@ -42,6 +42,12 @@ public class MvHelyConfiguration : IEntityTypeConfiguration<MvHely>
             .IsRequired(false); 
         builder
             .Property(x => x.GPS_N_Y)
-            .IsRequired(false); 
+            .IsRequired(false);
+
+        builder.HasMany(m => m.Minta)
+            .WithOne(e => e.cMvHely)
+            .HasForeignKey(e => e.MvhKod)
+            .HasPrincipalKey(m => m.MvhKod)   //az idegen kulcs alapja
+            .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
     }
 }

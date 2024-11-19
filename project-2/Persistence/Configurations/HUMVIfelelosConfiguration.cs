@@ -1,8 +1,8 @@
 namespace Persistence.Configurations;
 
-public class HUMVIfelelosConfiguration : IEntityTypeConfiguration<HUMVIfelelos>
+public class HUMVIfelelosConfiguration : IEntityTypeConfiguration<cHUMVIfelelos>
 {
-    public void Configure(EntityTypeBuilder<HUMVIfelelos> builder)
+    public void Configure(EntityTypeBuilder<cHUMVIfelelos> builder)
     {
         builder.HasIndex(x => x.Id);
         builder
@@ -17,5 +17,11 @@ public class HUMVIfelelosConfiguration : IEntityTypeConfiguration<HUMVIfelelos>
             .Property(x => x.Cim)
             .HasMaxLength(150)
             .IsRequired();
+
+        builder.HasMany(m => m.Minta)
+            .WithOne(e => e.cHUMVIfelelos)
+            .HasForeignKey(e => e.Felelos)
+            .HasPrincipalKey(m => m.Felelos)   //az idegen kulcs alapja
+            .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
     }
 }

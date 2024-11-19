@@ -12,8 +12,8 @@ using Persistence;
 namespace project_2.Migrations
 {
     [DbContext(typeof(LaborDbContext))]
-    [Migration("20241119135348_InitialCreation")]
-    partial class InitialCreation
+    [Migration("20241119154949_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace project_2.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.AkkrMintavetel", b =>
+            modelBuilder.Entity("Domain.cAkkrMintavetel", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace project_2.Migrations
                     b.ToTable("AkkrMintavetel");
                 });
 
-            modelBuilder.Entity("Domain.Eredmeny", b =>
+            modelBuilder.Entity("Domain.cEredmeny", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,7 +110,7 @@ namespace project_2.Migrations
                     b.ToTable("Eredmeny");
                 });
 
-            modelBuilder.Entity("Domain.HUMVIfelelos", b =>
+            modelBuilder.Entity("Domain.cHUMVIfelelos", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -146,7 +146,7 @@ namespace project_2.Migrations
                     b.ToTable("HumviFelelos");
                 });
 
-            modelBuilder.Entity("Domain.HUMVImodul", b =>
+            modelBuilder.Entity("Domain.cHUMVImodul", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -177,7 +177,7 @@ namespace project_2.Migrations
                     b.ToTable("HumviModul");
                 });
 
-            modelBuilder.Entity("Domain.Mertekegyseg", b =>
+            modelBuilder.Entity("Domain.cMertekegyseg", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -213,7 +213,7 @@ namespace project_2.Migrations
                     b.ToTable("Mertekegyseg");
                 });
 
-            modelBuilder.Entity("Domain.Minta", b =>
+            modelBuilder.Entity("Domain.cMinta", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -303,12 +303,28 @@ namespace project_2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AkkrMintavetel");
+
+                    b.HasIndex("Felelos");
+
                     b.HasIndex("Id");
+
+                    b.HasIndex("ModulKod");
+
+                    b.HasIndex("MvOk");
+
+                    b.HasIndex("MvTipus");
+
+                    b.HasIndex("MvhKod");
+
+                    b.HasIndex("Labor", "LabAkkrSzam");
+
+                    b.HasIndex("Mintavevo", "MvAkkrSzam");
 
                     b.ToTable("Minta");
                 });
 
-            modelBuilder.Entity("Domain.Mintavevo", b =>
+            modelBuilder.Entity("Domain.cMintavevo", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -355,7 +371,7 @@ namespace project_2.Migrations
                     b.ToTable("Mintavevo");
                 });
 
-            modelBuilder.Entity("Domain.MvHely", b =>
+            modelBuilder.Entity("Domain.cMvHely", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -381,8 +397,8 @@ namespace project_2.Migrations
 
                     b.Property<string>("MvhKod")
                         .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("NevRovid")
                         .IsRequired()
@@ -421,7 +437,7 @@ namespace project_2.Migrations
                     b.ToTable("MvHely");
                 });
 
-            modelBuilder.Entity("Domain.MvOka", b =>
+            modelBuilder.Entity("Domain.cMvOka", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -452,7 +468,7 @@ namespace project_2.Migrations
                     b.ToTable("MvOka");
                 });
 
-            modelBuilder.Entity("Domain.MvTipus", b =>
+            modelBuilder.Entity("Domain.cMvTipus", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -483,7 +499,7 @@ namespace project_2.Migrations
                     b.ToTable("MvTipus");
                 });
 
-            modelBuilder.Entity("Domain.Parameter", b =>
+            modelBuilder.Entity("Domain.cParameter", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -527,7 +543,7 @@ namespace project_2.Migrations
                     b.ToTable("Parameter");
                 });
 
-            modelBuilder.Entity("Domain.VizsgaloLabor", b =>
+            modelBuilder.Entity("Domain.cVizsgaloLabor", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -574,22 +590,22 @@ namespace project_2.Migrations
                     b.ToTable("VizsgaloLabor");
                 });
 
-            modelBuilder.Entity("Domain.Eredmeny", b =>
+            modelBuilder.Entity("Domain.cEredmeny", b =>
                 {
-                    b.HasOne("Domain.Mertekegyseg", "Mertekegyseg")
+                    b.HasOne("Domain.cMertekegyseg", "Mertekegyseg")
                         .WithMany("Eredmeny")
                         .HasForeignKey("Megyseg")
                         .HasPrincipalKey("Megyseg")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Minta", "Minta")
+                    b.HasOne("Domain.cMinta", "Minta")
                         .WithMany()
                         .HasForeignKey("MintaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Parameter", "Parameter")
+                    b.HasOne("Domain.cParameter", "Parameter")
                         .WithMany("Eredmeny")
                         .HasForeignKey("ParKod")
                         .HasPrincipalKey("ParKod")
@@ -603,14 +619,126 @@ namespace project_2.Migrations
                     b.Navigation("Parameter");
                 });
 
-            modelBuilder.Entity("Domain.Mertekegyseg", b =>
+            modelBuilder.Entity("Domain.cMinta", b =>
+                {
+                    b.HasOne("Domain.cAkkrMintavetel", "cAkkrMintavetel")
+                        .WithMany("Minta")
+                        .HasForeignKey("AkkrMintavetel")
+                        .HasPrincipalKey("AkkrMintavetelStatusz")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.cHUMVIfelelos", "cHUMVIfelelos")
+                        .WithMany("Minta")
+                        .HasForeignKey("Felelos")
+                        .HasPrincipalKey("Felelos")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.cHUMVImodul", "cHUMVImodul")
+                        .WithMany("Minta")
+                        .HasForeignKey("ModulKod")
+                        .HasPrincipalKey("ModulKod")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.cMvOka", "cMvOka")
+                        .WithMany("Minta")
+                        .HasForeignKey("MvOk")
+                        .HasPrincipalKey("MvOk")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.cMvTipus", "cMvTipus")
+                        .WithMany("Minta")
+                        .HasForeignKey("MvTipus")
+                        .HasPrincipalKey("MvTipusNev")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.cMvHely", "cMvHely")
+                        .WithMany("Minta")
+                        .HasForeignKey("MvhKod")
+                        .HasPrincipalKey("MvhKod")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.cVizsgaloLabor", "cVizsgaloLabor")
+                        .WithMany("Minta")
+                        .HasForeignKey("Labor", "LabAkkrSzam")
+                        .HasPrincipalKey("Labor", "LabAkkrSzam")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.cMintavevo", "cMintavevo")
+                        .WithMany("Minta")
+                        .HasForeignKey("Mintavevo", "MvAkkrSzam")
+                        .HasPrincipalKey("MintavevoAzonosito", "MvAkkrSzam")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("cAkkrMintavetel");
+
+                    b.Navigation("cHUMVIfelelos");
+
+                    b.Navigation("cHUMVImodul");
+
+                    b.Navigation("cMintavevo");
+
+                    b.Navigation("cMvHely");
+
+                    b.Navigation("cMvOka");
+
+                    b.Navigation("cMvTipus");
+
+                    b.Navigation("cVizsgaloLabor");
+                });
+
+            modelBuilder.Entity("Domain.cAkkrMintavetel", b =>
+                {
+                    b.Navigation("Minta");
+                });
+
+            modelBuilder.Entity("Domain.cHUMVIfelelos", b =>
+                {
+                    b.Navigation("Minta");
+                });
+
+            modelBuilder.Entity("Domain.cHUMVImodul", b =>
+                {
+                    b.Navigation("Minta");
+                });
+
+            modelBuilder.Entity("Domain.cMertekegyseg", b =>
                 {
                     b.Navigation("Eredmeny");
                 });
 
-            modelBuilder.Entity("Domain.Parameter", b =>
+            modelBuilder.Entity("Domain.cMintavevo", b =>
+                {
+                    b.Navigation("Minta");
+                });
+
+            modelBuilder.Entity("Domain.cMvHely", b =>
+                {
+                    b.Navigation("Minta");
+                });
+
+            modelBuilder.Entity("Domain.cMvOka", b =>
+                {
+                    b.Navigation("Minta");
+                });
+
+            modelBuilder.Entity("Domain.cMvTipus", b =>
+                {
+                    b.Navigation("Minta");
+                });
+
+            modelBuilder.Entity("Domain.cParameter", b =>
                 {
                     b.Navigation("Eredmeny");
+                });
+
+            modelBuilder.Entity("Domain.cVizsgaloLabor", b =>
+                {
+                    b.Navigation("Minta");
                 });
 #pragma warning restore 612, 618
         }

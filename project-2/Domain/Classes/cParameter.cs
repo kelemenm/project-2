@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class Parameter : Entity
+public class cParameter : cEntity
 {
     public string ParKod { get; set; }
     public string HumviLeiras { get; set; }
@@ -8,5 +8,5 @@ public class Parameter : Entity
     public string ParamErtek { get; set; }
     public string ParamTip { get; set; }
 
-    public virtual ICollection<Eredmeny> Eredmeny { get; set; }
+    public virtual ICollection<cEredmeny> Eredmeny { get; set; }
 }

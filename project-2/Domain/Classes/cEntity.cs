@@ -1,6 +1,6 @@
 namespace Domain;
 
-public abstract class Entity
+public abstract class cEntity
 {
     public long Id { get; set; }
     public DateTime Created { get; set; }

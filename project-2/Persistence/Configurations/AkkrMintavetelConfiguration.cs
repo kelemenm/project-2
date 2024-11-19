@@ -1,8 +1,8 @@
 namespace Persistence.Configurations;
 
-public class AkkrMintavetelConfiguration : IEntityTypeConfiguration<AkkrMintavetel>
+public class AkkrMintavetelConfiguration : IEntityTypeConfiguration<cAkkrMintavetel>
 {
-    public void Configure(EntityTypeBuilder<AkkrMintavetel> builder)
+    public void Configure(EntityTypeBuilder<cAkkrMintavetel> builder)
     {
         builder.HasIndex(x => x.Id);
         builder
@@ -13,5 +13,12 @@ public class AkkrMintavetelConfiguration : IEntityTypeConfiguration<AkkrMintavet
             .Property(x => x.Leiras)
             .HasMaxLength(50)
             .IsRequired();
+
+        builder.HasMany(m => m.Minta)
+            .WithOne(e => e.cAkkrMintavetel)
+            .HasForeignKey(e => e.AkkrMintavetel)
+            .HasPrincipalKey(m => m.AkkrMintavetelStatusz)   //az idegen kulcs alapja
+            .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
+
     }
 }

@@ -1,8 +1,8 @@
 namespace Persistence.Configurations;
 
-public class MintavevoConfiguration : IEntityTypeConfiguration<Mintavevo>
+public class MintavevoConfiguration : IEntityTypeConfiguration<cMintavevo>
 {
-    public void Configure(EntityTypeBuilder<Mintavevo> builder)
+    public void Configure(EntityTypeBuilder<cMintavevo> builder)
     {
         builder.HasIndex(x => x.Id);
         builder
@@ -27,5 +27,11 @@ public class MintavevoConfiguration : IEntityTypeConfiguration<Mintavevo>
         builder
             .Property(x => x.ErvVege)
             .IsRequired();
+
+        builder.HasMany(m => m.Minta)
+            .WithOne(e => e.cMintavevo)
+            .HasForeignKey(e => new { e.Mintavevo, e.MvAkkrSzam })
+            .HasPrincipalKey(m => new { m.MintavevoAzonosito, m.MvAkkrSzam })   //az idegen kulcs alapja
+            .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
     }
 }

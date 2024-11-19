@@ -1,8 +1,8 @@
 namespace Persistence.Configurations;
 
-public class ParameterConfiguration : IEntityTypeConfiguration<Parameter>
+public class ParameterConfiguration : IEntityTypeConfiguration<cParameter>
 {
-    public void Configure(EntityTypeBuilder<Parameter> builder)
+    public void Configure(EntityTypeBuilder<cParameter> builder)
     {
         builder.HasIndex(x => x.Id);
         builder
@@ -28,7 +28,7 @@ public class ParameterConfiguration : IEntityTypeConfiguration<Parameter>
 
         builder.HasMany(m => m.Eredmeny)
             .WithOne(e => e.Parameter)
-            .HasForeignKey(equals => equals.ParKod)
+            .HasForeignKey(e => e.ParKod)
             .HasPrincipalKey(m => m.ParKod)   //Parkod az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //Eredmények törlésekor ne törölje a paramétert
 
