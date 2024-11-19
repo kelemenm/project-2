@@ -1,3 +1,5 @@
+using Domain;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("LaborConnectionString") 
@@ -25,5 +27,9 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+//Seeder app minden indításakor lefut
+//Ha seedelt adattáblák üresek, akkor feltölti adatokkal
+DbInitializer.Seed(app);
 
 app.Run();
