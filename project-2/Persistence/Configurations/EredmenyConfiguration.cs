@@ -27,5 +27,16 @@ public class EredmenyConfiguration : IEntityTypeConfiguration<Eredmeny>
             .Property(x => x.ErtekHozzarendelt)
             .IsRequired(false);
 
+        builder.HasOne(e => e.Mertekegyseg)
+            .WithMany(m => m.Eredmeny)
+            .HasForeignKey(e => e.Megyseg)
+            .HasPrincipalKey(m => m.Megyseg)
+            .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
+
+        builder.HasOne(e => e.Parameter)
+            .WithMany(m => m.Eredmeny)
+            .HasForeignKey(e => e.ParKod)
+            .HasPrincipalKey(m => m.ParKod)
+            .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
     }
 }

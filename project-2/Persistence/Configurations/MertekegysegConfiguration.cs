@@ -17,5 +17,12 @@ public class MertekegysegConfiguration : IEntityTypeConfiguration<Mertekegyseg>
             .Property(x => x.SajatLeiras)
             .HasMaxLength(15)
             .IsRequired();
+
+        builder.HasMany(m => m.Eredmeny)
+            .WithOne(e => e.Mertekegyseg)
+            .HasForeignKey(equals => equals.Megyseg)
+            .HasPrincipalKey(m => m.Megyseg)   //Megyseg az idegen kulcs alapja
+            .OnDelete(DeleteBehavior.Restrict); //Eredmények törlésekor ne törölje a mértékegységet
+
     }
 }

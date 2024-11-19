@@ -7,4 +7,6 @@ public class Parameter : Entity
     public string SajatLeiras { get; set; }
     public string ParamErtek { get; set; }
     public string ParamTip { get; set; }
+
+    public virtual ICollection<Eredmeny> Eredmeny { get; set; }
 }

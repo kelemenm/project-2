@@ -25,5 +25,12 @@ public class ParameterConfiguration : IEntityTypeConfiguration<Parameter>
             .Property(x => x.ParamTip)
             .HasMaxLength(25)
             .IsRequired(false);
+
+        builder.HasMany(m => m.Eredmeny)
+            .WithOne(e => e.Parameter)
+            .HasForeignKey(equals => equals.ParKod)
+            .HasPrincipalKey(m => m.ParKod)   //Parkod az idegen kulcs alapja
+            .OnDelete(DeleteBehavior.Restrict); //Eredmények törlésekor ne törölje a paramétert
+
     }
 }

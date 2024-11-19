@@ -12,7 +12,7 @@ using Persistence;
 namespace project_2.Migrations
 {
     [DbContext(typeof(LaborDbContext))]
-    [Migration("20241118174543_InitialCreation")]
+    [Migration("20241119135348_InitialCreation")]
     partial class InitialCreation
     {
         /// <inheritdoc />
@@ -101,7 +101,11 @@ namespace project_2.Migrations
 
                     b.HasIndex("Id");
 
+                    b.HasIndex("Megyseg");
+
                     b.HasIndex("MintaId");
+
+                    b.HasIndex("ParKod");
 
                     b.ToTable("Eredmeny");
                 });
@@ -572,13 +576,41 @@ namespace project_2.Migrations
 
             modelBuilder.Entity("Domain.Eredmeny", b =>
                 {
+                    b.HasOne("Domain.Mertekegyseg", "Mertekegyseg")
+                        .WithMany("Eredmeny")
+                        .HasForeignKey("Megyseg")
+                        .HasPrincipalKey("Megyseg")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Domain.Minta", "Minta")
                         .WithMany()
                         .HasForeignKey("MintaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Parameter", "Parameter")
+                        .WithMany("Eredmeny")
+                        .HasForeignKey("ParKod")
+                        .HasPrincipalKey("ParKod")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Mertekegyseg");
+
                     b.Navigation("Minta");
+
+                    b.Navigation("Parameter");
+                });
+
+            modelBuilder.Entity("Domain.Mertekegyseg", b =>
+                {
+                    b.Navigation("Eredmeny");
+                });
+
+            modelBuilder.Entity("Domain.Parameter", b =>
+                {
+                    b.Navigation("Eredmeny");
                 });
 #pragma warning restore 612, 618
         }

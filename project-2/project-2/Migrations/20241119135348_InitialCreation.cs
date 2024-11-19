@@ -75,6 +75,7 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mertekegyseg", x => x.Id);
+                    table.UniqueConstraint("AK_Mertekegyseg_Megyseg", x => x.Megyseg);
                 });
 
             migrationBuilder.CreateTable(
@@ -202,6 +203,7 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Parameter", x => x.Id);
+                    table.UniqueConstraint("AK_Parameter_ParKod", x => x.ParKod);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,11 +246,23 @@ namespace project_2.Migrations
                 {
                     table.PrimaryKey("PK_Eredmeny", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Eredmeny_Mertekegyseg_Megyseg",
+                        column: x => x.Megyseg,
+                        principalTable: "Mertekegyseg",
+                        principalColumn: "Megyseg",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Eredmeny_Minta_MintaId",
                         column: x => x.MintaId,
                         principalTable: "Minta",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Eredmeny_Parameter_ParKod",
+                        column: x => x.ParKod,
+                        principalTable: "Parameter",
+                        principalColumn: "ParKod",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -262,9 +276,19 @@ namespace project_2.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Eredmeny_Megyseg",
+                table: "Eredmeny",
+                column: "Megyseg");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Eredmeny_MintaId",
                 table: "Eredmeny",
                 column: "MintaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Eredmeny_ParKod",
+                table: "Eredmeny",
+                column: "ParKod");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HumviFelelos_Id",
@@ -333,9 +357,6 @@ namespace project_2.Migrations
                 name: "HumviModul");
 
             migrationBuilder.DropTable(
-                name: "Mertekegyseg");
-
-            migrationBuilder.DropTable(
                 name: "Mintavevo");
 
             migrationBuilder.DropTable(
@@ -348,13 +369,16 @@ namespace project_2.Migrations
                 name: "MvTipus");
 
             migrationBuilder.DropTable(
-                name: "Parameter");
-
-            migrationBuilder.DropTable(
                 name: "VizsgaloLabor");
 
             migrationBuilder.DropTable(
+                name: "Mertekegyseg");
+
+            migrationBuilder.DropTable(
                 name: "Minta");
+
+            migrationBuilder.DropTable(
+                name: "Parameter");
         }
     }
 }
