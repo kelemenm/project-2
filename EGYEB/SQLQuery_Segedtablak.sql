@@ -1,0 +1,21 @@
+SELECT Count(Id) AS AkkrMintavetel FROM AkkrMintavetel;
+SELECT Count(Id) AS HumviFelelos FROM HumviFelelos;
+SELECT Count(Id) AS HumviModul FROM HumviModul;
+SELECT Count(Id) AS Mintavevo FROM Mintavevo;
+SELECT Count(Id) AS Mintavevo FROM Mintavevo;
+SELECT Count(Id) AS MvHely FROM MvHely;
+SELECT Count(Id) AS MvOka FROM MvOka;
+SELECT Count(Id) AS MvTipus FROM MvTipus;
+SELECT Count(Id) AS Parameter FROM Parameter;
+SELECT Count(Id) AS VizsgaloLabor FROM VizsgaloLabor;
+
+SELECT * FROM AkkrMintavetel;
+SELECT * FROM HumviFelelos;
+SELECT * FROM HumviModul;
+SELECT * FROM Mertekegyseg;
+SELECT * FROM Mintavevo;
+SELECT * FROM MvHely;
+SELECT * FROM MvOka;
+SELECT * FROM MvTipus;
+SELECT * FROM Parameter;
+SELECT * FROM VizsgaloLabor;
