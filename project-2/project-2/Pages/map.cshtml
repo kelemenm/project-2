@@ -1,0 +1,134 @@
+@page
+@using System.Data.SqlClient
+@{
+    ViewData["Title"] = "Térképes Mérési Pontok";
+
+    // Adatbázis kapcsolat
+    string connectionString = "Server=YOUR_SERVER_NAME;Database=YOUR_DATABASE_NAME;Trusted_Connection=True;";
+    var measurementData = new List<DateTime>();
+
+    try
+    {
+        // Adatok lekérdezése
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query = "SELECT TOP 4 MvDatum FROM dbo.Mvhely";
+            using (var command = new SqlCommand(query, connection))
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    measurementData.Add(reader.GetDateTime(0));
+                }
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        // Hibakezelés: ha az adatbázis nem elérhető, mintaadatokkal töltjük fel
+        measurementData = new List<DateTime> { DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now };
+    }
+
+    // Mérési pontok elhelyezkedése
+    var points = new List<(string Name, int Top, int Left)>
+    {
+        ("Mérési Pont 1", 20, 30),
+        ("Mérési Pont 2", 40, 60),
+        ("Mérési Pont 3", 70, 50),
+        ("Mérési Pont 4", 50, 20)
+    };
+}
+<div style="padding: 20px; font-family: Arial, sans-serif;">
+    <!-- Fejléc -->
+    <div style="
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 2px solid black;
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+        background-color: #f9f9f9;">
+        <h1 style="margin: 0; font-size: 24px;">Mérési Pontok Térképe</h1>
+        <p style="margin: 5px; font-size: 16px;">Funkciók: kattintás a mérési pontokra, információk megjelenítése</p>
+    </div>
+
+    <!-- Térkép -->
+    <div style="
+        position: relative;
+        width: 600px;
+        height: 400px;
+        margin: 0 auto;
+        border: 2px solid black;
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+        background-image: url('./map.webp');
+        background-size: cover;
+        background-position: center;">
+        @for (int i = 0; i < points.Count; i++)
+        {
+            <div 
+                class="map-point" 
+                data-name="@points[i].Name" 
+                data-datetime="@measurementData[i].ToString("yyyy-MM-dd HH:mm:ss")" 
+                style="top: @points[i].Top%; left: @points[i].Left%;">
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.map-point').forEach(point => {
+            point.addEventListener('mouseenter', (event) => {
+                const name = event.target.dataset.name;
+                const tooltip = document.createElement('div');
+                tooltip.id = 'tooltip';
+                tooltip.innerText = name;
+                tooltip.style.position = 'absolute';
+                tooltip.style.backgroundColor = '#333';
+                tooltip.style.color = '#fff';
+                tooltip.style.padding = '5px 10px';
+                tooltip.style.borderRadius = '5px';
+                tooltip.style.fontSize = '14px';
+                tooltip.style.boxShadow = '2px 2px 5px rgba(0,0,0,0.3)';
+                document.body.appendChild(tooltip);
+
+                event.target.addEventListener('mousemove', (e) => {
+                    tooltip.style.left = `${e.pageX + 10}px`;
+                    tooltip.style.top = `${e.pageY + 10}px`;
+                });
+            });
+
+            point.addEventListener('mouseleave', () => {
+                const tooltip = document.getElementById('tooltip');
+                if (tooltip) {
+                    tooltip.remove();
+                }
+            });
+
+            point.addEventListener('click', (event) => {
+                const datetime = event.target.dataset.datetime;
+                alert(`Legutolsó mérés időpontja: ${datetime}`);
+            });
+        });
+    </script>
+}
+
+<style>
+.map-point {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: red;
+    border: 2px solid black;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.map-point:hover {
+    transform: scale(1.2);
+    background-color: orange;
+}
+</style>
