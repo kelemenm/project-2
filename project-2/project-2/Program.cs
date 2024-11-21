@@ -9,6 +9,9 @@ builder.Services.AddDbContext<LaborDbContext>(options =>
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +26,18 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+        name: "AkkrMintavetel",
+        pattern: "{controller=AkkrMintavetel}/{action=Index}/{id?}");
+});
+
 
 app.UseAuthorization();
 
