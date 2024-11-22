@@ -16,7 +16,7 @@ public class cMinta : cEntity
     public string MvOkaEgyeb { get; set; }
     public string MvhKod { get; set; }
     public string? MvHely { get; set; }
-    public string? AkkrMintavetel { get; set; }
+    public long? AkkrMintavetel { get; set; }
     public string? Mintavevo { get; set; }
     public string MvAkkrSzam { get; set; }
     public bool HUMVIexport { get; set; }

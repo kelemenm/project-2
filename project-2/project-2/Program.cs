@@ -12,6 +12,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation();
 
+// Adjuk hozzá az ExcelFileReader-t is a DI konténerhez
+builder.Services.AddScoped<ExcelFileReader>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -46,5 +49,20 @@ app.MapRazorPages();
 //Seeder app minden indításakor lefut
 //Ha seedelt adattáblák üresek, akkor feltölti adatokkal
 DbInitializer.Seed(app);
+
+/*
+// Az Excel fájl beolvasása
+// Scoped szolgáltatásként kérjük le az ExcelFileReader-t
+using (var scope = app.Services.CreateScope())
+{
+    var reader = scope.ServiceProvider.GetRequiredService<ExcelFileReader>(); // Scoped példány kérése
+    FileInfo uploadedFile = reader.ExcelFileUploader();
+    string sheetName = "HUMVI";
+    int headerRow = 2;
+    Dictionary<string, int> headerColumns = reader.HeaderCols(uploadedFile, sheetName, headerRow);
+    List<List<string>> excelData = reader.ReadExcelSheet(uploadedFile, sheetName, headerColumns);
+    reader.ProcessLines(excelData, headerColumns);
+}
+*/
 
 app.Run();

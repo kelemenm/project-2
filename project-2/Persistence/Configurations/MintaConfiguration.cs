@@ -76,7 +76,7 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
         builder.HasOne(e => e.cAkkrMintavetel)
             .WithMany(m => m.Minta)
             .HasForeignKey(e => e.AkkrMintavetel)
-            .HasPrincipalKey(m => m.AkkrMintavetelStatusz)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
         builder.HasOne(e => e.cHUMVIfelelos)
