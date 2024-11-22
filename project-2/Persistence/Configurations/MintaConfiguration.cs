@@ -82,7 +82,7 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
         builder.HasOne(e => e.cHUMVIfelelos)
             .WithMany(m => m.Minta)
             .HasForeignKey(e => e.Felelos)
-            .HasPrincipalKey(m => m.Felelos)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
         builder.HasOne(e => e.cHUMVImodul)

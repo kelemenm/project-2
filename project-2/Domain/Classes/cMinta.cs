@@ -4,7 +4,7 @@ public class cMinta : cEntity
 {
     public string LaborMintaKod { get; set; }
     public string? ModulKod { get; set; }
-    public string? Felelos { get; set; }
+    public long? Felelos { get; set; }
     public string? MvTipus { get; set; }
     public DateTime MvDatum { get; set; }
     public string? Labor { get; set; }

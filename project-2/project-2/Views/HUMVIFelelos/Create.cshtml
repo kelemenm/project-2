@@ -1,0 +1,59 @@
+﻿@model Domain.cHUMVIfelelos
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>
+
+<h1>HUMVI felelősök</h1>
+
+<h4>Új rekord létrehozása</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Felelos" class="control-label">Felelős</label>
+                <input type="text" asp-for="Felelos" class="form-control" id="Felelos" name="Felelos" value="@Model.Felelos" />
+                <span asp-validation-for="Felelos" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nev" class="control-label">Név</label>
+                <input type="text" asp-for="Nev" class="form-control" id="Nev" name="Nev" value="@Model.Nev"/>
+                <span asp-validation-for="Nev" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cim" class="control-label">Cím</label>
+                <input type="text" asp-for="Cim" class="form-control" id="Cim" name="Cim" value="@Model.Cim"/>
+                <span asp-validation-for="Cim" class="text-danger"></span>
+            </div>
+            <!-- Hidden fields for Created, LastModified -->
+            <div class="form-group" style="display:none;">
+                <label for="Created">Created</label>
+                <input type="hidden" id="Created" name="Created" value="@DateTime.UtcNow" />
+            </div>
+
+            <div class="form-group" style="display:none;">
+                <label for="LastModified">LastModified</label>
+                <input type="hidden" id="LastModified" name="LastModified" value="@DateTime.UtcNow" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/HUMVIfelelos/Index" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

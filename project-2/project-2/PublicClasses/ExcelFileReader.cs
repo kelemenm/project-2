@@ -288,7 +288,8 @@ public class ExcelFileReader
             cMinta minta = new cMinta();
             minta.LaborMintaKod = rowData[HeaderCols["labormintakod"] - 1].Trim();
             minta.ModulKod = rowData[HeaderCols["modulkod"] - 1].Trim();
-            minta.Felelos = rowData[HeaderCols["felelos"] - 1].Trim();
+            //minta.Felelos = rowData[HeaderCols["felelos"] - 1].Trim();
+minta.Felelos = FindIdByValue("cHUMVIfelelos", "Felelos", rowData[HeaderCols["felelos"] - 1].Trim());
             minta.MvTipus = rowData[HeaderCols["mvtipus"] - 1].Trim();
 
             try { minta.MvDatum = DateTime.Parse(rowData[HeaderCols["mvdatum"] - 1]); }
@@ -310,8 +311,8 @@ public class ExcelFileReader
             minta.MvOkaEgyeb = rowData[HeaderCols["mvokaegyeb"] - 1].Trim();
             minta.MvhKod = rowData[HeaderCols["mvhkod"] - 1].Trim();
             minta.MvHely = rowData[HeaderCols["megnevezes"] - 1].Trim();
-            //minta.AkkrMintavetel = rowData[HeaderCols["akkrmintavetel"] - 1].Trim();
-            minta.AkkrMintavetel = FindIdByValue("cAkkrMintavetel", "AkkrMintavetelStatusz", rowData[HeaderCols["akkrmintavetel"] - 1].Trim());
+            
+minta.AkkrMintavetel = FindIdByValue("cAkkrMintavetel", "AkkrMintavetelStatusz", rowData[HeaderCols["akkrmintavetel"] - 1].Trim());
             minta.Mintavevo = rowData[HeaderCols["mintavevo"] - 1].Trim();
             minta.MvAkkrSzam = rowData[HeaderCols["mvakkrszam"] - 1].Trim();
             minta.HUMVIexport = false;

@@ -48,6 +48,9 @@ namespace project_2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AkkrMintavetelStatusz")
+                        .IsUnique();
+
                     b.HasIndex("Id");
 
                     b.ToTable("AkkrMintavetel");
@@ -138,6 +141,9 @@ namespace project_2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Felelos")
+                        .IsUnique();
+
                     b.HasIndex("Id");
 
                     b.ToTable("HumviFelelos");
@@ -218,17 +224,16 @@ namespace project_2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("AkkrMintavetel")
+                    b.Property<long?>("AkkrMintavetel")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Felelos")
-                        .IsRequired()
+                    b.Property<long>("Felelos")
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("HUMVIexport")
                         .HasColumnType("bit");
@@ -621,13 +626,11 @@ namespace project_2.Migrations
                     b.HasOne("Domain.cAkkrMintavetel", "cAkkrMintavetel")
                         .WithMany("Minta")
                         .HasForeignKey("AkkrMintavetel")
-                        .HasPrincipalKey("AkkrMintavetelStatusz")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.cHUMVIfelelos", "cHUMVIfelelos")
                         .WithMany("Minta")
                         .HasForeignKey("Felelos")
-                        .HasPrincipalKey("Felelos")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

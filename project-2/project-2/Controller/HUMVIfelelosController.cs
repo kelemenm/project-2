@@ -13,22 +13,22 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace project_2.Controllers
 {
-    public class AkkrMintavetelController : Controller
+    public class HUMVIfelelosController : Controller
     {
         private readonly LaborDbContext _context;
 
-        public AkkrMintavetelController(LaborDbContext context)
+        public HUMVIfelelosController(LaborDbContext context)
         {
             _context = context;
         }
 
-        // GET: AkkrMintavetel
+        // GET: HUMVIfelelos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AkkrMintavetel.ToListAsync());
+            return View(await _context.HumviFelelos.ToListAsync());
         }
 
-        // GET: AkkrMintavetel/Details/5
+        // GET: HUMVIfelelos/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -36,42 +36,42 @@ namespace project_2.Controllers
                 return NotFound();
             }
 
-            var cAkkrMintavetel = await _context.AkkrMintavetel
+            var cHUMVIfelelos = await _context.HumviFelelos
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cAkkrMintavetel == null)
+            if (cHUMVIfelelos == null)
             {
                 return NotFound();
             }
 
-            return View(cAkkrMintavetel);
+            return View(cHUMVIfelelos);
         }
 
-        // GET: AkkrMintavetel/Create
+        // GET: HUMVIfelelos/Create
         public IActionResult Create()
         {
-            return View(new cAkkrMintavetel());
+            return View(new cHUMVIfelelos());
         }
 
-        // POST: AkkrMintavetel/Create
+        // POST: HUMVIfelelos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AkkrMintavetelStatusz,Leiras,Created,LastModified")] cAkkrMintavetel cAkkrMintavetel)
+        public async Task<IActionResult> Create([Bind("Felelos,Nev,Cim,Created,LastModified")] cHUMVIfelelos cHUMVIfelelos)
         {
-            cAkkrMintavetel.Created = DateTime.UtcNow;
-            cAkkrMintavetel.LastModified = DateTime.UtcNow;
+            cHUMVIfelelos.Created = DateTime.UtcNow;
+            cHUMVIfelelos.LastModified = DateTime.UtcNow;
             //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
             // if (ModelState.IsValid)
             {
-                _context.Add(cAkkrMintavetel);
+                _context.Add(cHUMVIfelelos);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(cAkkrMintavetel);
+            return View(cHUMVIfelelos);
         }
 
-        // GET: AkkrMintavetel/Edit/5
+        // GET: HUMVIfelelos/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -79,24 +79,24 @@ namespace project_2.Controllers
                 return NotFound();
             }
 
-            var cAkkrMintavetel = await _context.AkkrMintavetel.FindAsync(id);
-            if (cAkkrMintavetel == null)
+            var cHUMVIfelelos = await _context.HumviFelelos.FindAsync(id);
+            if (cHUMVIfelelos == null)
             {
                 return NotFound();
             }
-            return View(cAkkrMintavetel);
+            return View(cHUMVIfelelos);
         }
 
-        // POST: AkkrMintavetel/Edit/5
+        // POST: HUMVIfelelos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,AkkrMintavetelStatusz,Leiras,Created,LastModified")] cAkkrMintavetel cAkkrMintavetel)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Felelos,Nev,Cim,Created,LastModified")] cHUMVIfelelos cHUMVIfelelos)
         {
-            cAkkrMintavetel.LastModified = DateTime.UtcNow;
+            cHUMVIfelelos.LastModified = DateTime.UtcNow;
 
-            if (id != cAkkrMintavetel.Id)
+            if (id != cHUMVIfelelos.Id)
             {
                 return NotFound();
             }
@@ -106,12 +106,12 @@ namespace project_2.Controllers
             {
                 try
                 {
-                    _context.Update(cAkkrMintavetel);
+                    _context.Update(cHUMVIfelelos);
                     await _context.SaveChangesAsync();
                 }
                catch (DbUpdateConcurrencyException)
                 {
-                    if (!cAkkrMintavetelExists(cAkkrMintavetel.Id))
+                    if (!cHUMVIfelelosExists(cHUMVIfelelos.Id))
                     {
                         return NotFound();
                     }
@@ -122,11 +122,11 @@ namespace project_2.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            return View(cAkkrMintavetel);
+            return View(cHUMVIfelelos);
 
         }
 
-        // GET: AkkrMintavetel/Delete/5
+        // GET: HUMVIfelelos/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -134,34 +134,34 @@ namespace project_2.Controllers
                 return NotFound();
             }
 
-            var cAkkrMintavetel = await _context.AkkrMintavetel
+            var cHUMVIfelelos = await _context.HumviFelelos
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cAkkrMintavetel == null)
+            if (cHUMVIfelelos == null)
             {
                 return NotFound();
             }
 
-            return View(cAkkrMintavetel);
+            return View(cHUMVIfelelos);
         }
 
-        // POST: AkkrMintavetel/Delete/5
+        // POST: HUMVIfelelos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var cAkkrMintavetel = await _context.AkkrMintavetel.FindAsync(id);
-            if (cAkkrMintavetel != null)
+            var cHUMVIfelelos = await _context.HumviFelelos.FindAsync(id);
+            if (cHUMVIfelelos != null)
             {
-                _context.AkkrMintavetel.Remove(cAkkrMintavetel);
+                _context.HumviFelelos.Remove(cHUMVIfelelos);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool cAkkrMintavetelExists(long id)
+        private bool cHUMVIfelelosExists(long id)
         {
-            return _context.AkkrMintavetel.Any(e => e.Id == id);
+            return _context.HumviFelelos.Any(e => e.Id == id);
         }
     }
 }

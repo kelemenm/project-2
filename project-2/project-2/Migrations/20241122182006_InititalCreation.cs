@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace project_2.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InititalCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,6 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AkkrMintavetel", x => x.Id);
-                    table.UniqueConstraint("AK_AkkrMintavetel_AkkrMintavetelStatusz", x => x.AkkrMintavetelStatusz);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,7 +42,6 @@ namespace project_2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HumviFelelos", x => x.Id);
-                    table.UniqueConstraint("AK_HumviFelelos_Felelos", x => x.Felelos);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,7 +208,7 @@ namespace project_2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LaborMintaKod = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     ModulKod = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Felelos = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Felelos = table.Column<long>(type: "bigint", maxLength: 10, nullable: false),
                     MvTipus = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     MvDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Labor = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
@@ -222,7 +220,7 @@ namespace project_2.Migrations
                     MvOkaEgyeb = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     MvhKod = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     MvHely = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    AkkrMintavetel = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    AkkrMintavetel = table.Column<long>(type: "bigint", maxLength: 10, nullable: true),
                     Mintavevo = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     MvAkkrSzam = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     HUMVIexport = table.Column<bool>(type: "bit", nullable: false),
@@ -236,13 +234,13 @@ namespace project_2.Migrations
                         name: "FK_Minta_AkkrMintavetel_AkkrMintavetel",
                         column: x => x.AkkrMintavetel,
                         principalTable: "AkkrMintavetel",
-                        principalColumn: "AkkrMintavetelStatusz",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Minta_HumviFelelos_Felelos",
                         column: x => x.Felelos,
                         principalTable: "HumviFelelos",
-                        principalColumn: "Felelos",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Minta_HumviModul_ModulKod",
@@ -322,6 +320,12 @@ namespace project_2.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AkkrMintavetel_AkkrMintavetelStatusz",
+                table: "AkkrMintavetel",
+                column: "AkkrMintavetelStatusz",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AkkrMintavetel_Id",
                 table: "AkkrMintavetel",
                 column: "Id");
@@ -345,6 +349,12 @@ namespace project_2.Migrations
                 name: "IX_Eredmeny_ParKod",
                 table: "Eredmeny",
                 column: "ParKod");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HumviFelelos_Felelos",
+                table: "HumviFelelos",
+                column: "Felelos",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_HumviFelelos_Id",

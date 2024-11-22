@@ -39,6 +39,11 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "AkkrMintavetel",
         pattern: "{controller=AkkrMintavetel}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "HUMVIfelelos",
+    pattern: "{controller=HUMVIfelelos}/{action=Index}/{id?}");
+
 });
 
 
