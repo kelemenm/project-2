@@ -10,6 +10,7 @@ using Persistence;
 using Microsoft.CodeAnalysis.Scripting;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using project_2.Dtos;
 
 namespace project_2.Controllers
 {
@@ -57,18 +58,24 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Felelos,Nev,Cim,Created,LastModified")] cHUMVIfelelos cHUMVIfelelos)
+        public async Task<IActionResult> Create([Bind("Felelos,Nev,Cim")] HUMVIfelelosDto hUMVIfelelosDto)
         {
-            cHUMVIfelelos.Created = DateTime.UtcNow;
-            cHUMVIfelelos.LastModified = DateTime.UtcNow;
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _context.Add(cHUMVIfelelos);
+                var now = DateTime.UtcNow;
+                var newHUMVIfelelos = new cHUMVIfelelos
+                {
+                    Felelos = hUMVIfelelosDto.Felelos,
+                    Nev = hUMVIfelelosDto.Nev,
+                    Cim = hUMVIfelelosDto.Cim,
+                    Created = now,
+                    LastModified = now
+                };
+                _context.Add(newHUMVIfelelos);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(cHUMVIfelelos);
+            return View(hUMVIfelelosDto);
         }
 
         // GET: HUMVIfelelos/Edit/5
@@ -92,37 +99,38 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Felelos,Nev,Cim,Created,LastModified")] cHUMVIfelelos cHUMVIfelelos)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Felelos,Nev,Cim")] HUMVIfelelosDto hUMVIfelelosDto)
         {
-            cHUMVIfelelos.LastModified = DateTime.UtcNow;
-
-            if (id != cHUMVIfelelos.Id)
+            if (hUMVIfelelosDto.Id == null)
             {
-                return NotFound();
+                return BadRequest("Id is missing!");
             }
 
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(cHUMVIfelelos);
-                    await _context.SaveChangesAsync();
-                }
-               catch (DbUpdateConcurrencyException)
-                {
-                    if (!cHUMVIfelelosExists(cHUMVIfelelos.Id))
+                    var hUMVIfelelos = await _context.HumviFelelos.FirstOrDefaultAsync(x => x.Id == hUMVIfelelosDto.Id);
+                    if (hUMVIfelelos != null)
                     {
-                        return NotFound();
+                        hUMVIfelelos.Felelos = hUMVIfelelosDto.Felelos;
+                        hUMVIfelelos.Nev = hUMVIfelelosDto.Nev;
+                        hUMVIfelelos.Cim = hUMVIfelelosDto.Cim;
+                        hUMVIfelelos.LastModified = DateTime.UtcNow;
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        throw;
+                        return NotFound();
                     }
+                }
+                catch (Exception)
+                {
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
-            return View(cHUMVIfelelos);
+            return View(hUMVIfelelosDto);
 
         }
 

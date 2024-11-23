@@ -10,6 +10,7 @@ using Persistence;
 using Microsoft.CodeAnalysis.Scripting;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using project_2.Dtos;
 
 namespace project_2.Controllers
 {
@@ -57,18 +58,24 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MvOk,Leiras,Created,LastModified")] cMvOka cMvOka)
+        public async Task<IActionResult> Create([Bind("MvOk,Leiras")] MvOkaDto mvOkaDto)
         {
-            cMvOka.Created = DateTime.UtcNow;
-            cMvOka.LastModified = DateTime.UtcNow;
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _context.Add(cMvOka);
+                var now = DateTime.UtcNow;
+                var newMvOka = new cMvOka
+                {
+                    MvOk = mvOkaDto.MvOk,
+                    Leiras = mvOkaDto.Leiras,
+                    Created = now,
+                    LastModified = now
+                };
+                _context.Add(newMvOka);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(cMvOka);
+            return View(mvOkaDto);
+
         }
 
         // GET: MvOka/Edit/5
@@ -92,38 +99,37 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,MvOk,Leiras,Created,LastModified")] cMvOka cMvOka)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,MvOk,Leiras")] MvOkaDto mvOkaDto)
         {
-            cMvOka.LastModified = DateTime.UtcNow;
-
-            if (id != cMvOka.Id)
+            if (mvOkaDto.Id == null)
             {
-                return NotFound();
+                return BadRequest("Id is missing!");
             }
 
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(cMvOka);
-                    await _context.SaveChangesAsync();
-                }
-               catch (DbUpdateConcurrencyException)
-                {
-                    if (!cMvOkaExists(cMvOka.Id))
+                    var mvOka = await _context.MvOka.FirstOrDefaultAsync(x => x.Id == mvOkaDto.Id);
+                    if (mvOka != null)
                     {
-                        return NotFound();
+                        mvOka.MvOk = mvOkaDto.MvOk;
+                        mvOka.Leiras = mvOkaDto.Leiras;
+                        mvOka.LastModified = DateTime.UtcNow;
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        throw;
+                        return NotFound();
                     }
+                }
+                catch (Exception)
+                {
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
-            return View(cMvOka);
-
+            return View(mvOkaDto);
         }
 
         // GET: MvOka/Delete/5

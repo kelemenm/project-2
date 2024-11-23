@@ -68,8 +68,13 @@ app.UseEndpoints(endpoints =>
     name: "VizsgaloLabor",
     pattern: "{controller=VizsgaloLabor}/{action=Index}/{id?}");
 
+    endpoints.MapControllerRoute(
+    name: "Mertekegyseg",
+    pattern: "{controller=Mertekegyseg}/{action=Index}/{id?}");
 
-
+    endpoints.MapControllerRoute(
+    name: "Parameter",
+    pattern: "{controller=Parameter}/{action=Index}/{id?}");
 
 });
 

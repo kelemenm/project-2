@@ -10,6 +10,7 @@ using Persistence;
 using Microsoft.CodeAnalysis.Scripting;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using project_2.Dtos;
 
 namespace project_2.Controllers
 {
@@ -57,18 +58,23 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ModulKod,Leiras,Created,LastModified")] cHUMVImodul cHUMVImodul)
+        public async Task<IActionResult> Create([Bind("ModulKod,Leiras")] HUMVImodulDto hUMVImodulDto)
         {
-            cHUMVImodul.Created = DateTime.UtcNow;
-            cHUMVImodul.LastModified = DateTime.UtcNow;
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _context.Add(cHUMVImodul);
+                var now = DateTime.UtcNow;
+                var newHUMVImodul = new cHUMVImodul
+                {
+                    ModulKod = hUMVImodulDto.ModulKod,
+                    Leiras = hUMVImodulDto.Leiras,
+                    Created = now,
+                    LastModified = now
+                };
+                _context.Add(newHUMVImodul);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(cHUMVImodul);
+            return View(hUMVImodulDto);
         }
 
         // GET: HUMVIModul/Edit/5
@@ -87,42 +93,42 @@ namespace project_2.Controllers
             return View(cHUMVImodul);
         }
 
-        // POST: ccccccccccc/Edit/5
+        // POST: HUMVIModul/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,ModulKod,Leiras,Created,LastModified")] cHUMVImodul cHUMVImodul)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,ModulKod,Leiras")] HUMVImodulDto hUMVImodulDto)
         {
-            cHUMVImodul.LastModified = DateTime.UtcNow;
-
-            if (id != cHUMVImodul.Id)
+            if (hUMVImodulDto.Id == null)
             {
-                return NotFound();
+                return BadRequest("Id is missing!");
             }
 
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(cHUMVImodul);
-                    await _context.SaveChangesAsync();
-                }
-               catch (DbUpdateConcurrencyException)
-                {
-                    if (!cHumviModulExists(cHUMVImodul.Id))
+                    var hUMVImodul = await _context.HumviModul.FirstOrDefaultAsync(x => x.Id == hUMVImodulDto.Id);
+                    if (hUMVImodul != null)
                     {
-                        return NotFound();
+                        hUMVImodul.ModulKod = hUMVImodulDto.ModulKod;
+                        hUMVImodul.Leiras = hUMVImodulDto.Leiras;
+                        hUMVImodul.LastModified = DateTime.UtcNow;
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        throw;
+                        return NotFound();
                     }
+                }
+                catch (Exception)
+                {
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
-            return View(cHUMVImodul);
+            return View(hUMVImodulDto);
 
         }
 

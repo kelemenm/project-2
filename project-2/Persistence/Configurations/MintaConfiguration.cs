@@ -19,7 +19,19 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
             .Property(x => x.MvTipus)
             .IsRequired();
         builder
+            .Property(x => x.MvDatum)
+            .IsRequired();
+        builder
             .Property(x => x.Labor)
+            .IsRequired();
+        builder
+            .Property(x => x.MintaAtvetel)
+            .IsRequired();
+        builder
+            .Property(x => x.VizsgalatKezdete)
+            .IsRequired();
+        builder
+            .Property(x => x.VizsgalatVege)
             .IsRequired();
         builder
             .Property(x => x.MvOk)
@@ -41,18 +53,6 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
         builder
             .Property(x => x.Mintavevo)
             .IsRequired(false);
-        builder
-            .Property(x => x.MvDatum)
-            .IsRequired();
-        builder
-            .Property(x => x.MintaAtvetel)
-            .IsRequired();
-        builder
-            .Property(x => x.VizsgalatKezdete)
-            .IsRequired();
-        builder
-            .Property(x => x.VizsgalatVege)
-            .IsRequired();
         builder
             .Property(x => x.HUMVIexport)
             .IsRequired();

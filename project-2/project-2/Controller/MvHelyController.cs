@@ -10,6 +10,7 @@ using Persistence;
 using Microsoft.CodeAnalysis.Scripting;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using project_2.Dtos;
 
 namespace project_2.Controllers
 {
@@ -57,18 +58,31 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MvhKod,NevSajat,NevTeljes,VizBazis,NevRovid,Telepules,Tipus,HumviRegiNev,GPS_N_Y,GPS_E_X,Created,LastModified")] cMvHely cMvHely)
+        public async Task<IActionResult> Create([Bind("MvhKod,NevSajat,NevTeljes,VizBazis,NevRovid,Telepules,Tipus,HumviRegiNev,GPS_N_Y,GPS_E_X")] MvHelyDto mvHelyDto)
         {
-            cMvHely.Created = DateTime.UtcNow;
-            cMvHely.LastModified = DateTime.UtcNow;
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _context.Add(cMvHely);
+                var now = DateTime.UtcNow;
+                var newMvHely = new cMvHely
+                {
+                    MvhKod = mvHelyDto.MvhKod,
+                    NevSajat = mvHelyDto.NevSajat,
+                    NevTeljes = mvHelyDto.NevTeljes,
+                    VizBazis = mvHelyDto.VizBazis,
+                    NevRovid = mvHelyDto.NevRovid,
+                    Telepules = mvHelyDto.Telepules,
+                    Tipus = mvHelyDto.Tipus,
+                    HumviRegiNev = mvHelyDto.HumviRegiNev,
+                    GPS_N_Y = mvHelyDto.GPS_N_Y,
+                    GPS_E_X = mvHelyDto.GPS_E_X,
+                    Created = now,
+                    LastModified = now
+                };
+                _context.Add(newMvHely);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(cMvHely);
+            return View(mvHelyDto);
         }
 
         // GET: MvHely/Edit/5
@@ -92,37 +106,45 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,MvhKod,NevSajat,NevTeljes,VizBazis,NevRovid,Telepules,Tipus,HumviRegiNev,GPS_N_Y,GPS_E_X,Created,LastModified")] cMvHely cMvHely)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,MvhKod,NevSajat,NevTeljes,VizBazis,NevRovid,Telepules,Tipus,HumviRegiNev,GPS_N_Y,GPS_E_X")] MvHelyDto mvHelyDto)
         {
-            cMvHely.LastModified = DateTime.UtcNow;
-
-            if (id != cMvHely.Id)
+            if (mvHelyDto.Id == null)
             {
-                return NotFound();
+                return BadRequest("Id is missing!");
             }
 
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(cMvHely);
-                    await _context.SaveChangesAsync();
-                }
-               catch (DbUpdateConcurrencyException)
-                {
-                    if (!cMvHelyExists(cMvHely.Id))
+                    var mvHely = await _context.MvHely.FirstOrDefaultAsync(x => x.Id == mvHelyDto.Id);
+                    if (mvHely != null)
                     {
-                        return NotFound();
+                        mvHely.MvhKod = mvHelyDto.MvhKod;
+                        mvHely.NevSajat = mvHelyDto.NevSajat;
+                        mvHely.NevTeljes = mvHelyDto.NevTeljes;
+                        mvHely.VizBazis = mvHelyDto.VizBazis;
+                        mvHely.NevRovid = mvHelyDto.NevRovid;
+                        mvHely.Telepules = mvHelyDto.Telepules;
+                        mvHely.Tipus = mvHelyDto.Tipus;
+                        mvHely.HumviRegiNev = mvHelyDto.HumviRegiNev;
+                        mvHely.GPS_N_Y = mvHelyDto.GPS_N_Y;
+                        mvHely.GPS_E_X = mvHelyDto.GPS_E_X;
+                        mvHely.LastModified = DateTime.UtcNow;
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        throw;
+                        return NotFound();
                     }
+                }
+                catch (Exception)
+                {
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
-            return View(cMvHely);
+            return View(mvHelyDto);
 
         }
 

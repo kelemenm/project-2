@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Domain;
-using Persistence;
-using Microsoft.CodeAnalysis.Scripting;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using project_2.Dtos;
 
 namespace project_2.Controllers
 {
@@ -57,18 +48,27 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Labor,LabAkkrSzam,Nev,Cim,ErvKezdete,ErvVege,Created,LastModified")] cVizsgaloLabor cVizsgaloLabor)
+        public async Task<IActionResult> Create([Bind("Labor,LabAkkrSzam,Nev,Cim,ErvKezdete,ErvVege")] VizsgaloLaborDto vizsgaloLaborDto)
         {
-            cVizsgaloLabor.Created = DateTime.UtcNow;
-            cVizsgaloLabor.LastModified = DateTime.UtcNow;
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            // if (ModelState.IsValid)
+             if (ModelState.IsValid)
             {
-                _context.Add(cVizsgaloLabor);
+                var now = DateTime.UtcNow;
+                var newVizsgaloLabor = new cVizsgaloLabor
+                {
+                    Labor = vizsgaloLaborDto.Labor,
+                    LabAkkrSzam = vizsgaloLaborDto.LabAkkrSzam,
+                    Nev = vizsgaloLaborDto.Nev,
+                    Cim = vizsgaloLaborDto.Cim,
+                    ErvKezdete = vizsgaloLaborDto.ErvKezdete,
+                    ErvVege = vizsgaloLaborDto.ErvVege,
+                    Created = now,
+                    LastModified = now
+                };
+                _context.Add(newVizsgaloLabor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(cVizsgaloLabor);
+            return View(vizsgaloLaborDto);
         }
 
         // GET: VizsgaloLabor/Edit/5
@@ -92,37 +92,40 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Labor,LabAkkrSzam,Nev,Cim,ErvKezdete,ErvVege,Created,LastModified")] cVizsgaloLabor cVizsgaloLabor)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Labor,LabAkkrSzam,Nev,Cim,ErvKezdete,ErvVege")] VizsgaloLaborDto vizsgaloLaborDto)
         {
-            cVizsgaloLabor.LastModified = DateTime.UtcNow;
-
-            if (id != cVizsgaloLabor.Id)
+            if (vizsgaloLaborDto.Id == null)
             {
-                return NotFound();
+                return BadRequest("Id is missing!");
             }
-
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(cVizsgaloLabor);
-                    await _context.SaveChangesAsync();
-                }
-               catch (DbUpdateConcurrencyException)
-                {
-                    if (!cVizsgaloLaborExists(cVizsgaloLabor.Id))
+                    var vizsgaloLabor = await _context.VizsgaloLabor.FirstOrDefaultAsync(x => x.Id == vizsgaloLaborDto.Id);
+                    if (vizsgaloLabor != null)
                     {
-                        return NotFound();
+                        vizsgaloLabor.Labor = vizsgaloLaborDto.Labor;
+                        vizsgaloLabor.LabAkkrSzam = vizsgaloLaborDto.LabAkkrSzam;
+                        vizsgaloLabor.Nev = vizsgaloLaborDto.Nev;
+                        vizsgaloLabor.Cim = vizsgaloLaborDto.Cim;
+                        vizsgaloLabor.ErvKezdete = vizsgaloLaborDto.ErvKezdete;
+                        vizsgaloLabor.ErvVege = vizsgaloLaborDto.ErvVege;
+                        vizsgaloLabor.LastModified = DateTime.UtcNow;
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        throw;
+                        return NotFound();
                     }
+                }
+                catch (Exception)
+                {
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
-            return View(cVizsgaloLabor);
+            return View(vizsgaloLaborDto);
 
         }
 

@@ -10,6 +10,7 @@ using Persistence;
 using Microsoft.CodeAnalysis.Scripting;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using project_2.Dtos;
 
 namespace project_2.Controllers
 {
@@ -57,18 +58,27 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MintavevoAzonosito,MvAkkrSzam,Nev,Cim,ErvKezdete,ErvVege,Created,LastModified")] cMintavevo cMintavevo)
+        public async Task<IActionResult> Create([Bind("MintavevoAzonosito,MvAkkrSzam,Nev,Cim,ErvKezdete,ErvVege")] MintavevoDto mintavevoDto)
         {
-            cMintavevo.Created = DateTime.UtcNow;
-            cMintavevo.LastModified = DateTime.UtcNow;
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _context.Add(cMintavevo);
+                var now = DateTime.UtcNow;
+                var newMintavevo = new cMintavevo
+                {
+                    MintavevoAzonosito = mintavevoDto.MintavevoAzonosito,
+                    MvAkkrSzam = mintavevoDto.MvAkkrSzam,
+                    Nev = mintavevoDto.Nev,
+                    Cim = mintavevoDto.Cim,
+                    ErvKezdete = mintavevoDto.ErvKezdete,
+                    ErvVege = mintavevoDto.ErvVege,
+                    Created = now,
+                    LastModified = now
+                };
+                _context.Add(newMintavevo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(cMintavevo);
+            return View(mintavevoDto);
         }
 
         // GET: Mintavevo/Edit/5
@@ -92,37 +102,40 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,MintavevoAzonosito,MvAkkrSzam,Nev,Cim,ErvKezdete,ErvVege,Created,LastModified")] cMintavevo cMintavevo)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,MintavevoAzonosito,MvAkkrSzam,Nev,Cim,ErvKezdete,ErvVege")] MintavevoDto mintavevoDto)
         {
-            cMintavevo.LastModified = DateTime.UtcNow;
-
-            if (id != cMintavevo.Id)
+            if (mintavevoDto.Id == null)
             {
-                return NotFound();
+                return BadRequest("Id is missing!");
             }
-
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(cMintavevo);
-                    await _context.SaveChangesAsync();
-                }
-               catch (DbUpdateConcurrencyException)
-                {
-                    if (!cMintavevoExists(cMintavevo.Id))
+                    var mintavevo = await _context.Mintavevo.FirstOrDefaultAsync(x => x.Id == mintavevoDto.Id);
+                    if (mintavevo != null)
                     {
-                        return NotFound();
+                        mintavevo.MintavevoAzonosito = mintavevoDto.MintavevoAzonosito;
+                        mintavevo.MvAkkrSzam = mintavevoDto.MvAkkrSzam;
+                        mintavevo.Nev = mintavevoDto.Nev;
+                        mintavevo.Cim = mintavevoDto.Cim;
+                        mintavevo.ErvKezdete = mintavevoDto.ErvKezdete;
+                        mintavevo.ErvVege = mintavevoDto.ErvVege;
+                        mintavevo.LastModified = DateTime.UtcNow;
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        throw;
+                        return NotFound();
                     }
+                }
+                catch (Exception)
+                {
+                    throw;
                 }
                 return RedirectToAction("Index");
             }
-            return View(cMintavevo);
+            return View(mintavevoDto);
 
         }
 
