@@ -53,8 +53,8 @@ app.UseEndpoints(endpoints =>
     pattern: "{controller=Mintavevo}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "VizsgaloLabor",
-    pattern: "{controller=VizsgaloLabor}/{action=Index}/{id?}");
+    name: "MvHely",
+    pattern: "{controller=MvHely}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
     name: "MvOka",
@@ -65,8 +65,11 @@ app.UseEndpoints(endpoints =>
     pattern: "{controller=MvTipus}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "MvHely",
-    pattern: "{controller=MvHely}/{action=Index}/{id?}");
+    name: "VizsgaloLabor",
+    pattern: "{controller=VizsgaloLabor}/{action=Index}/{id?}");
+
+
+
 
 });
 

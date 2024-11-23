@@ -22,6 +22,13 @@ namespace project_2.Controllers
             _context = context;
         }
 
+        public IActionResult LoadIndexPartial()
+        {
+            var data = _context.AkkrMintavetel.ToList(); // Ha van adatforrás
+            return PartialView("Index", data);
+        }
+
+
         // GET: AkkrMintavetel
         public async Task<IActionResult> Index()
         {

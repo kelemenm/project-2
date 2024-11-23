@@ -1,0 +1,226 @@
+@page
+@using project_2.Pages
+@model MainPageModel
+
+@{
+    ViewData["Title"] = "Main";
+}
+
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-image: url('/wwwrott/img/background.webp');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .content-container {
+            margin-top: 80px; /* Leave space for the fixed navbar */
+            padding: 20px;
+            overflow-y: auto;
+            height: calc(100vh - 80px); /* Fill the remaining space under the navbar */
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        #terkep {
+            display: none; /* Initially hidden */
+        }
+        .container-fluid {
+            width: 100% !important; /* Ensures the container takes full width */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
+        <a class="navbar-brand" href="#">Web Application</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showPage('mintak')">Minták kezelése</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showPage('idosorok')">Idősorok</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Adattáblák
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" onclick="showPage('akkrMintavetel')">Akkr. mintavétel státusza</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('humviFelelos')">HUMVI felelősök</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('humviModul')">HUMVI modulok</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('mertekEgyseg')">Mértékegységek</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('mintavevo')">Mintavevők</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('mvHely')">Mintavételi helyek</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('mvOka')">Mintavétel okai</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('mvTipus')">Mintavétel típusa</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('parameter')">Paraméterek</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('vizsgaloLabor')">Vizsgálólaborok</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Térkép
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" onclick="showMap()">Ivóvíz mintavételi pontok</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Jogszabályok
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://njt.hu/jogszabaly/2016-16-20-0A" target="_blank">16/2016. (V. 12.) BM rendelet</a>
+                        <a class="dropdown-item" href="https://njt.hu/jogszabaly/2023-5-20-22" target="_blank">5/2023. (I. 12.) Korm. rendelet</a>
+                        <a class="dropdown-item" href="https://njt.hu/jogszabaly/2015-124-00-00" target="_blank">2015. évi CXXIV. törvény</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="https://nah.gov.hu/hu/" target="_blank">Nemzeti Akkreditáló Hatóság</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Content container -->
+    <div class="content-container container-fluid">
+        <!-- Térkép dropdown -->
+        <div id="terkep" class="container mt-5" style="display:none;">
+            <h3>Ivóvíz mintavételi pontok</h3>
+            <iframe src="https://www.google.com/maps/d/embed?mid=1gD1S9UeSE7R5SlHLbLYXmrl3VR9BVA8&ehbc=2E312F" width="640" height="480"></iframe>
+        </div>
+
+        <!-- Dynamic content for Adattáblák menu items -->
+        <div id="akkrMintavetelContent" class="content-box" style="display:none;">
+            <h3>Akkr. mintavétel státusza</h3>
+            <p>Akkr. mintavétel státusz részletes információja.</p>
+        </div>
+
+        <div id="humviFelelosContent" class="content-box" style="display:none;">
+            <h3>HUMVI felelősök</h3>
+            <p>HUMVI felelősök részletes információja.</p>
+        </div>
+
+        <div id="humviModulContent" class="content-box" style="display:none;">
+            <h3>HUMVI modulok</h3>
+            <p>HUMVI modulok részletes információja.</p>
+        </div>
+
+        <div id="mertekEgysegContent" class="content-box" style="display:none;">
+            <h3>Mértékegységek</h3>
+            <p>Mértékegységek részletes információja.</p>
+        </div>
+
+        <div id="mintavevoContent" class="content-box" style="display:none;">
+            <h3>Mintavevők</h3>
+            <p>Mintavevők részletes információja.</p>
+        </div>
+
+        <div id="mvHelyContent" class="content-box" style="display:none;">
+            <h3>Mintavételi helyek</h3>
+            <p>Mintavételi helyek részletes információja.</p>
+        </div>
+
+        <div id="mvOkaContent" class="content-box" style="display:none;">
+            <h3>Mintavétel okai</h3>
+            <p>Mintavétel okai részletes információja.</p>
+        </div>
+
+        <div id="mvTipusContent" class="content-box" style="display:none;">
+            <h3>Mintavétel típusa</h3>
+            <p>Mintavétel típusa részletes információja.</p>
+        </div>
+
+        <div id="parameterContent" class="content-box" style="display:none;">
+            <h3>Paraméterek</h3>
+            <p>Paraméterek részletes információja.</p>
+        </div>
+
+        <div id="vizsgaloLaborContent" class="content-box" style="display:none;">
+            <h3>Vizsgálólaborok</h3>
+            <p>Vizsgálólaborok részletes információja.</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function showMap() {
+            // Toggle the visibility of the map container
+            var mapContainer = document.getElementById('terkep');
+            mapContainer.style.display = (mapContainer.style.display === 'none') ? 'block' : 'none';
+
+            // Hide all content boxes when map is shown
+            var contentBoxes = document.querySelectorAll('.content-box');
+            contentBoxes.forEach(function(box) {
+                box.style.display = 'none';
+            });
+        }
+
+        function showPage(pageId) {
+            // Hide all content boxes and map
+            var contentBoxes = document.querySelectorAll('.content-box');
+            contentBoxes.forEach(function(box) {
+                box.style.display = 'none';
+            });
+
+            var mapContainer = document.getElementById('terkep');
+            mapContainer.style.display = 'none'; // Hide the map when a page is shown
+
+            // Show the selected content
+            var selectedContent = document.getElementById(pageId + 'Content');
+            if (selectedContent) {
+                selectedContent.style.display = 'block';
+            }
+        }
+    </script>
+
+
+    <script>
+    function showPage(pageId) {
+        // Hide all other content boxes
+        document.querySelectorAll('.content-box').forEach(function (box) {
+            box.style.display = 'none';
+        });
+
+        // Hide the map
+        document.getElementById('terkep').style.display = 'none';
+
+        // Show the target div and load content
+        var targetDiv = document.getElementById(pageId + 'Content');
+        if (targetDiv) {
+            targetDiv.style.display = 'block';
+
+            // Dynamically load content if needed
+            if (pageId === 'akkrMintavetel') {
+                $("#akkrMintavetelContent").load("/AkkrMintavetel/LoadIndexPartial");
+            }
+        }
+    }
+</script>
+
+
+</body>
+
+
+</html>
