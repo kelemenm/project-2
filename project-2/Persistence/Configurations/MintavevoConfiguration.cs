@@ -30,8 +30,10 @@ public class MintavevoConfiguration : IEntityTypeConfiguration<cMintavevo>
 
         builder.HasMany(m => m.Minta)
             .WithOne(e => e.cMintavevo)
-            .HasForeignKey(e => new { e.Mintavevo, e.MvAkkrSzam })
-            .HasPrincipalKey(m => new { m.MintavevoAzonosito, m.MvAkkrSzam })   //az idegen kulcs alapja
+            .HasForeignKey(e => e.Mintavevo)
+            .HasPrincipalKey(m => m.Id)   //az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
+
+        builder.HasIndex(m => new { m.MintavevoAzonosito, m.MvAkkrSzam }).IsUnique(); // Egyediség biztosítása
     }
 }

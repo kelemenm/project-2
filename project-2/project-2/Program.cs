@@ -44,6 +44,17 @@ app.UseEndpoints(endpoints =>
     name: "HUMVIfelelos",
     pattern: "{controller=HUMVIfelelos}/{action=Index}/{id?}");
 
+    endpoints.MapControllerRoute(
+    name: "HUMVImodul",
+    pattern: "{controller=HUMVImodul}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "Mintavevo",
+    pattern: "{controller=Mintavevo}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "VizsgaloLabor",
+    pattern: "{controller=VizsgaloLabor}/{action=Index}/{id?}");
 });
 
 
@@ -55,7 +66,7 @@ app.MapRazorPages();
 //Ha seedelt adattáblák üresek, akkor feltölti adatokkal
 DbInitializer.Seed(app);
 
-/*
+
 // Az Excel fájl beolvasása
 // Scoped szolgáltatásként kérjük le az ExcelFileReader-t
 using (var scope = app.Services.CreateScope())
@@ -68,6 +79,6 @@ using (var scope = app.Services.CreateScope())
     List<List<string>> excelData = reader.ReadExcelSheet(uploadedFile, sheetName, headerColumns);
     reader.ProcessLines(excelData, headerColumns);
 }
-*/
+
 
 app.Run();

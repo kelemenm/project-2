@@ -26,10 +26,6 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
             .HasMaxLength(10)
             .IsRequired();
         builder
-            .Property(x => x.LabAkkrSzam)
-            .HasMaxLength(15)
-            .IsRequired(false);
-        builder
             .Property(x => x.MvOk)
             .HasMaxLength(10)
             .IsRequired();
@@ -52,10 +48,6 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
         builder
             .Property(x => x.Mintavevo)
             .HasMaxLength(10)
-            .IsRequired(false);
-        builder
-            .Property(x => x.MvAkkrSzam)
-            .HasMaxLength(15)
             .IsRequired(false);
         builder
             .Property(x => x.MvDatum)
@@ -88,13 +80,13 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
         builder.HasOne(e => e.cHUMVImodul)
             .WithMany(m => m.Minta)
             .HasForeignKey(e => e.ModulKod)
-            .HasPrincipalKey(m => m.ModulKod)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
         builder.HasOne(e => e.cMintavevo)
             .WithMany(m => m.Minta)
-            .HasForeignKey(e => new { e.Mintavevo, e.MvAkkrSzam })
-            .HasPrincipalKey(m => new { m.MintavevoAzonosito, m.MvAkkrSzam })
+            .HasForeignKey(e => e.Mintavevo)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
         builder.HasOne(e => e.cMvHely)
@@ -117,8 +109,8 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
 
         builder.HasOne(e => e.cVizsgaloLabor)
             .WithMany(m => m.Minta)
-            .HasForeignKey(e => new { e.Labor, e.LabAkkrSzam })
-            .HasPrincipalKey(m => new { m.Labor, m.LabAkkrSzam })
+            .HasForeignKey(e => e.Labor)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
 

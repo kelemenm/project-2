@@ -114,6 +114,93 @@ public class ExcelFileReader
         return result as long?;
     }
 
+    public long? FindIdByTwoValues(string tableName, string columnName1, string searchValue1, string columnName2, string searchValue2)
+    {
+        var entities = _context.Model.GetEntityTypes();
+
+        // 1. Megkeresi az entitás típust a megadott táblanév alapján
+        var entityType = _context.Model.FindEntityType($"Domain.{tableName}");
+        if (entityType == null)
+        {
+            throw new InvalidOperationException($"Entity type for table {tableName} not found.");
+        }
+
+        // 2. Dinamikusan lekéri az adott DbSet-et
+        var dbSetMethod = typeof(DbContext)
+            .GetMethods()
+            .FirstOrDefault(m => m.Name == "Set"
+                                 && m.IsGenericMethod
+                                 && m.GetParameters().Length == 0);
+
+        if (dbSetMethod == null)
+        {
+            throw new InvalidOperationException("Could not find the generic 'Set' method on DbContext.");
+        }
+
+        var genericDbSetMethod = dbSetMethod.MakeGenericMethod(entityType.ClrType);
+        var dbSet = genericDbSetMethod.Invoke(_context, null) as IQueryable<object>;
+        if (dbSet == null)
+        {
+            throw new InvalidOperationException($"Failed to retrieve the DbSet for {tableName}.");
+        }
+
+        // 3. Megkeresi a megfelelő oszlopokat (Property-ket) az entitásban
+        var property1 = entityType.FindProperty(columnName1);
+        if (property1 == null)
+        {
+            throw new InvalidOperationException($"Column {columnName1} not found in table {tableName}.");
+        }
+
+        var property2 = entityType.FindProperty(columnName2);
+        if (property2 == null)
+        {
+            throw new InvalidOperationException($"Column {columnName2} not found in table {tableName}.");
+        }
+
+        // 4. Keresés a megadott értékek alapján
+        var parameter = Expression.Parameter(entityType.ClrType, "e");
+        var propertyAccess1 = Expression.Property(parameter, property1.Name);
+        var propertyAccess2 = Expression.Property(parameter, property2.Name);
+        var searchValueConstant1 = Expression.Constant(searchValue1);
+        var searchValueConstant2 = Expression.Constant(searchValue2);
+        var equalsExpression1 = Expression.Equal(propertyAccess1, searchValueConstant1);
+        var equalsExpression2 = Expression.Equal(propertyAccess2, searchValueConstant2);
+        var combinedExpression = Expression.AndAlso(equalsExpression1, equalsExpression2);
+
+        var lambda = Expression.Lambda(combinedExpression, parameter);
+        var whereMethod = typeof(Queryable)
+            .GetMethods()
+            .First(m => m.Name == "Where" && m.GetParameters().Length == 2)
+            .MakeGenericMethod(entityType.ClrType);
+
+        var filteredQuery = whereMethod.Invoke(null, new object[] { dbSet, lambda });
+
+        // 5. Lekérdezi az `Id` oszlopot az eredményből
+        var idProperty = entityType.FindProperty("Id");
+        if (idProperty == null)
+        {
+            throw new InvalidOperationException($"Id column not found in table {tableName}.");
+        }
+
+        var selectMethod = typeof(Queryable)
+            .GetMethods()
+            .First(m => m.Name == "Select" && m.GetParameters().Length == 2)
+            .MakeGenericMethod(entityType.ClrType, typeof(long));
+
+        var idSelector = Expression.Lambda(Expression.Property(parameter, idProperty.Name), parameter);
+        var idQuery = selectMethod.Invoke(null, new object[] { filteredQuery, idSelector });
+
+        // 6. Az első találatot visszaadja
+        var firstOrDefaultMethod = typeof(Queryable)
+            .GetMethods()
+            .First(m => m.Name == "FirstOrDefault" && m.GetParameters().Length == 1)
+            .MakeGenericMethod(typeof(long));
+
+        var result = firstOrDefaultMethod.Invoke(null, new object[] { idQuery });
+
+        return result as long?;
+    }
+
 
     public Dictionary<string, int> HeaderCols(FileInfo fileInfo, string sheetName, int headerRow)
     {
@@ -272,9 +359,9 @@ public class ExcelFileReader
 
         // SQL beszúró utasítás OUTPUT-tal
         string insertQuery = @"
-                INSERT INTO minta (labormintakod, modulkod, felelos, mvtipus, mvdatum, labor, labakkrszam, mintaatvetel, vizsgalatkezdete, vizsgalatvege, mvok, mvokaegyeb, mvhkod, mvhely, akkrmintavetel, mintavevo, mvakkrszam, HUMVIexport, Created, LastModified)
+                INSERT INTO minta (labormintakod, modulkod, felelos, mvtipus, mvdatum, labor, mintaatvetel, vizsgalatkezdete, vizsgalatvege, mvok, mvokaegyeb, mvhkod, mvhely, akkrmintavetel, mintavevo, HUMVIexport, Created, LastModified)
                 OUTPUT INSERTED.Id
-                VALUES (@labormintakod, @modulkod, @felelos, @mvtipus, @mvdatum, @labor, @labakkrszam, @mintaatvetel, @vizsgalatkezdete, @vizsgalatvege, @mvoka, @mvokaegyeb, @mvhkod, @mvhely, @akkrmintavetel, @mintavevo, @mvakkrszam, @HUMVIexport, @Created, @LastModified)";
+                VALUES (@labormintakod, @modulkod, @felelos, @mvtipus, @mvdatum, @labor, @mintaatvetel, @vizsgalatkezdete, @vizsgalatvege, @mvoka, @mvokaegyeb, @mvhkod, @mvhely, @akkrmintavetel, @mintavevo, @HUMVIexport, @Created, @LastModified)";
 
         // SQL beszúró utasítás eredményekre
         string insertQueryEredmeny = @"
@@ -287,16 +374,20 @@ public class ExcelFileReader
             rowData = sheetData[i];
             cMinta minta = new cMinta();
             minta.LaborMintaKod = rowData[HeaderCols["labormintakod"] - 1].Trim();
-            minta.ModulKod = rowData[HeaderCols["modulkod"] - 1].Trim();
-            //minta.Felelos = rowData[HeaderCols["felelos"] - 1].Trim();
+minta.ModulKod = FindIdByValue("cHUMVImodul", "ModulKod", rowData[HeaderCols["modulkod"] - 1].Trim());
 minta.Felelos = FindIdByValue("cHUMVIfelelos", "Felelos", rowData[HeaderCols["felelos"] - 1].Trim());
             minta.MvTipus = rowData[HeaderCols["mvtipus"] - 1].Trim();
 
             try { minta.MvDatum = DateTime.Parse(rowData[HeaderCols["mvdatum"] - 1]); }
             catch { minta.MvDatum = DateTime.Parse("01/01/1900 00:00:01"); }
 
-            minta.Labor = rowData[HeaderCols["labor"] - 1].Trim();
-            minta.LabAkkrSzam = rowData[HeaderCols["labakkrszam"] - 1].Trim();
+            //minta.Labor = rowData[HeaderCols["labor"] - 1].Trim();
+            //minta.LabAkkrSzam = rowData[HeaderCols["labakkrszam"] - 1].Trim();
+minta.Labor = FindIdByTwoValues("cVizsgaloLabor",
+    "Labor", rowData[HeaderCols["labor"] - 1].Trim(),
+    "LabAkkrSzam", rowData[HeaderCols["labakkrszam"] - 1].Trim());
+
+
 
             try { minta.MintaAtvetel = DateTime.Parse(rowData[HeaderCols["mintaatvetel"] - 1]); }
             catch { minta.MintaAtvetel = DateTime.Parse("01/01/1900 00:00:01"); }
@@ -313,8 +404,12 @@ minta.Felelos = FindIdByValue("cHUMVIfelelos", "Felelos", rowData[HeaderCols["fe
             minta.MvHely = rowData[HeaderCols["megnevezes"] - 1].Trim();
             
 minta.AkkrMintavetel = FindIdByValue("cAkkrMintavetel", "AkkrMintavetelStatusz", rowData[HeaderCols["akkrmintavetel"] - 1].Trim());
-            minta.Mintavevo = rowData[HeaderCols["mintavevo"] - 1].Trim();
-            minta.MvAkkrSzam = rowData[HeaderCols["mvakkrszam"] - 1].Trim();
+
+minta.Mintavevo = FindIdByTwoValues("cMintavevo", 
+    "MintavevoAzonosito", rowData[HeaderCols["mintavevo"] - 1].Trim(),
+    "MvAkkrSzam", rowData[HeaderCols["mvakkrszam"] - 1].Trim());
+
+
             minta.HUMVIexport = false;
 
             long newMintaId = WriteMinta(minta, connectionString, insertQuery);
@@ -377,7 +472,6 @@ minta.AkkrMintavetel = FindIdByValue("cAkkrMintavetel", "AkkrMintavetelStatusz",
                     command.Parameters.AddWithValue("@mvtipus", minta.MvTipus);
                     command.Parameters.AddWithValue("@mvdatum", minta.MvDatum);
                     command.Parameters.AddWithValue("@labor", minta.Labor);
-                    command.Parameters.AddWithValue("@labakkrszam", minta.LabAkkrSzam);
                     command.Parameters.AddWithValue("@mintaatvetel", minta.MintaAtvetel);
                     command.Parameters.AddWithValue("@vizsgalatkezdete", minta.VizsgalatKezdete);
                     command.Parameters.AddWithValue("@vizsgalatvege", minta.VizsgalatVege);
@@ -386,8 +480,7 @@ minta.AkkrMintavetel = FindIdByValue("cAkkrMintavetel", "AkkrMintavetelStatusz",
                     command.Parameters.AddWithValue("@mvhkod", minta.MvhKod);
                     command.Parameters.AddWithValue("@mvhely", minta.MvHely);
                     command.Parameters.AddWithValue("@akkrmintavetel", minta.AkkrMintavetel);
-                    command.Parameters.AddWithValue("@mintavevo", minta.Mintavevo);
-                    command.Parameters.AddWithValue("@mvakkrszam", minta.MvAkkrSzam);
+                    command.Parameters.AddWithValue("@mintavevo", minta.Mintavevo);                  
                     command.Parameters.AddWithValue("@HUMVIexport", minta.HUMVIexport);
                     command.Parameters.AddWithValue("@Created", DateTime.Now);
                     command.Parameters.AddWithValue("@LastModified", DateTime.Now);

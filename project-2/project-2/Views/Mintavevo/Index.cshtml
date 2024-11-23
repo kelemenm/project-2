@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Domain.cMintavevo>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<h1>Mintavevők</h1>
+
+<p>
+    <a href="/Mintavevo/Create" asp-action="Create">Create New</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Azonosító
+            </th>
+            <th>
+                Akkreditációs szám
+            </th>
+            <th>
+                Név
+            </th>
+            <th>
+                Cím
+            </th>
+            <th>
+                Érvényesség kezdete
+            </th>
+            <th>
+                Érvényesség vége
+            </th>
+            <th>
+                Létrehozva
+            </th>
+            <th>
+                Utolsó módosítás
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MintavevoAzonosito)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MvAkkrSzam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nev)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cim)
+            </td>
+            <td>
+                @item.ErvKezdete.ToString("yyyy.MM.dd.")
+            </td>
+            <td>
+                @item.ErvVege.ToString("yyyy.MM.dd.")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModified)
+            </td>
+            <td>
+                <a href="/Mintavevo/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a href="/Mintavevo/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a href="/Mintavevo/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,4 +1,4 @@
-﻿@model Domain.cAkkrMintavetel
+﻿@model Domain.cHUMVImodul
 
 @{
     ViewData["Title"] = "Create";
@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 <script src="/_framework/aspnetcore-browser-refresh.js"></script>
 
-<h1>Akkreditált mintavétel státusza</h1>
+<h1>HUMVI modulkódok</h1>
 
 <h4>Új rekord létrehozása</h4>
 <hr />
@@ -17,9 +17,9 @@
             @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="AkkrMintavetelStatusz" class="control-label">Mintavétel státusza</label>
-                <input type="text" asp-for="AkkrMintavetelStatusz" class="form-control" id="AkkrMintavetelStatusz" name="AkkrMintavetelStatusz" value="@Model.AkkrMintavetelStatusz" />
-                <span asp-validation-for="AkkrMintavetelStatusz" class="text-danger"></span>
+                <label asp-for="ModulKod" class="control-label">Modul kód</label>
+                <input type="text" asp-for="ModulKod" class="form-control" id="ModulKod" name="ModulKod" value="@Model.ModulKod" />
+                <span asp-validation-for="ModulKod" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Leiras" class="control-label">Leírás</label>
@@ -44,7 +44,7 @@
 </div>
 
 <div>
-    <a href="/AkkrMintavetel/Index" asp-action="Index">Back to List</a>
+    <a href="/HUMVIModul/Index" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
