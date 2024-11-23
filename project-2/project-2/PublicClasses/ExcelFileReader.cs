@@ -35,11 +35,11 @@ public class ExcelFileReader
     {
 
         var entities = _context.Model.GetEntityTypes();
-        foreach (var entity in entities)
+/*        foreach (var entity in entities)
         {
             Console.WriteLine(entity.Name);
         }
-
+*/
 
         // 1. Megkeresi az entitás típust a megadott táblanév alapján
         var entityType = _context.Model.FindEntityType($"Domain.{tableName}");
@@ -309,7 +309,7 @@ public class ExcelFileReader
         // Ellenőrizzük, hogy a fájl létezik-e
         if (!fileInfo.Exists)
         {
-            //Console.WriteLine("A fájl nem található.");
+            Console.WriteLine("A fájl nem található.");
             return sheetData;  // Üres lista visszaadása, ha a fájl nem található
         }
 
@@ -321,7 +321,7 @@ public class ExcelFileReader
 
             if (worksheet == null)
             {
-                //Console.WriteLine($"A '{sheetName}' nevű munkalap nem található.");
+                Console.WriteLine($"A '{sheetName}' nevű munkalap nem található.");
                 return sheetData;  // Üres lista visszaadása, ha a munkalap nem található
             }
 
