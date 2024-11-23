@@ -1,0 +1,68 @@
+﻿@model Domain.cParameter
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>
+
+<h1>Vizsgálati paraméterek</h1>
+
+<h4>Új rekord létrehozása</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ParKod" class="control-label">Paraméter kód</label>
+                <input type="text" asp-for="ParKod" class="form-control" id="ParKod" name="ParKod" value="@Model.ParKod" />
+                <span asp-validation-for="ParKod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HumviLeiras" class="control-label">HUMVI leírás</label>
+                <input type="text" asp-for="HumviLeiras" class="form-control" id="HumviLeiras" name="HumviLeiras" value="@Model.HumviLeiras" />
+                <span asp-validation-for="HumviLeiras" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SajatLeiras" class="control-label">Saját leírás</label>
+                <input type="text" asp-for="SajatLeiras" class="form-control" id="SajatLeiras" name="SajatLeiras" value="@Model.SajatLeiras" />
+                <span asp-validation-for="SajatLeiras" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParamErtek" class="control-label">Parametrikus érték</label>
+                <input type="text" asp-for="ParamErtek" class="form-control" id="ParamErtek" name="ParamErtek" value="@Model.ParamErtek" />
+                <span asp-validation-for="ParamErtek" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParamTip" class="control-label">Parametrikus érték jellege</label>
+                <input type="text" asp-for="ParamTip" class="form-control" id="ParamTip" name="ParamTip" value="@Model.ParamTip" />
+                <span asp-validation-for="ParamTip" class="text-danger"></span>
+            </div>
+            <!-- Hidden fields for Created, LastModified -->
+            <div class="form-group" style="display:none;">
+                <label for="Created">Created</label>
+                <input type="hidden" id="Created" name="Created" value="@DateTime.UtcNow" />
+            </div>
+
+            <div class="form-group" style="display:none;">
+                <label for="LastModified">LastModified</label>
+                <input type="hidden" id="LastModified" name="LastModified" value="@DateTime.UtcNow" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/Parameter/Index" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

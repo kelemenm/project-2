@@ -1,0 +1,53 @@
+﻿@model Domain.cMertekegyseg
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<h1>Mértékegységek</h1>
+
+<div>
+    <h4>Biztosan törölni akarja a rekordot?</h4>
+    <hr />
+    <dl class="row">
+         <dt class = "col-sm-2">
+             Mértékegység kód
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Megyseg)
+        </dd>
+        <dt class = "col-sm-2">
+           HUMVI leírás
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HumviLeiras)
+        </dd>
+        <dt class = "col-sm-2">
+           Saját leírás
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SajatLeiras)
+        </dd>
+        <dt class = "col-sm-2">
+            Létrehozva
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+        <dt class = "col-sm-2">
+            Utolsó módosítás
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastModified)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+         <a href="/Mertekegyseg/Index" asp-action="Index">Back to List</a>
+    </form>
+</div>
