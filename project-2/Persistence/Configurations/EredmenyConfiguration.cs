@@ -7,11 +7,9 @@ public class EredmenyConfiguration : IEntityTypeConfiguration<cEredmeny>
         builder.HasIndex(x => x.Id);
         builder
             .Property(x => x.ParKod)
-            .HasMaxLength(25)
             .IsRequired();
         builder
             .Property(x => x.Megyseg)
-            .HasMaxLength(15)
             .IsRequired();
         builder
             .Property(x => x.Ertek)
@@ -30,13 +28,13 @@ public class EredmenyConfiguration : IEntityTypeConfiguration<cEredmeny>
         builder.HasOne(e => e.Mertekegyseg)
             .WithMany(m => m.Eredmeny)
             .HasForeignKey(e => e.Megyseg)
-            .HasPrincipalKey(m => m.Megyseg)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
         builder.HasOne(e => e.Parameter)
             .WithMany(m => m.Eredmeny)
             .HasForeignKey(e => e.ParKod)
-            .HasPrincipalKey(m => m.ParKod)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
     }
 }

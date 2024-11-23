@@ -17,7 +17,9 @@ public class MvTipusConfiguration : IEntityTypeConfiguration<cMvTipus>
         builder.HasMany(m => m.Minta)
             .WithOne(e => e.cMvTipus)
             .HasForeignKey(e => e.MvTipus)
-            .HasPrincipalKey(m => m.MvTipusNev)   //az idegen kulcs alapja
+            .HasPrincipalKey(m => m.Id)   //az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
+
+        builder.HasIndex(m => m.MvTipusNev).IsUnique(); // Egyediség biztosítása
     }
 }

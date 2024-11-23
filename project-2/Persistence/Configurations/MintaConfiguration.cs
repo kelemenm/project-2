@@ -11,23 +11,18 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
             .IsRequired();
         builder
             .Property(x => x.ModulKod)
-            .HasMaxLength(10)
             .IsRequired();
         builder
             .Property(x => x.Felelos)
-            .HasMaxLength(10)
             .IsRequired();
         builder
             .Property(x => x.MvTipus)
-            .HasMaxLength(10)
             .IsRequired();
         builder
             .Property(x => x.Labor)
-            .HasMaxLength(10)
             .IsRequired();
         builder
             .Property(x => x.MvOk)
-            .HasMaxLength(10)
             .IsRequired();
         builder
             .Property(x => x.MvOkaEgyeb)
@@ -35,7 +30,6 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
             .IsRequired(false);
         builder
             .Property(x => x.MvhKod)
-            .HasMaxLength(25)
             .IsRequired();
         builder
             .Property(x => x.MvHely)
@@ -43,11 +37,9 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
             .IsRequired(false);
         builder
             .Property(x => x.AkkrMintavetel)
-            .HasMaxLength(10)
             .IsRequired(false);
         builder
             .Property(x => x.Mintavevo)
-            .HasMaxLength(10)
             .IsRequired(false);
         builder
             .Property(x => x.MvDatum)
@@ -92,19 +84,19 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
         builder.HasOne(e => e.cMvHely)
             .WithMany(m => m.Minta)
             .HasForeignKey(e => e.MvhKod)
-            .HasPrincipalKey(m => m.MvhKod)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
         builder.HasOne(e => e.cMvOka)
             .WithMany(m => m.Minta)
             .HasForeignKey(e => e.MvOk)
-            .HasPrincipalKey(m => m.MvOk)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
         builder.HasOne(e => e.cMvTipus)
             .WithMany(m => m.Minta)
             .HasForeignKey(e => e.MvTipus)
-            .HasPrincipalKey(m => m.MvTipusNev)
+            .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
         builder.HasOne(e => e.cVizsgaloLabor)
