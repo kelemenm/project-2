@@ -9,13 +9,13 @@ SELECT m.Id, m.LaborMintaKod, HumviModul.Leiras AS HUMVImodul, HumviFelelos.Nev 
 	   AkkrMintavetel.Leiras AS AkkrMintavetel, Mintavevo.Nev AS Mintavevo, Mintavevo.MvAkkrSzam AS MvAkkrSzam FROM Minta AS m
 INNER JOIN HumviModul ON m.ModulKod=HumviModul.Id
 INNER JOIN HumviFelelos ON m.Felelos=HumviFelelos.Id
-INNER JOIN MvTipus ON m.MvTipus=MvTipus.MvTipusNev
-INNER JOIN VizsgaloLabor ON m.Labor=VizsgaloLabor.Labor AND m.LabAkkrSzam = VizsgaloLabor.LabAkkrSzam
-INNER JOIN MvOka ON m.MvOk = MvOka.MvOk
-INNER JOIN MvHely ON m.MvhKod = MvHely.MvhKod
+INNER JOIN MvTipus ON m.MvTipus=MvTipus.Id
+INNER JOIN VizsgaloLabor ON m.Labor=VizsgaloLabor.Id
+INNER JOIN MvOka ON m.MvOk = MvOka.Id
+INNER JOIN MvHely ON m.MvhKod = MvHely.Id
 INNER JOIN AkkrMintavetel ON m.AkkrMintavetel = AkkrMintavetel.Id
-INNER JOIN Mintavevo ON m.Mintavevo=Mintavevo.MintavevoAzonosito AND m.MvAkkrSzam = Mintavevo.MvAkkrSzam
+INNER JOIN Mintavevo ON m.Mintavevo=Mintavevo.Id
 
 SELECT Eredmeny.Id, Eredmeny.MintaId, Eredmeny.ParKod, Parameter.SajatLeiras, Eredmeny.Megyseg, Mertekegyseg.SajatLeiras, Eredmeny.Ertek, Eredmeny.AlsoMh, Eredmeny.MaxRange, Eredmeny.ErtekHozzarendelt, Eredmeny.Created, Eredmeny.LastModified FROM Eredmeny
-INNER JOIN Parameter ON Eredmeny.ParKod=Parameter.ParKod
-INNER JOIN Mertekegyseg ON Eredmeny.Megyseg=Mertekegyseg.Megyseg;
+INNER JOIN Parameter ON Eredmeny.ParKod=Parameter.Id
+INNER JOIN Mertekegyseg ON Eredmeny.Megyseg=Mertekegyseg.Id;

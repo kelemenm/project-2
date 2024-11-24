@@ -8,15 +8,15 @@ namespace project_2.Dtos
         
         [Required]
         [MaxLength(25)]
-        public string ParKod { get; set; }
+        public string? ParKod { get; set; }
         
         [Required]
         [MaxLength(75)]
-        public string HumviLeiras { get; set; }
+        public string? HumviLeiras { get; set; }
         
         [Required]
         [MaxLength(75)]
-        public string SajatLeiras { get; set; }      
+        public string? SajatLeiras { get; set; }      
         
         [MaxLength(75)]
         public string? ParamErtek { get; set; }

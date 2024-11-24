@@ -7,7 +7,7 @@ namespace project_2.Dtos
         public long? Id { get; set; }
         [Required]
         [MaxLength(25)]
-        public string LaborMintaKod { get; set; }
+        public string? LaborMintaKod { get; set; }
         [Required]
         public long? ModulKod { get; set; }
         [Required]
@@ -27,7 +27,7 @@ namespace project_2.Dtos
         [Required]
         public long? MvOk { get; set; }
         [MaxLength(255)]
-        public string MvOkaEgyeb { get; set; }
+        public string? MvOkaEgyeb { get; set; }
         [Required]
         public long? MvhKod { get; set; }
         [MaxLength(255)]

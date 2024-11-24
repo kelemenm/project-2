@@ -110,8 +110,6 @@
 
         <!-- Dynamic content for Adattáblák menu items -->
         <div id="akkrMintavetelContent" class="content-box" style="display:none;">
-            <h3>Akkr. mintavétel státusza</h3>
-            <p>Akkr. mintavétel státusz részletes információja.</p>
         </div>
 
         <div id="humviFelelosContent" class="content-box" style="display:none;">
@@ -197,27 +195,27 @@
 
 
     <script>
-    function showPage(pageId) {
-        // Hide all other content boxes
-        document.querySelectorAll('.content-box').forEach(function (box) {
-            box.style.display = 'none';
-        });
+        function showPage(pageId) {
+            // Hide all other content boxes
+            document.querySelectorAll('.content-box').forEach(function (box) {
+                box.style.display = 'none';
+            });
 
-        // Hide the map
-        document.getElementById('terkep').style.display = 'none';
+            // Hide the map
+            document.getElementById('terkep').style.display = 'none';
 
-        // Show the target div and load content
-        var targetDiv = document.getElementById(pageId + 'Content');
-        if (targetDiv) {
-            targetDiv.style.display = 'block';
+            // Show the target div and load content
+            var targetDiv = document.getElementById(pageId + 'Content');
+            if (targetDiv) {
+                targetDiv.style.display = 'block';
 
-            // Dynamically load content if needed
-            if (pageId === 'akkrMintavetel') {
-                $("#akkrMintavetelContent").load("/AkkrMintavetel/LoadIndexPartial");
+                // Dynamically load content if needed
+                if (pageId === 'akkrMintavetel') {
+                    $("#akkrMintavetelContent").load("/AkkrMintavetel/LoadIndexPartial");
+                }
             }
         }
-    }
-</script>
+    </script>
 
 
 </body>

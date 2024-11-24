@@ -7,13 +7,13 @@ namespace project_2.Dtos
         public long? Id { get; set; }
         [Required]
         [MaxLength(15)]
-        public string Megyseg { get; set; }
+        public string? Megyseg { get; set; }
         [Required]
         [MaxLength(15)]
-        public string HumviLeiras { get; set; }
+        public string? HumviLeiras { get; set; }
         [Required]
         [MaxLength(15)]
-        public string SajatLeiras { get; set; }
+        public string? SajatLeiras { get; set; }
 
 
     }

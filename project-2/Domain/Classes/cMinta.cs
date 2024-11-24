@@ -2,7 +2,7 @@
 
 public class cMinta : cEntity
 {
-    public string LaborMintaKod { get; set; }
+    public string? LaborMintaKod { get; set; }
     public long? ModulKod { get; set; }
     public long? Felelos { get; set; }
     public long? MvTipus { get; set; }
@@ -12,7 +12,7 @@ public class cMinta : cEntity
     public DateTime VizsgalatKezdete { get; set; }
     public DateTime VizsgalatVege { get; set; }
     public long? MvOk { get; set; }
-    public string MvOkaEgyeb { get; set; }
+    public string? MvOkaEgyeb { get; set; }
     public long? MvhKod { get; set; }
     public string? MvHely { get; set; }
     public long? AkkrMintavetel { get; set; }

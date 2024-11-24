@@ -7,16 +7,16 @@ namespace project_2.Dtos
         public long? Id { get; set; }
         [Required]
         [MaxLength(10)]
-        public string Labor { get; set; }
+        public string? Labor { get; set; }
         [Required]
         [MaxLength(15)]
-        public string LabAkkrSzam { get; set; }
+        public string? LabAkkrSzam { get; set; }
         [Required]
         [MaxLength(150)]
-        public string Nev { get; set; }
+        public string? Nev { get; set; }
         [Required]
         [MaxLength(150)]
-        public string Cim { get; set; }
+        public string? Cim { get; set; }
         [Required]
         public DateTime ErvKezdete { get; set; }
         [Required]
