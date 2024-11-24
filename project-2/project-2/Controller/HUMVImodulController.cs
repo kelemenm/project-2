@@ -23,6 +23,48 @@ namespace project_2.Controllers
             _context = context;
         }
 
+        public IActionResult LoadIndexPartial()
+        {
+            var data = _context.HumviModul.ToList();
+            return PartialView("Index", data);
+        }
+        public IActionResult LoadDetailsPartial(int id)
+        {
+            var model = _context.HumviModul.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Details", model);
+        }
+
+        public IActionResult LoadEditPartial(int id)
+        {
+            var model = _context.HumviModul.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Edit", model);
+        }
+
+        public IActionResult LoadCreatePartial()
+        {
+            var model = new cHUMVImodul();
+            return PartialView("Create", model);
+        }
+
+        public IActionResult LoadDeletePartial(int id)
+        {
+            var model = _context.HumviModul.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Delete", model);
+        }
+
+
         // GET: HUMVIModul
         public async Task<IActionResult> Index()
         {
@@ -72,7 +114,11 @@ namespace project_2.Controllers
                 };
                 _context.Add(newHUMVImodul);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return Json(new
+                {
+                    success = true,
+                    tableName = "HumviModul"  // Adattábla neve, amit kezelünk
+                });
             }
             return View(hUMVImodulDto);
         }
@@ -126,7 +172,11 @@ namespace project_2.Controllers
                 {
                     throw;
                 }
-                return RedirectToAction("Index");
+                return Json(new
+                {
+                    success = true,
+                    tableName = "HumviModul"  // Adattábla neve, amit kezelünk
+                });
             }
             return View(hUMVImodulDto);
 
@@ -162,7 +212,11 @@ namespace project_2.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new
+            {
+                success = true,
+                tableName = "HumviModul"  // Adattábla neve, amit kezelünk
+            });
         }
 
         private bool cHumviModulExists(long id)

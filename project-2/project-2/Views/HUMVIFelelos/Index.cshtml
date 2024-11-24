@@ -8,7 +8,7 @@
 <h1>HUMVI felelősök</h1>
 
 <p>
-    <a href="/HUMVIfelelos/Create" asp-action="Create">Create New</a>
+    <a href="#" onclick="showPage('createHumviFelelos')">Create New</a>
 </p>
 <table class="table table-striped">
     <thead>
@@ -50,11 +50,11 @@
                 @Html.DisplayFor(modelItem => item.LastModified)
             </td>
             <td>
-                <a href="/HUMVIfelelos/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a href="/HUMVIfelelos/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a href="/HUMVIfelelos/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a href="#" onclick="showPage('showHumviFelelosEdit', @item.Id)">Edit</a>
+                <a href="#" onclick="showPage('showHumviFelelosDetails', @item.Id)">Details</a>
+                <a href="#" onclick="showPage('showHumviFelelosDelete', @item.Id)">Delete</a>
             </td>
-        </tr>
+    </tr>
 }
     </tbody>
 </table>

@@ -44,10 +44,9 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete" method="post">
+    <form id="deleteForm" action="/HumviFelelos/Delete" asp-action="Delete" method="post">
         @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
-        <input type="hidden" asp-for="Id" />
+        <input hidden asp-for="Id" class="form-control" id="Id" name="Id" value="@Model.Id"/>
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-         <a href="/HUMVIfelelos/Index" asp-action="Index">Back to List</a>
-    </form>
+        <a href="#" onclick="showPage('humviFelelos')">Back to List</a>    </form>
 </div>

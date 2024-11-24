@@ -39,6 +39,7 @@
     </dl>
 </div>
 <div>
-    <a href="/HUMVIModul/Edit/@Model?.Id" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a href="/HUMVIModul/Index" asp-action="Index">Back to List</a>
+    <a href="#" onclick="showPage('showHumviModulEdit', @Model.Id)">Edit</a>
+    <a href="#" onclick="showPage('humviModul')">Back to List</a>
+
 </div>

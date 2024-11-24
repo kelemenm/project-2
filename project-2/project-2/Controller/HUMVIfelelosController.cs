@@ -23,6 +23,47 @@ namespace project_2.Controllers
             _context = context;
         }
 
+        public IActionResult LoadIndexPartial()
+        {
+            var data = _context.HumviFelelos.ToList();
+            return PartialView("Index", data);
+        }
+        public IActionResult LoadDetailsPartial(int id)
+        {
+            var model = _context.HumviFelelos.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Details", model);
+        }
+
+        public IActionResult LoadEditPartial(int id)
+        {
+            var model = _context.HumviFelelos.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Edit", model);
+        }
+
+        public IActionResult LoadCreatePartial()
+        {
+            var model = new cHUMVIfelelos();
+            return PartialView("Create", model);
+        }
+
+        public IActionResult LoadDeletePartial(int id)
+        {
+            var model = _context.HumviFelelos.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Delete", model);
+        }
+
         // GET: HUMVIfelelos
         public async Task<IActionResult> Index()
         {
@@ -73,7 +114,11 @@ namespace project_2.Controllers
                 };
                 _context.Add(newHUMVIfelelos);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return Json(new
+                {
+                    success = true,
+                    tableName = "HumviFelelos"  // Adattábla neve, amit kezelünk
+                });
             }
             return View(hUMVIfelelosDto);
         }
@@ -128,7 +173,12 @@ namespace project_2.Controllers
                 {
                     throw;
                 }
-                return RedirectToAction("Index");
+                return Json(new
+                {
+                    success = true,
+                    tableName = "HumviFelelos"  // Adattábla neve, amit kezelünk
+                });
+
             }
             return View(hUMVIfelelosDto);
 
@@ -164,7 +214,11 @@ namespace project_2.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new
+            {
+                success = true,
+                tableName = "HumviFelelos"  // Adattábla neve, amit kezelünk
+            });
         }
 
         private bool cHUMVIfelelosExists(long id)

@@ -7,8 +7,8 @@
 
 <h1>HUMVI modulkódok</h1>
 
-<p>
-    <a href="/HUMVIModul/Create" asp-action="Create">Create New</a>
+<p> 
+    <a href="#" onclick="showPage('createHumviModul')">Create New</a>
 </p>
 <table class="table table-striped">
     <thead>
@@ -44,9 +44,9 @@
                 @Html.DisplayFor(modelItem => item.LastModified)
             </td>
             <td>
-                <a href="/HUMVIModul/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a href="/HUMVIModul/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a href="/HUMVIModul/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a href="#" onclick="showPage('showHumviModulEdit', @item.Id)">Edit</a>
+                <a href="#" onclick="showPage('showHumviModulDetails', @item.Id)">Details</a>
+                <a href="#" onclick="showPage('showHumviModulDelete', @item.Id)">Delete</a>
             </td>
         </tr>
 }

@@ -25,10 +25,44 @@ namespace project_2.Controllers
 
         public IActionResult LoadIndexPartial()
         {
-            var data = _context.AkkrMintavetel.ToList(); // Ha van adatforrás
+            var data = _context.AkkrMintavetel.ToList();
             return PartialView("Index", data);
         }
+        public IActionResult LoadDetailsPartial(int id)
+        {
+            var model = _context.AkkrMintavetel.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Details", model);
+        }
 
+        public IActionResult LoadEditPartial(int id)
+        {
+            var model = _context.AkkrMintavetel.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Edit", model);
+        }
+
+        public IActionResult LoadCreatePartial()
+        {
+            var model = new cAkkrMintavetel();
+            return PartialView("Create", model);
+        }
+
+        public IActionResult LoadDeletePartial(int id)
+        {
+            var model = _context.AkkrMintavetel.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Delete", model);
+        }
 
         // GET: AkkrMintavetel
         public async Task<IActionResult> Index()
@@ -79,7 +113,11 @@ namespace project_2.Controllers
                 };
                 _context.Add(newAkkrMintavetel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return Json(new
+                {
+                    success = true,
+                    tableName = "AkkrMintavetel"  // Adattábla neve, amit kezelünk
+                });
             }
             return View(akkrMintavetelDto);
         }
@@ -133,9 +171,14 @@ namespace project_2.Controllers
                 {
                     throw;
                 }
-                return RedirectToAction("Index");
+
+                return Json(new
+                {
+                    success = true,
+                    tableName = "AkkrMintavetel"  // Adattábla neve, amit kezelünk
+                });
             }
-            return View(akkrMintavetelDto);
+            return PartialView("LoadEditPartial", akkrMintavetelDto);
         }
 
         // GET: AkkrMintavetel/Delete/5
@@ -168,7 +211,11 @@ namespace project_2.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new
+            {
+                success = true,
+                tableName = "AkkrMintavetel"  // Adattábla neve, amit kezelünk
+            });
         }
 
         private bool cAkkrMintavetelExists(long id)
