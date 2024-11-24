@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Domain.cHUMVImodul>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<h1>HUMVI modulkódok</h1>
+
+<p> 
+    <a href="#" onclick="showPage('createHumviModul')">Create New</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Modulkód
+            </th>
+            <th>
+                Leírás
+            </th>
+            <th>
+                Létrehozva
+            </th>
+            <th>
+                Utolsó módosítás
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModulKod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Leiras)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModified)
+            </td>
+            <td>
+                <a href="#" onclick="showPage('showHumviModulEdit', @item.Id)">Edit</a>
+                <a href="#" onclick="showPage('showHumviModulDetails', @item.Id)">Details</a>
+                <a href="#" onclick="showPage('showHumviModulDelete', @item.Id)">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

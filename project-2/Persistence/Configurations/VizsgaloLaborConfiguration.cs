@@ -30,8 +30,10 @@ public class VizsgaloLaborConfiguration : IEntityTypeConfiguration<cVizsgaloLabo
 
         builder.HasMany(m => m.Minta)
             .WithOne(e => e.cVizsgaloLabor)
-            .HasForeignKey(e => new { e.Labor, e.LabAkkrSzam })
-            .HasPrincipalKey(m => new { m.Labor, m.LabAkkrSzam })   //az idegen kulcs alapja
+            .HasForeignKey(e => e.Labor)
+            .HasPrincipalKey(m => m.Id)   //az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
+
+        builder.HasIndex(m => new { m.Labor, m.LabAkkrSzam }).IsUnique(); // Egyediség biztosítása
     }
 }

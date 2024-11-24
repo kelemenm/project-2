@@ -21,7 +21,9 @@ public class HUMVIfelelosConfiguration : IEntityTypeConfiguration<cHUMVIfelelos>
         builder.HasMany(m => m.Minta)
             .WithOne(e => e.cHUMVIfelelos)
             .HasForeignKey(e => e.Felelos)
-            .HasPrincipalKey(m => m.Felelos)   //az idegen kulcs alapja
+            .HasPrincipalKey(m => m.Id)   //az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
+
+        builder.HasIndex(m => m.Felelos).IsUnique(); // Egyediség biztosítása
     }
 }

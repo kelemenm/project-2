@@ -21,8 +21,9 @@ public class MertekegysegConfiguration : IEntityTypeConfiguration<cMertekegyseg>
         builder.HasMany(m => m.Eredmeny)
             .WithOne(e => e.Mertekegyseg)
             .HasForeignKey(e => e.Megyseg)
-            .HasPrincipalKey(m => m.Megyseg)   //Megyseg az idegen kulcs alapja
+            .HasPrincipalKey(m => m.Id)   //Megyseg az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //Eredmények törlésekor ne törölje a mértékegységet
 
+        builder.HasIndex(m => m.Megyseg).IsUnique(); // Egyediség biztosítása
     }
 }

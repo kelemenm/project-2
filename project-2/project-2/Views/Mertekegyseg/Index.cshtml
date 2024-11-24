@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Domain.cMertekegyseg>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<h1>Mértékegységek</h1>
+
+<p>
+    <a href="/Mertekegyseg/Create" asp-action="Create">Create New</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Mértékegység kód
+            </th>
+            <th>
+                HUMVI leírás
+            </th>
+            <th>
+                Saját leírás
+            </th>
+            <th>
+                Létrehozva
+            </th>
+            <th>
+                Utolsó módosítás
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Megyseg)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HumviLeiras)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SajatLeiras)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModified)
+            </td>
+            <td>
+                <a href="/Mertekegyseg/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a href="/Mertekegyseg/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a href="/Mertekegyseg/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

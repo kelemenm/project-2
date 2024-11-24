@@ -17,7 +17,9 @@ public class MvOkaConfiguration : IEntityTypeConfiguration<cMvOka>
         builder.HasMany(m => m.Minta)
             .WithOne(e => e.cMvOka)
             .HasForeignKey(e => e.MvOk)
-            .HasPrincipalKey(m => m.MvOk)   //az idegen kulcs alapja
+            .HasPrincipalKey(m => m.Id)   //az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
+
+        builder.HasIndex(m => m.MvOk).IsUnique(); // Egyediség biztosítása
     }
 }

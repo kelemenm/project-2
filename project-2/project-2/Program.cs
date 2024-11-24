@@ -12,6 +12,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation();
 
+// Adjuk hozzá az ExcelFileReader-t is a DI konténerhez
+builder.Services.AddScoped<ExcelFileReader>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,6 +39,43 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "AkkrMintavetel",
         pattern: "{controller=AkkrMintavetel}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "HUMVIfelelos",
+    pattern: "{controller=HUMVIfelelos}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "HUMVImodul",
+    pattern: "{controller=HUMVImodul}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "Mintavevo",
+    pattern: "{controller=Mintavevo}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "MvHely",
+    pattern: "{controller=MvHely}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "MvOka",
+    pattern: "{controller=MvOka}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "MvTipus",
+    pattern: "{controller=MvTipus}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "VizsgaloLabor",
+    pattern: "{controller=VizsgaloLabor}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "Mertekegyseg",
+    pattern: "{controller=Mertekegyseg}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+    name: "Parameter",
+    pattern: "{controller=Parameter}/{action=Index}/{id?}");
+
 });
 
 
@@ -46,5 +86,22 @@ app.MapRazorPages();
 //Seeder app minden indításakor lefut
 //Ha seedelt adattáblák üresek, akkor feltölti adatokkal
 DbInitializer.Seed(app);
+
+
+/*
+
+// Az Excel fájl beolvasása
+// Scoped szolgáltatásként kérjük le az ExcelFileReader-t
+using (var scope = app.Services.CreateScope())
+{
+    var reader = scope.ServiceProvider.GetRequiredService<ExcelFileReader>(); // Scoped példány kérése
+    FileInfo uploadedFile = reader.ExcelFileUploader();
+    string sheetName = "HUMVI";
+    int headerRow = 2;
+    Dictionary<string, int> headerColumns = reader.HeaderCols(uploadedFile, sheetName, headerRow);
+    List<List<string>> excelData = reader.ReadExcelSheet(uploadedFile, sheetName, headerColumns);
+    reader.ProcessLines(excelData, headerColumns);
+}
+*/
 
 app.Run();

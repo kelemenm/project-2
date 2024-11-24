@@ -17,7 +17,9 @@ public class HUMVImodulConfiguration : IEntityTypeConfiguration<cHUMVImodul>
         builder.HasMany(m => m.Minta)
             .WithOne(e => e.cHUMVImodul)
             .HasForeignKey(e => e.ModulKod)
-            .HasPrincipalKey(m => m.ModulKod)   //az idegen kulcs alapja
+            .HasPrincipalKey(m => m.Id)   //az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
+
+        builder.HasIndex(m => m.ModulKod).IsUnique(); // Egyediség biztosítása
     }
 }

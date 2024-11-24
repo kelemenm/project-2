@@ -1,0 +1,96 @@
+﻿@model Domain.cMvHely
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<h1>Mintavételi helyek</h1>
+
+<div>
+    <h4>Biztosan törölni akarja a rekordot?</h4>
+    <hr />
+    <dl class="row">
+         <dt class = "col-sm-2">
+             Azonosító
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MvhKod)
+        </dd>
+         <dt class = "col-sm-2">
+             Név, saját
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NevSajat)
+        </dd>
+         <dt class = "col-sm-2">
+             Név, teljes
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NevTeljes)
+        </dd>
+         <dt class = "col-sm-2">
+             Vízbázis
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VizBazis)
+        </dd>
+         <dt class = "col-sm-2">
+             Név, rövid
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NevRovid)
+        </dd>
+         <dt class = "col-sm-2">
+             Település
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Telepules)
+        </dd>
+         <dt class = "col-sm-2">
+             Típus
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Tipus)
+        </dd>
+         <dt class = "col-sm-2">
+             HUMVI régi név
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HumviRegiNev)
+        </dd>
+         <dt class = "col-sm-2">
+             GPS_N_Y
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.GPS_N_Y)
+        </dd>
+        </dd>
+         <dt class = "col-sm-2">
+             GPS_E_X
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.GPS_E_X)
+        </dd>
+        <dt class = "col-sm-2">
+            Létrehozva
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+        <dt class = "col-sm-2">
+            Utolsó módosítás
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastModified)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+         <a href="/MvHely/Index" asp-action="Index">Back to List</a>
+    </form>
+</div>

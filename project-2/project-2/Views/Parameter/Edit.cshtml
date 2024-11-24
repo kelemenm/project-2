@@ -1,0 +1,71 @@
+﻿@model Domain.cParameter
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<h1>Vizsgálati paraméterek</h1>
+
+<h4>Szerkesztés</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label">Id</label>
+                <input asp-for="Id" class="form-control" id="Id" name="Id" value="@Model.Id" readonly/>
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParKod" class="control-label">Paraméter kód</label>
+                <input type="text" asp-for="ParKod" class="form-control" id="ParKod" name="ParKod" value="@Model.ParKod" />
+                <span asp-validation-for="ParKod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HumviLeiras" class="control-label">HUMVI leírás</label>
+                <input type="text" asp-for="HumviLeiras" class="form-control" id="HumviLeiras" name="HumviLeiras" value="@Model.HumviLeiras" />
+                <span asp-validation-for="HumviLeiras" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SajatLeiras" class="control-label">Saját leírás</label>
+                <input type="text" asp-for="SajatLeiras" class="form-control" id="SajatLeiras" name="SajatLeiras" value="@Model.SajatLeiras" />
+                <span asp-validation-for="SajatLeiras" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParamErtek" class="control-label">Parametrikus érték</label>
+                <input type="text" asp-for="ParamErtek" class="form-control" id="ParamErtek" name="ParamErtek" value="@Model.ParamErtek" />
+                <span asp-validation-for="ParamErtek" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParamTip" class="control-label">Parametrikus érték jellege</label>
+                <input type="text" asp-for="ParamTip" class="form-control" id="ParamTip" name="ParamTip" value="@Model.ParamTip" />
+                <span asp-validation-for="ParamTip" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Created" class="control-label">Létrehozva</label>
+                <input asp-for="Created" class="form-control" id="Created" name="Created" value="@Model.Created" readonly/>
+                <span asp-validation-for="Created" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastModified" class="control-label">Utolsó módosítás</label>
+                <input asp-for="LastModified" class="form-control" id="LastModified" name="LastModified" value="@Model.LastModified" readonly/>
+                <span asp-validation-for="LastModified" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/Parameter/Index" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
