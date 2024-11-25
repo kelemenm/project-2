@@ -17,7 +17,7 @@ public class AkkrMintavetelConfiguration : IEntityTypeConfiguration<cAkkrMintave
         builder.HasMany(m => m.Minta)
             .WithOne(e => e.cAkkrMintavetel)
             .HasForeignKey(e => e.AkkrMintavetel)
-            //.HasPrincipalKey(m => m.AkkrMintavetelStatusz)   //az idegen kulcs alapja
+            .HasPrincipalKey(m => m.Id)   //az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //minta törlésekor ne törölje ebbõl a táblából
 
         builder.HasIndex(m => m.AkkrMintavetelStatusz).IsUnique(); // Egyediség biztosítása 

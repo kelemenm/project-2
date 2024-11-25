@@ -10,6 +10,7 @@ using Persistence;
 using Microsoft.CodeAnalysis.Scripting;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using project_2.Dtos;
 
 namespace project_2.Controllers
 {
@@ -20,6 +21,47 @@ namespace project_2.Controllers
         public AkkrMintavetelController(LaborDbContext context)
         {
             _context = context;
+        }
+
+        public IActionResult LoadIndexPartial()
+        {
+            var data = _context.AkkrMintavetel.ToList();
+            return PartialView("Index", data);
+        }
+        public IActionResult LoadDetailsPartial(int id)
+        {
+            var model = _context.AkkrMintavetel.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Details", model);
+        }
+
+        public IActionResult LoadEditPartial(int id)
+        {
+            var model = _context.AkkrMintavetel.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Edit", model);
+        }
+
+        public IActionResult LoadCreatePartial()
+        {
+            var model = new cAkkrMintavetel();
+            return PartialView("Create", model);
+        }
+
+        public IActionResult LoadDeletePartial(int id)
+        {
+            var model = _context.AkkrMintavetel.FirstOrDefault(m => m.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return PartialView("Delete", model);
         }
 
         // GET: AkkrMintavetel
@@ -57,18 +99,27 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AkkrMintavetelStatusz,Leiras,Created,LastModified")] cAkkrMintavetel cAkkrMintavetel)
+        public async Task<IActionResult> Create([Bind("AkkrMintavetelStatusz,Leiras")] AkkrMintavetelDto akkrMintavetelDto)
         {
-            cAkkrMintavetel.Created = DateTime.UtcNow;
-            cAkkrMintavetel.LastModified = DateTime.UtcNow;
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _context.Add(cAkkrMintavetel);
+                var now = DateTime.UtcNow;
+                var newAkkrMintavetel = new cAkkrMintavetel
+                {
+                    AkkrMintavetelStatusz = akkrMintavetelDto.AkkrMintavetelStatusz,
+                    Leiras = akkrMintavetelDto.Leiras,
+                    Created = now,
+                    LastModified = now
+                };
+                _context.Add(newAkkrMintavetel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return Json(new
+                {
+                    success = true,
+                    tableName = "AkkrMintavetel"  // Adattábla neve, amit kezelünk
+                });
             }
-            return View(cAkkrMintavetel);
+            return View(akkrMintavetelDto);
         }
 
         // GET: AkkrMintavetel/Edit/5
@@ -92,67 +143,42 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,AkkrMintavetelStatusz,Leiras,Created,LastModified")] cAkkrMintavetel cAkkrMintavetel)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,AkkrMintavetelStatusz,Leiras")] AkkrMintavetelDto akkrMintavetelDto)
         {
-
-
-            //Próba - ez egyáltalán nem frissít
-            var entity = await _context.AkkrMintavetel.FindAsync(id);
-
-            if (entity == null)
+            if (akkrMintavetelDto.Id == null)
             {
-                return NotFound();
+                return BadRequest("Id is missing!");
             }
 
-            // Frissítendő mezők értékeinek beállítása
-            entity.AkkrMintavetelStatusz = cAkkrMintavetel.AkkrMintavetelStatusz;
-            entity.Leiras = cAkkrMintavetel.Leiras;
-            entity.LastModified = DateTime.UtcNow; // Feltételezve, hogy LastModified az aktuális dátumot mutatja
-
-            // Explicit módon megjelölni a frissítendő mezőket
-            _context.Entry(entity).Property(e => e.AkkrMintavetelStatusz).IsModified = true;
-            _context.Entry(entity).Property(e => e.Leiras).IsModified = true;
-            _context.Entry(entity).Property(e => e.LastModified).IsModified = true;
-
-            // Mentés az adatbázisba
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-
-/*
-
-            //        InvalidOperationException: The property 'cAkkrMintavetel.AkkrMintavetelStatusz' is part of a key and so cannot be modified or marked as modified.To change the principal of an existing entity with an identifying foreign key, first delete the dependent and invoke 'SaveChanges', and then associate the dependent with the new principal.
-
-
-            cAkkrMintavetel.LastModified = DateTime.UtcNow;
-
-            if (id != cAkkrMintavetel.Id)
+            if (ModelState.IsValid)
             {
-                return NotFound();
-            }
-
-            //A VALIDÁLÁS NEM MEGY, DE KIKOMMENTELVE A SORT TUDJA ÍRNI ADATBÁZIS
-            //if (ModelState.IsValid)
-            {
-               // try
+                try
                 {
-                    _context.Update(cAkkrMintavetel);
-                    await _context.SaveChangesAsync();
-                }
-               catch (DbUpdateConcurrencyException)
-                {
-                    if (!cAkkrMintavetelExists(cAkkrMintavetel.Id))
+                    var akkrMintavetel = await _context.AkkrMintavetel.FirstOrDefaultAsync(x => x.Id == akkrMintavetelDto.Id);
+                    if (akkrMintavetel != null)
                     {
-                        return NotFound();
+                        akkrMintavetel.AkkrMintavetelStatusz = akkrMintavetelDto.AkkrMintavetelStatusz;
+                        akkrMintavetel.Leiras = akkrMintavetelDto.Leiras;
+                        akkrMintavetel.LastModified = DateTime.UtcNow;
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        throw;
+                        return NotFound();
                     }
                 }
-                return RedirectToAction("Index");
+               catch (Exception)
+                {
+                    throw;
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    tableName = "AkkrMintavetel"  // Adattábla neve, amit kezelünk
+                });
             }
-            return View(cAkkrMintavetel);
-*/
+            return PartialView("LoadEditPartial", akkrMintavetelDto);
         }
 
         // GET: AkkrMintavetel/Delete/5
@@ -185,7 +211,11 @@ namespace project_2.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new
+            {
+                success = true,
+                tableName = "AkkrMintavetel"  // Adattábla neve, amit kezelünk
+            });
         }
 
         private bool cAkkrMintavetelExists(long id)

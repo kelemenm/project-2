@@ -1,0 +1,133 @@
+﻿@model Domain.cMinta
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<h1>Vízminták</h1>
+
+<h4>Biztosan törölni akarja a rekordot?</h4
+<div>
+    <h4>cMinta</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Laborkód
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LaborMintaKod)
+        </dd>
+        <dt class = "col-sm-2">
+            HUMVI Modul
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cHUMVImodul.Leiras)
+        </dd>
+        <dt class = "col-sm-2">
+            HUMVI felelős
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cHUMVIfelelos.Nev)
+        </dd>
+        <dt class = "col-sm-2">
+            Mintavétel típusa
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cMvTipus.Leiras)
+        </dd>
+        <dt class = "col-sm-2">
+            Mintavétel dátuma
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.MvDatum.ToString("yyyy.MM.dd")
+        </dd>
+        <dt class = "col-sm-2">
+            Vizsgálólabor
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cVizsgaloLabor.Nev)
+        </dd>
+        <dt class = "col-sm-2">
+            Mintaátvétel dátuma
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.MintaAtvetel.ToString("yyyy.MM.dd")
+        </dd>
+        <dt class = "col-sm-2">
+            Vizsgálat kezdete
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.VizsgalatKezdete.ToString("yyyy.MM.dd")
+        </dd>
+        <dt class = "col-sm-2">
+            Vizsgálat vége
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.VizsgalatVege.ToString("yyyy.MM.dd")
+        </dd>
+        <dt class = "col-sm-2">
+            Mintavétel oka
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cMvOka.Leiras)
+        </dd>
+        <dt class = "col-sm-2">
+            Mintavétel oka, részletes
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MvOkaEgyeb)
+        </dd>
+        <dt class = "col-sm-2">
+            Mintavétel helye
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cMvHely.NevSajat)
+        </dd>
+        <dt class = "col-sm-2">
+            Mintavétel helye, egyéb
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MvHely)
+        </dd>
+        <dt class = "col-sm-2">
+            Akkreditált mintavétel
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cAkkrMintavetel.Leiras)
+        </dd>
+        <dt class = "col-sm-2">
+            Mintavevő
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cMintavevo.Nev)
+        </dd>
+        <dt class = "col-sm-2">
+            HUMVI export
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HUMVIexport)
+        </dd>
+        <dt class = "col-sm-2">
+            Létrehozva
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+        <dt class = "col-sm-2">
+            Utolsó módosítás
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastModified)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+         <a href="/Minta/Index" asp-action="Index">Back to List</a>
+    </form>
+
+</div>

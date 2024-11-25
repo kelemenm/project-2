@@ -1,0 +1,242 @@
+﻿@model Domain.cMinta
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<h1>Vízminták</h1>
+
+<h4>Szerkesztés</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="editForm" action="/Minta/Edit" asp-action="Edit" method="post">
+            @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Id" class="control-label">Id</label>
+                <input asp-for="Id" class="form-control" id="Id" name="Id" value="@Model.Id" readonly/>
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LaborMintaKod" class="control-label">Laborkód</label>
+                <input type="text" asp-for="LaborMintaKod" class="form-control" id="LaborMintaKod" name="LaborMintaKod" value="@Model.LaborMintaKod" />
+                <span asp-validation-for="LaborMintaKod" class="text-danger"></span>
+            </div>          
+
+            <div class="form-group">
+                <label asp-for="ModulKod" class="control-label">HUMVI Modul</label>
+                <select asp-for="ModulKod" class="form-control" id="ModulKod" name="ModulKod">
+                    <option value="">-- Válasszon modult --</option>
+                    @if (ViewBag.ModulKod != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.ModulKod)
+                        {
+                        <option value="@modul.Value" @(modul.Value == Model.ModulKod.ToString() ? "selected" : "")>
+                                @modul.Text
+                        </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="ModulKod" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Felelos" class="control-label">HUMVI felelős</label>
+                <select asp-for="Felelos" class="form-control" id="Felelos" name="Felelos">
+                    <option value="">-- Válasszon felelőst --</option>
+                    @if (ViewBag.Felelos != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.Felelos)
+                        {
+                        <option value="@modul.Value" @(modul.Value == Model.Felelos.ToString() ? "selected" : "")>
+                            @modul.Text
+                        </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="ModulKod" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MvTipus" class="control-label">Mintavétel típusa</label>
+                <select asp-for="MvTipus" class="form-control" id="MvTipus" name="MvTipus">
+                    <option value="">-- Válasszon típust --</option>
+                    @if (ViewBag.MvTipus != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.MvTipus)
+                        {
+                        <option value="@modul.Value" @(modul.Value == Model.MvTipus.ToString() ? "selected" : "")>
+                            @modul.Text
+                        </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="MvTipus" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MvDatum" class="control-label">Mintavétel dátuma</label>
+                <input type="date" asp-for="MvDatum" class="form-control" id="MvDatum" name="MvDatum" value="@Model.MvDatum.ToString("yyyy-MM-dd")""/>
+                <span asp-validation-for="MvDatum" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Labor" class="control-label">Vizsgálólabor</label>
+                <select asp-for="Labor" class="form-control" id="Labor" name="Labor">
+                    <option value="">-- Válasszon labort --</option>
+                    @if (ViewBag.Laborok != null)
+                    {
+                    foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.Laborok)
+                        {
+                        <option value="@modul.Value" @(modul.Value == Model.Labor.ToString() ? "selected" : "")>
+                            @modul.Text
+                        </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="Labor" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MintaAtvetel" class="control-label">Mintaátvétel dátuma</label>
+                <input type="date" asp-for="MintaAtvetel" class="form-control" id="MintaAtvetel" name="MintaAtvetel" value="@Model.MintaAtvetel.ToString("yyyy-MM-dd")""/>
+                <span asp-validation-for="MintaAtvetel" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="VizsgalatKezdete" class="control-label">Vizsgálat kezdete</label>
+                <input type="date" asp-for="VizsgalatKezdete" class="form-control" id="VizsgalatKezdete" name="VizsgalatKezdete" value="@Model.VizsgalatKezdete.ToString("yyyy-MM-dd")""/>
+                <span asp-validation-for="VizsgalatKezdete" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="VizsgalatVege" class="control-label">Vizsgálat vége</label>
+                <input type="date" asp-for="VizsgalatVege" class="form-control" id="VizsgalatVege" name="VizsgalatVege" value="@Model.VizsgalatVege.ToString("yyyy-MM-dd")""/>
+                <span asp-validation-for="VizsgalatVege" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MvOk" class="control-label">Mintavétel oka</label>
+                <select asp-for="MvOk" class="form-control" id="MvOk" name="MvOk">
+                    <option value="">-- Válasszon okot --</option>
+                    @if (ViewBag.MvOka != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.MvOka)
+                        {
+                             <option value="@modul.Value" @(modul.Value == Model.MvOk.ToString() ? "selected" : "")>
+                                @modul.Text
+                            </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="MvOk" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MvOkaEgyeb" class="control-label">Mintavétel oka, részletes</label>
+                <input type="text" asp-for="MvOkaEgyeb" class="form-control" id="MvOkaEgyeb" name="MvOkaEgyeb" value="@Model.MvOkaEgyeb" />
+                <span asp-validation-for="MvOkaEgyeb" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MvhKod" class="control-label">Mintavétel helye</label>
+                <select asp-for="MvhKod" class="form-control" id="MvhKod" name="MvhKod">
+                    <option value="">-- Válasszon mintavételi helyet --</option>
+                    @if (ViewBag.MvhKod != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.MvhKod)
+                        {
+                            <option value="@modul.Value" @(modul.Value == Model.MvhKod.ToString() ? "selected" : "")>
+                                @modul.Text
+                            </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="MvhKod" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MvHely" class="control-label">Mintavétel helye, egyéb</label>
+                <input type="text" asp-for="MvHely" class="form-control" id="MvHely" name="MvHely" value="@Model.MvHely" />
+                <span asp-validation-for="MvHely" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AkkrMintavetel" class="control-label">Akkreditált mintavétel</label>
+                <select asp-for="AkkrMintavetel" class="form-control" id="AkkrMintavetel" name="AkkrMintavetel">
+                    <option value="">-- Válasszon státuszt --</option>
+                    @if (ViewBag.AkkrMintavetel != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.AkkrMintavetel)
+                        {
+                                    <option value="@modul.Value" @(modul.Value == Model.AkkrMintavetel.ToString() ? "selected" : "")>
+                                @modul.Text
+                                            </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="AkkrMintavetel" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Mintavevo" class="control-label">Mintavevő</label>
+                <select asp-for="Mintavevo" class="form-control" id="Mintavevo" name="Mintavevo">
+                    <option value="">-- Válasszon mintavevőt --</option>
+                    @if (ViewBag.Mintavevok != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.Mintavevok)
+                        {
+                            <option value="@modul.Value" @(modul.Value == Model.Mintavevo.ToString() ? "selected" : "")>
+                                @modul.Text
+                            </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="Mintavevo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="HUMVIexport" class="control-label">HUMVI export</label>
+                <input 
+                    type="checkbox" 
+                    class="form-check-input" 
+                    asp-for="HUMVIexport" 
+                    id="HUMVIexport" 
+                    name="HUMVIexport" 
+                    value="true" 
+                    @(Model.HUMVIexport ? "checked=\"checked\"" : "") 
+                />               
+                <span asp-validation-for="HUMVIexport" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Created" class="control-label">Létrehozva</label>
+                <input asp-for="Created" class="form-control" id="Created" name="Created" value="@Model.Created" readonly/>
+                <span asp-validation-for="Created" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastModified" class="control-label">Utolsó módosítás</label>
+                <input asp-for="LastModified" class="form-control" id="LastModified" name="LastModified" value="@Model.LastModified" readonly/>
+                <span asp-validation-for="LastModified" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/Minta/Index" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

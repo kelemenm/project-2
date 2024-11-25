@@ -1,0 +1,73 @@
+﻿@model Domain.cVizsgaloLabor
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>
+
+<h1>Vizsgálólaborok</h1>
+
+<h4>Új rekord létrehozása</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Labor" class="control-label">Azonosító</label>
+                <input type="text" asp-for="Labor" class="form-control" id="Labor" name="Labor" value="@Model.Labor" />
+                <span asp-validation-for="Labor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LabAkkrSzam" class="control-label">Akkreditációs szám</label>
+                <input type="text" asp-for="LabAkkrSzam" class="form-control" id="LabAkkrSzam" name="LabAkkrSzam" value="@Model.LabAkkrSzam" />
+                <span asp-validation-for="LabAkkrSzam" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nev" class="control-label">Név</label>
+                <input type="text" asp-for="Nev" class="form-control" id="Nev" name="Nev" value="@Model.Nev" />
+                <span asp-validation-for="Nev" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cim" class="control-label">Cím</label>
+                <input type="text" asp-for="Cim" class="form-control" id="Cim" name="Cim" value="@Model.Cim" />
+                <span asp-validation-for="Cim" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ErvKezdete" class="control-label">Érvényesség kezdete</label>
+                <input type="date" asp-for="ErvKezdete" class="form-control" id="ErvKezdete" name="ErvKezdete" value="@Model.ErvKezdete"/>
+                <span asp-validation-for="ErvKezdete" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ErvVege" class="control-label">Érvényesség vége</label>
+                <input type="date" asp-for="ErvVege" class="form-control" id="ErvVege" name="ErvVege" value="@Model.ErvVege"/>
+                <span asp-validation-for="ErvVege" class="text-danger"></span>
+            </div>
+            <!-- Hidden fields for Created, LastModified -->
+            <div class="form-group" style="display:none;">
+                <label for="Created">Created</label>
+                <input type="hidden" id="Created" name="Created" value="@DateTime.UtcNow" />
+            </div>
+
+            <div class="form-group" style="display:none;">
+                <label for="LastModified">LastModified</label>
+                <input type="hidden" id="LastModified" name="LastModified" value="@DateTime.UtcNow" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/VizsgaloLabor/Index" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

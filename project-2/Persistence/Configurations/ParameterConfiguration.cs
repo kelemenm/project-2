@@ -29,8 +29,10 @@ public class ParameterConfiguration : IEntityTypeConfiguration<cParameter>
         builder.HasMany(m => m.Eredmeny)
             .WithOne(e => e.Parameter)
             .HasForeignKey(e => e.ParKod)
-            .HasPrincipalKey(m => m.ParKod)   //Parkod az idegen kulcs alapja
+            .HasPrincipalKey(m => m.Id)   //Parkod az idegen kulcs alapja
             .OnDelete(DeleteBehavior.Restrict); //Eredmények törlésekor ne törölje a paramétert
+
+        builder.HasIndex(m => m.ParKod).IsUnique(); // Egyediség biztosítása
 
     }
 }
