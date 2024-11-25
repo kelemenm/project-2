@@ -28,5 +28,7 @@ public class cMinta : cEntity
     public virtual cMvOka? cMvOka { get; set; }
     public virtual cMvTipus? cMvTipus { get; set; }
     public virtual cVizsgaloLabor? cVizsgaloLabor { get; set; }
-  
+
+    public virtual ICollection<cEredmeny> Eredmenyek { get; set; } = new List<cEredmeny>();
+
 }

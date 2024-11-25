@@ -120,57 +120,112 @@
                 <span asp-validation-for="VizsgalatVege" class="text-danger"></span>
             </div>
 
-
-
-
-
-
-
             <div class="form-group">
                 <label asp-for="MvOk" class="control-label">Mintavétel oka</label>
-                <input type="text" asp-for="MvOk" class="form-control" id="MvOk" name="MvOk" value="@Model.MvOk" />
+                <select asp-for="MvOk" class="form-control" id="MvOk" name="MvOk">
+                    <option value="">-- Válasszon okot --</option>
+                    @if (ViewBag.MvOka != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.MvOka)
+                        {
+                             <option value="@modul.Value" @(modul.Value == Model.MvOk.ToString() ? "selected" : "")>
+                                @modul.Text
+                            </option>
+                        }
+                    }
+                </select>
                 <span asp-validation-for="MvOk" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="MvOkaEgyeb" class="control-label">Mintavétel oka, részletes</label>
                 <input type="text" asp-for="MvOkaEgyeb" class="form-control" id="MvOkaEgyeb" name="MvOkaEgyeb" value="@Model.MvOkaEgyeb" />
                 <span asp-validation-for="MvOkaEgyeb" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="MvhKod" class="control-label">Mintavétel helye</label>
-                <input type="text" asp-for="MvhKod" class="form-control" id="MvhKod" name="MvhKod" value="@Model.MvhKod" />
+                <select asp-for="MvhKod" class="form-control" id="MvhKod" name="MvhKod">
+                    <option value="">-- Válasszon mintavételi helyet --</option>
+                    @if (ViewBag.MvhKod != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.MvhKod)
+                        {
+                            <option value="@modul.Value" @(modul.Value == Model.MvhKod.ToString() ? "selected" : "")>
+                                @modul.Text
+                            </option>
+                        }
+                    }
+                </select>
                 <span asp-validation-for="MvhKod" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="MvHely" class="control-label">Mintavétel helye, egyéb</label>
                 <input type="text" asp-for="MvHely" class="form-control" id="MvHely" name="MvHely" value="@Model.MvHely" />
                 <span asp-validation-for="MvHely" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="AkkrMintavetel" class="control-label">Akkreditált mintavétel</label>
-                <input type="text" asp-for="AkkrMintavetel" class="form-control" id="AkkrMintavetel" name="AkkrMintavetel" value="@Model.AkkrMintavetel" />
+                <select asp-for="AkkrMintavetel" class="form-control" id="AkkrMintavetel" name="AkkrMintavetel">
+                    <option value="">-- Válasszon státuszt --</option>
+                    @if (ViewBag.AkkrMintavetel != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.AkkrMintavetel)
+                        {
+                                    <option value="@modul.Value" @(modul.Value == Model.AkkrMintavetel.ToString() ? "selected" : "")>
+                                @modul.Text
+                                            </option>
+                        }
+                    }
+                </select>
                 <span asp-validation-for="AkkrMintavetel" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Mintavevo" class="control-label">Mintavevő</label>
-                <input type="text" asp-for="Mintavevo" class="form-control" id="Mintavevo" name="Mintavevo" value="@Model.Mintavevo" />
+                <select asp-for="Mintavevo" class="form-control" id="Mintavevo" name="Mintavevo">
+                    <option value="">-- Válasszon mintavevőt --</option>
+                    @if (ViewBag.Mintavevok != null)
+                    {
+                        foreach (var modul in (IEnumerable<SelectListItem>)ViewBag.Mintavevok)
+                        {
+                            <option value="@modul.Value" @(modul.Value == Model.Mintavevo.ToString() ? "selected" : "")>
+                                @modul.Text
+                            </option>
+                        }
+                    }
+                </select>
                 <span asp-validation-for="Mintavevo" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="HUMVIexport" class="control-label">HUMVI export</label>
-                <input class="form-check-input" asp-for="HUMVIexport" class="form-control" id="HUMVIexport" name="HUMVIexport" value="@Model.HUMVIexport" />
+                <input 
+                    type="checkbox" 
+                    class="form-check-input" 
+                    asp-for="HUMVIexport" 
+                    id="HUMVIexport" 
+                    name="HUMVIexport" 
+                    value="true" 
+                    @(Model.HUMVIexport ? "checked=\"checked\"" : "") 
+                />               
                 <span asp-validation-for="HUMVIexport" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Created" class="control-label">Létrehozva</label>
                 <input asp-for="Created" class="form-control" id="Created" name="Created" value="@Model.Created" readonly/>
                 <span asp-validation-for="Created" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="LastModified" class="control-label">Utolsó módosítás</label>
                 <input asp-for="LastModified" class="form-control" id="LastModified" name="LastModified" value="@Model.LastModified" readonly/>
                 <span asp-validation-for="LastModified" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

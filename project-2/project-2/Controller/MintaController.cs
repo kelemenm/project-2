@@ -64,8 +64,6 @@ namespace project_2.Controllers
             return PartialView("Delete", model);
         }
 
-
-
         // GET: Minta
         public async Task<IActionResult> Index()
         {
@@ -90,6 +88,10 @@ namespace project_2.Controllers
                 .Include(c => c.cMvOka)
                 .Include(c => c.cMvTipus)
                 .Include(c => c.cVizsgaloLabor)
+                .Include(c => c.Eredmenyek)
+                    .ThenInclude(e => e.Parameter)
+                .Include(c => c.Eredmenyek)
+                    .ThenInclude(e => e.Mertekegyseg)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cMinta == null)
             {
@@ -99,18 +101,60 @@ namespace project_2.Controllers
             return View(cMinta);
         }
 
+
         // GET: Minta/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AkkrMintavetel"] = new SelectList(_context.AkkrMintavetel, "Id", "AkkrMintavetelStatusz");
-            ViewData["Felelos"] = new SelectList(_context.HumviFelelos, "Id", "Cim");
-            ViewData["ModulKod"] = new SelectList(_context.HumviModul, "Id", "Leiras");
-            ViewData["Mintavevo"] = new SelectList(_context.Mintavevo, "Id", "Cim");
-            ViewData["MvhKod"] = new SelectList(_context.MvHely, "Id", "MvhKod");
-            ViewData["MvOk"] = new SelectList(_context.MvOka, "Id", "Leiras");
-            ViewData["MvTipus"] = new SelectList(_context.MvTipus, "Id", "Leiras");
-            ViewData["Labor"] = new SelectList(_context.VizsgaloLabor, "Id", "Cim");
-            return View();
+            var modulok = await _context.HumviModul.ToListAsync();
+            ViewBag.ModulKod = modulok.Select(modul => new SelectListItem
+            {
+                Value = modul.Id.ToString(),
+                Text = $" {modul.ModulKod} - {modul.Leiras}"
+            }).ToList();
+            var felelosok = await _context.HumviFelelos.ToListAsync();
+            ViewBag.Felelos = felelosok.Select(felelos => new SelectListItem
+            {
+                Value = felelos.Id.ToString(),
+                Text = felelos.Nev
+            }).ToList();
+            var mvTipusok = await _context.MvTipus.ToListAsync();
+            ViewBag.MvTipus = mvTipusok.Select(mvTipus => new SelectListItem
+            {
+                Value = mvTipus.Id.ToString(),
+                Text = $" {mvTipus.MvTipusNev} - {mvTipus.Leiras}"
+            }).ToList();
+            var laborok = await _context.VizsgaloLabor.ToListAsync();
+            ViewBag.Laborok = laborok.Select(labor => new SelectListItem
+            {
+                Value = labor.Id.ToString(),
+                Text = $"{labor.Nev} - {labor.LabAkkrSzam} (Érvényesség: {labor.ErvKezdete:yyyy-MM-dd} - {labor.ErvVege:yyyy-MM-dd})"
+            }).ToList();
+            var mvOkok = await _context.MvOka.ToListAsync();
+            ViewBag.MvOka = mvOkok.Select(mvOk => new SelectListItem
+            {
+                Value = mvOk.Id.ToString(),
+                Text = $" {mvOk.MvOk} - {mvOk.Leiras}"
+            }).ToList();
+            var mvHelyek = await _context.MvHely.ToListAsync();
+            ViewBag.MvhKod = mvHelyek.Select(mvHely => new SelectListItem
+            {
+                Value = mvHely.Id.ToString(),
+                Text = $" {mvHely.MvhKod} - {mvHely.NevSajat}"
+            }).ToList();
+            var akkMintavetelStatuszok = await _context.AkkrMintavetel.ToListAsync();
+            ViewBag.AkkrMintavetel = akkMintavetelStatuszok.Select(akkMintavetelStatusz => new SelectListItem
+            {
+                Value = akkMintavetelStatusz.Id.ToString(),
+                Text = $" {akkMintavetelStatusz.AkkrMintavetelStatusz} - {akkMintavetelStatusz.Leiras}"
+            }).ToList();
+            var mintavevok = await _context.Mintavevo.ToListAsync();
+            ViewBag.Mintavevok = mintavevok.Select(mintavevo => new SelectListItem
+            {
+                Value = mintavevo.Id.ToString(),
+                Text = $"{mintavevo.Nev} - {mintavevo.MvAkkrSzam} (Érvényesség: {mintavevo.ErvKezdete:yyyy-MM-dd} - {mintavevo.ErvVege:yyyy-MM-dd})"
+            }).ToList();
+
+            return View(new cMinta());
         }
 
         // POST: Minta/Create
@@ -118,23 +162,37 @@ namespace project_2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LaborMintaKod,ModulKod,Felelos,MvTipus,MvDatum,Labor,MintaAtvetel,VizsgalatKezdete,VizsgalatVege,MvOk,MvOkaEgyeb,MvhKod,MvHely,AkkrMintavetel,Mintavevo,HUMVIexport,Id,Created,LastModified")] cMinta cMinta)
+        public async Task<IActionResult> Create([Bind("LaborMintaKod,ModulKod,Felelos,MvTipus,MvDatum,Labor,MintaAtvetel,VizsgalatKezdete,VizsgalatVege,MvOk,MvOkaEgyeb,MvhKod,MvHely,AkkrMintavetel,Mintavevo,HUMVIexport")] MintaDto mintaDto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cMinta);
+                var now = DateTime.UtcNow;
+                var newMinta = new cMinta
+                {
+                    LaborMintaKod = mintaDto.LaborMintaKod,
+                    ModulKod = mintaDto.ModulKod,
+                    Felelos = mintaDto.Felelos,
+                    MvTipus = mintaDto.MvTipus,
+                    MvDatum = mintaDto.MvDatum,
+                    Labor = mintaDto.Labor,
+                    MintaAtvetel = mintaDto.MintaAtvetel,
+                    VizsgalatKezdete = mintaDto.VizsgalatKezdete,
+                    VizsgalatVege = mintaDto.VizsgalatVege,
+                    MvOk = mintaDto.MvOk,
+                    MvOkaEgyeb = mintaDto.MvOkaEgyeb,
+                    MvhKod = mintaDto.MvhKod,
+                    MvHely = mintaDto.MvHely,
+                    AkkrMintavetel = mintaDto.AkkrMintavetel,
+                    Mintavevo = mintaDto.Mintavevo,
+                    HUMVIexport = mintaDto.HUMVIexport,
+                    Created = now,
+                    LastModified = now
+                };
+                _context.Add(newMinta);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
-            ViewData["AkkrMintavetel"] = new SelectList(_context.AkkrMintavetel, "Id", "AkkrMintavetelStatusz", cMinta.AkkrMintavetel);
-            ViewData["Felelos"] = new SelectList(_context.HumviFelelos, "Id", "Cim", cMinta.Felelos);
-            ViewData["ModulKod"] = new SelectList(_context.HumviModul, "Id", "Leiras", cMinta.ModulKod);
-            ViewData["Mintavevo"] = new SelectList(_context.Mintavevo, "Id", "Cim", cMinta.Mintavevo);
-            ViewData["MvhKod"] = new SelectList(_context.MvHely, "Id", "MvhKod", cMinta.MvhKod);
-            ViewData["MvOk"] = new SelectList(_context.MvOka, "Id", "Leiras", cMinta.MvOk);
-            ViewData["MvTipus"] = new SelectList(_context.MvTipus, "Id", "Leiras", cMinta.MvTipus);
-            ViewData["Labor"] = new SelectList(_context.VizsgaloLabor, "Id", "Cim", cMinta.Labor);
-            return View(cMinta);
+            return View(mintaDto);
         }
 
         // GET: Minta/Edit/5
@@ -155,8 +213,8 @@ namespace project_2.Controllers
             ViewBag.ModulKod = modulok.Select(modul => new SelectListItem
                 {
                     Value = modul.Id.ToString(),
-                    Text = modul.Leiras 
-                }).ToList();
+                    Text = $" {modul.ModulKod} - {modul.Leiras}"
+            }).ToList();
             var felelosok = await _context.HumviFelelos.ToListAsync();
             ViewBag.Felelos = felelosok.Select(felelos => new SelectListItem
             {
@@ -167,7 +225,7 @@ namespace project_2.Controllers
             ViewBag.MvTipus = mvTipusok.Select(mvTipus => new SelectListItem
             {
                 Value = mvTipus.Id.ToString(),
-                Text = mvTipus.MvTipusNev
+                Text = $" {mvTipus.MvTipusNev} - {mvTipus.Leiras}"
             }).ToList();
             var laborok = await _context.VizsgaloLabor.ToListAsync();
             ViewBag.Laborok = laborok.Select(labor => new SelectListItem
@@ -175,17 +233,31 @@ namespace project_2.Controllers
                 Value = labor.Id.ToString(),
                 Text = $"{labor.Nev} - {labor.LabAkkrSzam} (Érvényesség: {labor.ErvKezdete:yyyy-MM-dd} - {labor.ErvVege:yyyy-MM-dd})"
             }).ToList();
+            var mvOkok = await _context.MvOka.ToListAsync();
+            ViewBag.MvOka = mvOkok.Select(mvOk => new SelectListItem
+            {
+                Value = mvOk.Id.ToString(),
+                Text = $" {mvOk.MvOk} - {mvOk.Leiras}"
+            }).ToList();
+            var mvHelyek = await _context.MvHely.ToListAsync();
+            ViewBag.MvhKod = mvHelyek.Select(mvHely => new SelectListItem
+            {
+                Value = mvHely.Id.ToString(),
+                Text = $" {mvHely.MvhKod} - {mvHely.NevSajat}"
+            }).ToList();
+            var akkMintavetelStatuszok = await _context.AkkrMintavetel.ToListAsync();
+            ViewBag.AkkrMintavetel = akkMintavetelStatuszok.Select(akkMintavetelStatusz => new SelectListItem
+            {
+                Value = akkMintavetelStatusz.Id.ToString(),
+                Text = $" {akkMintavetelStatusz.AkkrMintavetelStatusz} - {akkMintavetelStatusz.Leiras}"
+            }).ToList();
+            var mintavevok = await _context.Mintavevo.ToListAsync();
+            ViewBag.Mintavevok = mintavevok.Select(mintavevo => new SelectListItem
+            {
+                Value = mintavevo.Id.ToString(),
+                Text = $"{mintavevo.Nev} - {mintavevo.MvAkkrSzam} (Érvényesség: {mintavevo.ErvKezdete:yyyy-MM-dd} - {mintavevo.ErvVege:yyyy-MM-dd})"
+            }).ToList();
 
-
-
-            ViewData["AkkrMintavetel"] = new SelectList(_context.AkkrMintavetel, "Id", "AkkrMintavetelStatusz", cMinta.AkkrMintavetel);
-            //ViewData["Felelos"] = new SelectList(_context.HumviFelelos, "Id", "Cim", cMinta.Felelos);
-            //ViewData["ModulKod"] = new SelectList(_context.HumviModul, "Id", "Leiras", cMinta.ModulKod);
-            ViewData["Mintavevo"] = new SelectList(_context.Mintavevo, "Id", "Cim", cMinta.Mintavevo);
-            ViewData["MvhKod"] = new SelectList(_context.MvHely, "Id", "MvhKod", cMinta.MvhKod);
-            ViewData["MvOk"] = new SelectList(_context.MvOka, "Id", "Leiras", cMinta.MvOk);
-            ViewData["MvTipus"] = new SelectList(_context.MvTipus, "Id", "Leiras", cMinta.MvTipus);
-            ViewData["Labor"] = new SelectList(_context.VizsgaloLabor, "Id", "Cim", cMinta.Labor);
             return View(cMinta);
         }
 
@@ -200,7 +272,7 @@ namespace project_2.Controllers
             {
                 return BadRequest("Id is missing!");
             }
-           // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -237,14 +309,6 @@ namespace project_2.Controllers
                 }
                 return RedirectToAction("Index");
             }
-/*            ViewData["AkkrMintavetel"] = new SelectList(_context.AkkrMintavetel, "Id", "AkkrMintavetelStatusz", cMinta.AkkrMintavetel);
-            ViewData["Felelos"] = new SelectList(_context.HumviFelelos, "Id", "Cim", cMinta.Felelos);
-            ViewData["ModulKod"] = new SelectList(_context.HumviModul, "Id", "Leiras", cMinta.ModulKod);
-            ViewData["Mintavevo"] = new SelectList(_context.Mintavevo, "Id", "Cim", cMinta.Mintavevo);
-            ViewData["MvhKod"] = new SelectList(_context.MvHely, "Id", "MvhKod", cMinta.MvhKod);
-            ViewData["MvOk"] = new SelectList(_context.MvOka, "Id", "Leiras", cMinta.MvOk);
-            ViewData["MvTipus"] = new SelectList(_context.MvTipus, "Id", "Leiras", cMinta.MvTipus);
-            ViewData["Labor"] = new SelectList(_context.VizsgaloLabor, "Id", "Cim", cMinta.Labor);*/
             return View(mintaDto);
         }
 

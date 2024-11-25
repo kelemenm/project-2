@@ -105,8 +105,10 @@ public class MintaConfiguration : IEntityTypeConfiguration<cMinta>
             .HasPrincipalKey(m => m.Id)
             .OnDelete(DeleteBehavior.Restrict); //Törlés esetén ne törölje a kapcsolódó mértékegységet
 
-
-
+        builder.HasMany(m => m.Eredmenyek)
+           .WithOne(e => e.Minta)
+           .HasForeignKey(e => e.MintaId)
+           .OnDelete(DeleteBehavior.Cascade);
 
     }
 }

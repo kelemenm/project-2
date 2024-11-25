@@ -21,7 +21,8 @@
 <h1>Vízminták</h1>
 
 <p>
-    <a href="#" onclick="showPage('createMinta')">Create New</a>
+  <!--  <a href="#" onclick="showPage('createMinta')">Create New</a>-->
+    <a href="/Minta/Create" asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -111,10 +112,9 @@
 <!--                <a href="#" onclick="showPage('showMintaEdit', @item.Id)">Edit</a>
                 <a href="#" onclick="showPage('showMintaDetails', @item.Id)">Details</a>
                     <a href="#" onclick="showPage('showMintaDelete', @item.Id)">Delete</a>-->
-    <a href="/Minta/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-        <a href="/Minta/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-        <a href="/Minta/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-
+                <a href="/Minta/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a href="/Minta/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a href="/Minta/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }
