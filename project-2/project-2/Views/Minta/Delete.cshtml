@@ -1,0 +1,130 @@
+﻿@model Domain.cMinta
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Vízminták</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>cMinta</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LaborMintaKod)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LaborMintaKod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MvDatum)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MvDatum)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MintaAtvetel)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MintaAtvetel)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.VizsgalatKezdete)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VizsgalatKezdete)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.VizsgalatVege)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VizsgalatVege)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MvOkaEgyeb)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MvOkaEgyeb)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MvHely)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MvHely)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HUMVIexport)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HUMVIexport)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cAkkrMintavetel)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cAkkrMintavetel.AkkrMintavetelStatusz)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cHUMVIfelelos)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cHUMVIfelelos.Cim)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cHUMVImodul)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cHUMVImodul.Leiras)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cMintavevo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cMintavevo.Cim)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cMvHely)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cMvHely.MvhKod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cMvOka)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cMvOka.Leiras)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cMvTipus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cMvTipus.Leiras)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cVizsgaloLabor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cVizsgaloLabor.Cim)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LastModified)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastModified)
+        </dd>
+    </dl>
+    
+    <form id="deleteForm" action="/Minta/Delete" asp-action="Delete" method="post">
+        @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
+        <input hidden asp-for="Id" class="form-control" id="Id" name="Id" value="@Model.Id"/>
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a href="#" onclick="showPage('minta')">Back to List</a>
+    </form>
+</div>

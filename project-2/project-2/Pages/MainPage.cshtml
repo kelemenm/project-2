@@ -15,7 +15,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         body {
-            background-image: url('/wwwrott/img/background.webp');
+            width: 100%;
+            background-image: url('/wwwroot/img/background.webp');
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -23,11 +24,14 @@
             overflow-x: hidden;
         }
         .content-container {
+            width: 100%;
             margin-top: 80px;
             padding: 20px;
             overflow-y: auto;
             height: calc(100vh - 80px);
         }
+        #dynamicContainer {
+            width: 100%; 
         .navbar {
             position: fixed;
             top: 0;
@@ -46,8 +50,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="showPage('mintak')">Minták kezelése</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="mintakDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Minták kezelése
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="mintakDropdown">
+                        <a class="dropdown-item" href="#" onclick="showPage('minta')">Vízminták kezelése</a>
+                        <a class="dropdown-item" href="#" onclick="showPage('importalas')">Vízminták importálása</a>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onclick="showPage('idosorok')">Idősorok</a>
@@ -116,8 +126,6 @@
                         <iframe src="https://www.google.com/maps/d/embed?mid=1gD1S9UeSE7R5SlHLbLYXmrl3VR9BVA8&ehbc=2E312F" width="640" height="480"></iframe>
                     `;
                     break;
-                    
-
                 //AkkrMintavetel tábla
                 case 'akkrMintavetel':
                     $("#dynamicContainer").load("/AkkrMintavetel/LoadIndexPartial");
@@ -144,7 +152,6 @@
                 case 'humviFelelos':
                     $("#dynamicContainer").load("/HUMVIfelelos/LoadIndexPartial");
                     break;
-
                 case 'showHumviFelelosDetails':
                     if (additionalId) {
                         $("#dynamicContainer").load("/HUMVIfelelos/LoadDetailsPartial?id=" + additionalId);
@@ -185,13 +192,28 @@
                 case 'createHumviModul':
                     $("#dynamicContainer").load("/HUMVImodul/LoadCreatePartial");
                     break;
-
-
-
-
-
-
-
+                //Minta tábla
+                case 'minta':
+                    $("#dynamicContainer").load("/Minta/LoadIndexPartial");
+                    break;
+                case 'showMintaDetails':
+                    if (additionalId) {
+                        $("#dynamicContainer").load("/Minta/LoadDetailsPartial?id=" + additionalId);
+                    }
+                    break;
+                case 'showMintaEdit':
+                    if (additionalId) {
+                        $("#dynamicContainer").load("/Minta/LoadEditPartial?id=" + additionalId);
+                    }
+                    break;
+                case 'showMintaDelete':
+                    if (additionalId) {
+                        $("#dynamicContainer").load("/Minta/LoadDeletePartial?id=" + additionalId);
+                    }
+                    break;
+                case 'createMinta':
+                    $("#dynamicContainer").load("/Minta/LoadCreatePartial");
+                    break;
                 default:
                     container.innerHTML = '<p>A kért tartalom nem található.</p>';
                     break;
@@ -220,6 +242,10 @@
                                 break;
 
 
+
+                            case "Minta":
+                                showPage("minta");
+                                break;
                             default:
                                 alert("Ismeretlen tábla: " + response.tableName);
                         }
@@ -256,6 +282,10 @@
                                 break;
 
 
+
+                            case "Minta":
+                                showPage("minta");
+                                break;
                             default:
                                 alert("Ismeretlen tábla: " + response.tableName);
                         }
@@ -290,6 +320,12 @@
                                 showPage("humviModul");
                                 break;
 
+
+
+
+                            case "Minta":
+                                showPage("minta");
+                                break;
                             default:
                                 alert("Ismeretlen tábla: " + response.tableName);
                         }

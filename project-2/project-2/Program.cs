@@ -76,6 +76,11 @@ app.UseEndpoints(endpoints =>
     name: "Parameter",
     pattern: "{controller=Parameter}/{action=Index}/{id?}");
 
+    endpoints.MapControllerRoute(
+    name: "Minta",
+    pattern: "{controller=Minta}/{action=Index}/{id?}");
+
+
 });
 
 
@@ -88,20 +93,27 @@ app.MapRazorPages();
 DbInitializer.Seed(app);
 
 
-/*
+
 
 // Az Excel fájl beolvasása
 // Scoped szolgáltatásként kérjük le az ExcelFileReader-t
+
 using (var scope = app.Services.CreateScope())
 {
-    var reader = scope.ServiceProvider.GetRequiredService<ExcelFileReader>(); // Scoped példány kérése
-    FileInfo uploadedFile = reader.ExcelFileUploader();
-    string sheetName = "HUMVI";
-    int headerRow = 2;
-    Dictionary<string, int> headerColumns = reader.HeaderCols(uploadedFile, sheetName, headerRow);
-    List<List<string>> excelData = reader.ReadExcelSheet(uploadedFile, sheetName, headerColumns);
-    reader.ProcessLines(excelData, headerColumns);
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<LaborDbContext>();
+
+    if (!context.Minta.Any())
+    { 
+        var reader = scope.ServiceProvider.GetRequiredService<ExcelFileReader>(); // Scoped példány kérése
+        FileInfo uploadedFile = reader.ExcelFileUploader();
+        string sheetName = "HUMVI";
+        int headerRow = 2;
+        Dictionary<string, int> headerColumns = reader.HeaderCols(uploadedFile, sheetName, headerRow);
+        List<List<string>> excelData = reader.ReadExcelSheet(uploadedFile, sheetName, headerColumns);
+        reader.ProcessLines(excelData, headerColumns);
+    }
 }
-*/
+
 
 app.Run();
