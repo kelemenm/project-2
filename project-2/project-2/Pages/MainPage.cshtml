@@ -31,6 +31,8 @@
             height: calc(100vh - 80px);
         }
         #dynamicContainer {
+            height: 70vh;
+            border: 1px solid black;
             width: 100%; 
         .navbar {
             position: fixed;
@@ -38,6 +40,14 @@
             width: 100%;
             z-index: 1000;
         }
+        .iframecontainer {
+            width: 90%;
+            height: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
     </style>
 </head>
 <body>
@@ -60,7 +70,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="showPage('idosorok')">Idősorok</a>
+                    <a class="nav-link" href="#" onclick="showPage('timeSeries')">Idősorok</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -120,10 +130,15 @@
 
             // Dinamikus tartalom betöltése
             switch (pageId) {
+                //Idősor oldal
+                case 'timeSeries':
+                    $("#dynamicContainer").load("/TimeSeries");
+                    break;
+                //Ivóvízes térkép
                 case 'ivoviz':
                     container.innerHTML = `
                         <h3>Ivóvíz mintavételi pontok</h3>
-                        <iframe src="https://www.google.com/maps/d/embed?mid=1gD1S9UeSE7R5SlHLbLYXmrl3VR9BVA8&ehbc=2E312F" width="640" height="480"></iframe>
+                        <iframe id="iframecontainer" src="https://www.google.com/maps/d/embed?mid=1gD1S9UeSE7R5SlHLbLYXmrl3VR9BVA8&ehbc=2E312F" style="width: 100%; height: 90%";></iframe>
                     `;
                     break;
                 //AkkrMintavetel tábla
