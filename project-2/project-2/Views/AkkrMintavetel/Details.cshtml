@@ -1,4 +1,5 @@
-﻿@model Domain.cAkkrMintavetel
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Domain.cAkkrMintavetel
 
 @{
     ViewData["Title"] = "Details";
@@ -39,6 +40,6 @@
     </dl>
 </div>
 <div>
-    <a href="#" onclick="showPage('showAkkrMintavetelEdit', @Model.Id)">Edit</a>
-    <a href="#" onclick="showPage('akkrMintavetel')">Back to List</a>
+    <a class="btn btn-warning" asp-area="" asp-controller="AkkrMintavetel" asp-action="Edit" asp-route-id="@Model.Id">Szerkeszt</a>
+    <a class="btn btn-secondary" asp-area="" asp-controller="AkkrMintavetel" asp-action="Index">Mégsem</a>
 </div>

@@ -1,58 +1,44 @@
 @page
+@using project_2.Pages
+@model TimeSeriesModel
 
-@{
-    Layout = null;
-}
+<style>
+    #timeSeriesContainer {
+        display: grid;
+        grid-template-columns: 48% 4% 48%; /* Két panel és a függőleges resizer */
+        grid-template-rows: 48% 4% 48%; /* Felső, resizer, alsó panel arányai */
+        width: 100%; /* Teljes szélesség kitöltése */
+        height: 80%; /* A szülő magasságának 80%-a */
+    }
 
-<!DOCTYPE html>
-<html lang="hu">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Átméretezhető Mezők</title>
+    .top-panel-left,
+    .top-panel-right {
+        background-color: lightblue;
+        padding: 0; /* Nincs padding */
+        margin: 0; /* Nincs margin */
+        overflow: auto; /* Ha szükséges, görgetés engedélyezése */
+    }
 
-    <style>
+    .resizer-vertical {
+        background-color: gray;
+        cursor: ew-resize;
+        width: 10px; /* Rögzített szélesség */
+    }
 
-#timeSeriesContainer {
-    display: grid;
-    grid-template-columns: 48% 4% 48%; /* Két panel és a függőleges resizer */
-    grid-template-rows: 48% 4% 48%; /* Felső, resizer, alsó panel arányai */
-    width: 100%; /* Teljes szélesség kitöltése */
-    height: 80%; /* A szülő magasságának 80%-a */
-}
+    .bottom-panel {
+        background-color: lightcoral;
+        padding: 0; /* Nincs padding */
+        margin: 0; /* Nincs margin */
+        overflow: auto; /* Ha szükséges, görgetés engedélyezése */
+    }
 
-.top-panel-left,
-.top-panel-right {
-    background-color: lightblue;
-    padding: 0; /* Nincs padding */
-    margin: 0; /* Nincs margin */
-    overflow: auto; /* Ha szükséges, görgetés engedélyezése */
-}
+    .resizer-horizontal {
+        background-color: gray;
+        cursor: ns-resize;
+        height: 10px; /* Rögzített magasság */
+    }
+</style>
 
-.resizer-vertical {
-    background-color: gray;
-    cursor: ew-resize;
-    width: 10px; /* Rögzített szélesség */
-}
-
-.bottom-panel {
-    background-color: lightcoral;
-    padding: 0; /* Nincs padding */
-    margin: 0; /* Nincs margin */
-    overflow: auto; /* Ha szükséges, görgetés engedélyezése */
-}
-
-.resizer-horizontal {
-    background-color: gray;
-    cursor: ns-resize;
-    height: 10px; /* Rögzített magasság */
-}
-
-
-    </style>
-</head>
-
-<body>
 <div id="timeSeriesContainer">
     <!-- Felső sor: bal panel, függőleges resizer, jobb panel -->
     <div class="top-panel-left">Bal oldali tartalom</div>
@@ -101,8 +87,3 @@
         document.body.style.cursor = 'default';
     });
 </script>
-
-
-
-</body>
-</html>

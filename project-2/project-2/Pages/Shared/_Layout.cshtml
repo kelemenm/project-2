@@ -1,51 +1,97 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - project_2</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/project_2.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/project_2.styles.css" asp-append-version="true" />
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">project_2</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Kezdőlap</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/loginPage">Bejelentkezés</a>
-                    </li>
-                </ul>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">project_2</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Kezdőlap</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" id="navbarMinta" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Minták kezelése
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarMinta">
+                                <li><a class="dropdown-item" href="#">Vízminták kezelése</a></li>
+                                <li><a class="dropdown-item" href="#">Vízminták importálása</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/TimeSeries">Idősorok</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" id="navbarAdatok" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Adattáblák
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarAdatok">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="Index">Akkr. mintavétel státusza</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="HUMVIfelelos" asp-action="LoadIndexPartial">HUMVI felelősök</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">HUMVI modulok</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mértékegységek</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mintavevők</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mintavételi helyek</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mintavétel okai</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mintavétel típusa</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Paraméterek</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Vizsgálólaborok</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" id="navbarTerkep" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Térkép
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarTerkep">
+                                <li><a class="dropdown-item" href="#">Ivóvíz mintavételi pontok</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" id="navbarJog" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Jogszabályok
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarJog">
+                                <li><a class="dropdown-item" href="https://njt.hu/jogszabaly/2016-16-20-0A" target="_blank">16/2016. (V. 12.) BM rendelet</a></li>
+                                <li><a class="dropdown-item" href="https://njt.hu/jogszabaly/2023-5-20-22" target="_blank">5/2023. (I. 12.) Korm. rendelet</a></li>
+                                <li><a class="dropdown-item" href="https://njt.hu/jogszabaly/2015-124-00-00" target="_blank">2015. évi CXXIV. törvény</a></li>
+                                <li><div class="dropdown-divider"></div></li>
+                                <li><a class="dropdown-item" href="https://nah.gov.hu/hu/" target="_blank">Nemzeti Akkreditáló Hatóság</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
-
-<footer class="border-top footer text-muted">
+        </nav>
+    </header>
     <div class="container">
-        &copy; 2024 - project_2 - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
-</footer>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - project_2 - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
 
-@await RenderSectionAsync("Scripts", required: false)
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
