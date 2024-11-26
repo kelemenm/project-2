@@ -65,9 +65,64 @@ namespace project_2.Controllers
         }
 
         // GET: Minta
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate, string? mvhKod, string? vizBazis, string? telepules, string? mvOk, string? modulKod)
         {
-            var laborDbContext = _context.Minta.Include(c => c.cAkkrMintavetel).Include(c => c.cHUMVIfelelos).Include(c => c.cHUMVImodul).Include(c => c.cMintavevo).Include(c => c.cMvHely).Include(c => c.cMvOka).Include(c => c.cMvTipus).Include(c => c.cVizsgaloLabor);
+
+
+            var mvHelyek = await _context.MvHely.ToListAsync();
+            ViewBag.MvhKodList = mvHelyek.Select(mvHely => new SelectListItem
+            {
+                Value = mvHely.Id.ToString(),
+                Text = $" {mvHely.MvhKod} - {mvHely.NevSajat}"
+            }).ToList();
+            ViewBag.VizBazisList = await _context.MvHely.Select(h => h.VizBazis).Distinct().ToListAsync();
+            ViewBag.TelepulesList = await _context.MvHely.Select(h => h.Telepules).Distinct().ToListAsync();
+            ViewBag.MvOkList = await _context.MvOka.Select(o => o.MvOk).Distinct().ToListAsync();
+            ViewBag.ModulKodList = await _context.HumviModul.Select(m => m.ModulKod).Distinct().ToListAsync();
+
+
+            var laborDbContext = _context.Minta
+                .Include(c => c.cAkkrMintavetel)
+                .Include(c => c.cHUMVIfelelos)
+                .Include(c => c.cHUMVImodul)
+                .Include(c => c.cMintavevo)
+                .Include(c => c.cMvHely)
+                .Include(c => c.cMvOka)
+                .Include(c => c.cMvTipus)
+                .Include(c => c.cVizsgaloLabor)
+                .AsQueryable();
+
+            // Szűrési feltételek
+            
+            if (startDate.HasValue)
+            {
+                laborDbContext = laborDbContext.Where(m => m.MvDatum >= startDate.Value);
+            }
+            if (endDate.HasValue)
+            {
+                laborDbContext = laborDbContext.Where(m => m.MvDatum <= endDate.Value);
+            }
+            if (!string.IsNullOrEmpty(mvhKod))
+            {
+                laborDbContext = laborDbContext.Where(m => m.cMvHely.Id.ToString() == mvhKod);
+            }
+            if (!string.IsNullOrEmpty(vizBazis))
+            {
+                laborDbContext = laborDbContext.Where(m => m.cMvHely.VizBazis.Contains(vizBazis));
+            }
+            if (!string.IsNullOrEmpty(telepules))
+            {
+                laborDbContext = laborDbContext.Where(m => m.cMvHely.Telepules.Contains(telepules));
+            }
+            if (!string.IsNullOrEmpty(mvOk))
+            {
+                laborDbContext = laborDbContext.Where(m => m.cMvOka.MvOk.Contains(mvOk));
+            }
+            if (!string.IsNullOrEmpty(modulKod))
+            {
+                laborDbContext = laborDbContext.Where(m => m.cHUMVImodul.ModulKod.Contains(modulKod));
+            }
+
             return View(await laborDbContext.ToListAsync());
         }
 
