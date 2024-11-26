@@ -24,6 +24,86 @@
   <!--  <a href="#" onclick="showPage('createMinta')">Create New</a>-->
     <a href="/Minta/Create" asp-action="Create">Create New</a>
 </p>
+
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label for="startDate" class="form-label">Mintavétel kezdete</label>
+            <input type="date" name="startDate" id="startDate" class="form-control" value="@ViewContext.HttpContext.Request.Query["startDate"]" />
+        </div>
+        <div class="col-md-3">
+            <label for="endDate" class="form-label">Mintavétel vége</label>
+            <input type="date" name="endDate" id="endDate" class="form-control" value="@ViewContext.HttpContext.Request.Query["endDate"]" />
+        </div>
+
+        <div class="col-md-2">
+            <label for="mvhKod" class="form-label">Mintavételi hely</label>
+            <select name="mvhKod" id="mvhKod" class="form-control">
+                <option value="">-- Válasszon --</option>
+                @if (ViewBag.MvhKodList != null)
+                {
+                    foreach (var item in (IEnumerable<SelectListItem>)ViewBag.MvhKodList)
+                    {
+                        <option value="@item.Value" @(item.Value == @ViewContext.HttpContext.Request.Query["mvhkod"] ? "selected" : "")>
+                            @item.Text
+                        </option>
+                    }
+                }                
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="vizBazis" class="form-label">Víz bázis</label>
+            <select name="vizBazis" id="vizBazis" class="form-control">
+                <option value="">-- Válasszon --</option>
+                @foreach (var item in ViewBag.VizBazisList)
+                {
+                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["vizBazis"] ? "selected" : "")>@item</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="telepules" class="form-label">Település</label>
+            <select name="telepules" id="telepules" class="form-control">
+                <option value="">-- Válasszon --</option>
+                @foreach (var item in ViewBag.TelepulesList)
+                {
+                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["telepules"] ? "selected" : "")>@item</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="mvOk" class="form-label">Mintavétel oka</label>
+            <select name="mvOk" id="mvOk" class="form-control">
+                <option value="">-- Válasszon --</option>
+                @foreach (var item in ViewBag.MvOkList)
+                {
+                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["mvOk"] ? "selected" : "")>@item</option>
+                }
+            </select>
+        </div>
+       <div class="col-md-2">
+            <label for="modulKod" class="form-label">HUMVI Modul Kód</label>
+            <select name="modulKod" id="modulKod" class="form-control">
+                <option value="">-- Válasszon --</option>
+                @foreach (var item in ViewBag.ModulKodList)
+                {
+                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["modulKod"] ? "selected" : "")>@item</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Szűrés</button>
+        </div>
+        <div class="col-md-2">
+            <a href="/Minta/Index" class="btn btn-secondary w-100">Szűrők törlése</a>
+        </div>
+    </div>
+</form>
+
+
+
 <table class="table">
     <thead>
         <tr>
