@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Domain.cMinta>
+
+@{
+    ViewData["Title"] = "Exportált Minták";
+}
+
+<h1>Exportált Minták</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Laborkód</th>
+            <th>Mintavétel dátuma</th>
+            <th>Mintaátvétel dátuma</th>
+            <th>Mintavétel oka</th>
+            <th>Mintavétel helye</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var minta in Model)
+        {
+            <tr>
+                <td>@minta.Id</td>
+                <td>@minta.LaborMintaKod</td>
+                <td>@minta.MvDatum.ToString("yyyy.MM.dd.")</td>
+                <td>@minta.MintaAtvetel.ToString("yyyy.MM.dd.")</td>
+                <td>@minta.cMvOka.Leiras</td>
+                <td>@(string.IsNullOrEmpty(minta.cMvHely?.MvhKod) || minta.cMvHely.MvhKod.ToLower() == "na"
+                            ? minta.MvHely : minta.cMvHely.NevSajat)</td>
+            </tr>
+            <tr></tr>          
+            @foreach (var eredmeny in minta.Eredmenyek.OrderBy(e => e.ParKod))
+            {
+                <tr>
+                    <td>@eredmeny.Parameter?.SajatLeiras</td>
+                    <td>@eredmeny.Mertekegyseg?.SajatLeiras</td>
+                    <td>@eredmeny.Ertek</td>
+                    <td>@eredmeny.AlsoMh</td>
+                    <td>@eredmeny.MaxRange</td>
+                    <td>@eredmeny.ErtekHozzarendelt</td>
+                </tr>
+            }
+            <tr></tr>
+        }
+    </tbody>
+</table>

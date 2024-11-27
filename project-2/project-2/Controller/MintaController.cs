@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using project_2.Dtos;
+using Microsoft.IdentityModel.Tokens;
 
 namespace project_2.Controllers
 {
@@ -65,7 +66,7 @@ namespace project_2.Controllers
         }
 
         // GET: Minta
-        public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate, string? mvhKod, string? vizBazis, string? telepules, string? mvOk, string? modulKod)
+        public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate, string? mvhKod, string? vizBazis, string? telepules, string? mvOk, string? modulKod, string? humviexport)
         {
 
 
@@ -121,6 +122,11 @@ namespace project_2.Controllers
             if (!string.IsNullOrEmpty(modulKod))
             {
                 laborDbContext = laborDbContext.Where(m => m.cHUMVImodul.ModulKod.Contains(modulKod));
+            }
+            if (!string.IsNullOrEmpty(humviexport))
+            {
+                bool humviExportBool = humviexport.ToLower() == "true";
+                laborDbContext = laborDbContext.Where(m => m.HUMVIexport == humviExportBool);
             }
 
             return View(await laborDbContext.ToListAsync());
@@ -411,6 +417,36 @@ namespace project_2.Controllers
         private bool cMintaExists(long id)
         {
             return _context.Minta.Any(e => e.Id == id);
+        }
+
+        //Minták exportálása
+        [HttpPost]
+        public IActionResult Export(List<long> selectedIds)
+        {
+            if (selectedIds == null || !selectedIds.Any())
+            {
+                TempData["Error"] = "Nincs kiválasztott minta az exportáláshoz.";
+                return RedirectToAction("Index");
+            }
+
+            var kiválasztottMinták = _context.Minta
+                .Include(c => c.cAkkrMintavetel)
+                .Include(c => c.cHUMVIfelelos)
+                .Include(c => c.cHUMVImodul)
+                .Include(c => c.cMintavevo)
+                .Include(c => c.cMvHely)
+                .Include(c => c.cMvOka)
+                .Include(c => c.cMvTipus)
+                .Include(c => c.cVizsgaloLabor)
+                .Include(c => c.Eredmenyek)
+                    .ThenInclude(e => e.Parameter)
+                .Include(c => c.Eredmenyek)
+                    .ThenInclude(e => e.Mertekegyseg)
+                .AsQueryable()
+                .Where(m => selectedIds.Contains(m.Id))
+                .ToList();
+
+            return View("ExportResult", kiválasztottMinták);
         }
     }
 }
