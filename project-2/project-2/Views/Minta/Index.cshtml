@@ -1,23 +1,30 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model IEnumerable<Domain.cMinta>
 
 @{
     ViewData["Title"] = "Index";
 }
-
-<style>
-    .minta_tabla_small-font {
-        font-size: 10px;
-    }
-
-    .minta_tabla_medium-font {
+<head>
+    <style>
+        .minta_tabla_small-font {
+            font-size: 10px;
+        }
+    </style>
+    <style>
+        .minta_tabla_medium-font {
         font-size: 12px;
     }
-</style>
+    </style>
+</head>
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
 <h1>Vízminták</h1>
 
-<a class="btn btn-primary my-2" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Create">Hozzáadás</a>
+<p>
+  <!--  <a href="#" onclick="showPage('createMinta')">Create New</a>-->
+    <a href="/Minta/Create" asp-action="Create">Create New</a>
+</p>
+
 <form method="get" asp-action="Index" class="mb-4">
     <div class="row g-3">
         <div class="col-md-3">
@@ -37,11 +44,11 @@
                 {
                     foreach (var item in (IEnumerable<SelectListItem>)ViewBag.MvhKodList)
                     {
-                        <option value="@item.Value" selected="@(item == ViewContext.HttpContext.Request.Query["mvhkod"] ? "selected" : null)">
+                        <option value="@item.Value" @(item.Value == @ViewContext.HttpContext.Request.Query["mvhkod"] ? "selected" : "")>
                             @item.Text
                         </option>
                     }
-                }
+                }                
             </select>
         </div>
         <div class="col-md-2">
@@ -50,7 +57,7 @@
                 <option value="">-- Válasszon --</option>
                 @foreach (var item in ViewBag.VizBazisList)
                 {
-                    <option value="@item" selected="@(item == ViewContext.HttpContext.Request.Query["vizBazis"] ? "selected" : null)">@item</option>
+                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["vizBazis"] ? "selected" : "")>@item</option>
                 }
             </select>
         </div>
@@ -60,7 +67,7 @@
                 <option value="">-- Válasszon --</option>
                 @foreach (var item in ViewBag.TelepulesList)
                 {
-                    <option value="@item" selected="@(item == ViewContext.HttpContext.Request.Query["telepules"] ? "selected" : null)">@item</option>
+                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["telepules"] ? "selected" : "")>@item</option>
                 }
             </select>
         </div>
@@ -70,18 +77,26 @@
                 <option value="">-- Válasszon --</option>
                 @foreach (var item in ViewBag.MvOkList)
                 {
-                    <option value="@item" selected="@(item == ViewContext.HttpContext.Request.Query["mvOk"] ? "selected" : null)">@item</option>
+                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["mvOk"] ? "selected" : "")>@item</option>
                 }
             </select>
         </div>
-        <div class="col-md-2">
+       <div class="col-md-2">
             <label for="modulKod" class="form-label">HUMVI Modul Kód</label>
             <select name="modulKod" id="modulKod" class="form-control">
                 <option value="">-- Válasszon --</option>
                 @foreach (var item in ViewBag.ModulKodList)
                 {
-                    <option value="@item" selected="@(item == ViewContext.HttpContext.Request.Query["modulKod"] ? "selected" : null)">@item</option>
+                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["modulKod"] ? "selected" : "")>@item</option>
                 }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="humviexport" class="form-label">HUMVI Export</label>
+            <select name="humviexport" id="humviexport" class="form-control">
+                <option value="">-- Válasszon --</option>
+                <option value="true" @(ViewContext.HttpContext.Request.Query["humviexport"] == "true" ? "selected" : "")>Igen</option>
+                <option value="false" @(ViewContext.HttpContext.Request.Query["humviexport"] == "false" ? "selected" : "")>Nem</option>
             </select>
         </div>
     </div>
@@ -97,50 +112,59 @@
 
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Humvi export
-            </th>
-            <th>
-                Laborkód
-            </th>
-            <th>
-                Mintavétel dátuma
-            </th>
-            <th>
-                Mintaátvétel dátuma
-            </th>
-            <th>
-                Mintavétel oka
-            </th>
-            <th>
-                Mintavétel helye
-            </th>
-            <th>
-                Akkr. mintavétel
-            </th>
-            <th>
-                HUMVI felelős
-            </th>
-            <th>
-                Modul
-            </th>
-            <th>
-                Mintavevő
-            </th>
+<form id="mintaForm" method="post" action="/Minta/Export">
 
-            <th>
-                Vizsgálólabor
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success">Exportálás</button>
+    </div>
+
+    <table class="table">
+        <thead>
             <tr>
+                <th><input type="checkbox" id="masterCheckbox" /></th>
+                <th>
+                    Humvi export
+                </th>
+                <th>
+                    Laborkód
+                </th>
+                <th>
+                    Mintavétel dátuma
+                </th>
+                <th>
+                    Mintaátvétel dátuma
+                </th>
+                <th>
+                    Mintavétel oka
+                </th>
+                <th>
+                    Mintavétel helye
+                </th>
+                <th>
+                    Akkr. mintavétel
+                </th>
+                <th>
+                    HUMVI felelős
+                </th>
+                <th>
+                    Modul
+                </th>
+                <th>
+                    Mintavevő
+                </th>
+
+                <th>
+                    Vizsgálólabor
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    <input type="checkbox" name="selectedIds" value="@item.Id" class="rowCheckbox" />
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.HUMVIexport)
                 </td>
@@ -183,11 +207,22 @@
                     @Html.DisplayFor(modelItem => item.cVizsgaloLabor.Nev)
                 </td>
                 <td>
-                    <a class="btn btn-warning btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Edit" asp-route-id="@item.Id">Szerkeszt</a>
-                    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Details" asp-route-id="@item.Id">Részletek</a>
-                    <a class="btn btn-danger btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Delete" asp-route-id="@item.Id">Törlés</a>
+        <!--                <a href="#" onclick="showPage('showMintaEdit', @item.Id)">Edit</a>
+                    <a href="#" onclick="showPage('showMintaDetails', @item.Id)">Details</a>
+                        <a href="#" onclick="showPage('showMintaDelete', @item.Id)">Delete</a>-->
+                    <a href="/Minta/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a href="/Minta/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a href="/Minta/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</form>
+
+<script>
+    document.getElementById('masterCheckbox').addEventListener('change', function () {
+        const isChecked = this.checked;
+        document.querySelectorAll('.rowCheckbox').forEach(cb => cb.checked = isChecked);
+    });
+</script>
