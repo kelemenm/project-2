@@ -1,10 +1,9 @@
-﻿@model Domain.cAkkrMintavetel
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Domain.cAkkrMintavetel
 
 @{
     ViewData["Title"] = "Edit";
 }
-
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
 <h1>Akkreditált mintavétel státusza</h1>
 
@@ -12,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form id="editForm" action="/AkkrMintavetel/Edit" asp-action="Edit" method="post">
+        <form id="editForm" asp-action="Edit" method="post">
             @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -40,15 +39,12 @@
                 <input asp-for="LastModified" class="form-control" id="LastModified" name="LastModified" value="@Model.LastModified" readonly/>
                 <span asp-validation-for="LastModified" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-group mt-3">
+                <input type="submit" value="Mentés" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-area="" asp-controller="AkkrMintavetel" asp-action="Index">Mégsem</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a href="#" onclick="showPage('akkrMintavetel')">Back to List</a>
 </div>
 
 @section Scripts {
