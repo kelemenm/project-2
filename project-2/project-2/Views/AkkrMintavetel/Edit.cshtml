@@ -41,7 +41,7 @@
             </div>
             <div class="form-group mt-3">
                 <input type="submit" value="Mentés" class="btn btn-primary" />
-                <a class="btn btn-secondary" asp-area="" asp-controller="AkkrMintavetel" asp-action="Index">Mégsem</a>
+                <a class="btn btn-secondary" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Index">Mégsem</a>
             </div>
         </form>
     </div>

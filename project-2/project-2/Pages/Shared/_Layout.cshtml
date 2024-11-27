@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,8 +27,8 @@
                                 Minták kezelése
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarMinta">
-                                <li><a class="dropdown-item" href="#">Vízminták kezelése</a></li>
-                                <li><a class="dropdown-item" href="#">Vízminták importálása</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Minta" asp-action="Index">Vízminták kezelése</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="Index">Vízminták importálása</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -40,15 +40,15 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarAdatok">
                                 <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="Index">Akkr. mintavétel státusza</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="HUMVIfelelos" asp-action="LoadIndexPartial">HUMVI felelősök</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">HUMVI modulok</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mértékegységek</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mintavevők</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mintavételi helyek</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mintavétel okai</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Mintavétel típusa</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Paraméterek</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="AkkrMintavetel" asp-action="LoadIndexPartial">Vizsgálólaborok</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="HUMVIfelelos" asp-action="Index">HUMVI felelősök</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="HUMVImodul" asp-action="Index">HUMVI modulok</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Mertekegyseg" asp-action="Index">Mértékegységek</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Mintavevo" asp-action="Index">Mintavevők</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="MvHely" asp-action="Index">Mintavételi helyek</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="MvOka" asp-action="Index">Mintavétel okai</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="MvTipus" asp-action="Index">Mintavétel típusa</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Parameter" asp-action="Index">Paraméterek</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="VizsgaloLabor" asp-action="Index">Vizsgálólaborok</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -56,7 +56,7 @@
                                 Térkép
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarTerkep">
-                                <li><a class="dropdown-item" href="#">Ivóvíz mintavételi pontok</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-page="/Map">Ivóvíz mintavételi pontok</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -76,7 +76,7 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid px-5">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

@@ -1,15 +1,13 @@
-﻿@model IEnumerable<Domain.cParameter>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<Domain.cParameter>
 
 @{
     ViewData["Title"] = "Index";
 }
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
 <h1>Vizsgálati paraméterek</h1>
 
-<p>
-    <a href="/Parameter/Create" asp-action="Create">Create New</a>
-</p>
+<a class="btn btn-primary my-2" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Create">Hozzáadás</a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -38,35 +36,36 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParKod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HumviLeiras)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SajatLeiras)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParamErtek)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParamTip)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastModified)
-            </td>
-            <td>
-                <a href="/Parameter/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a href="/Parameter/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a href="/Parameter/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParKod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HumviLeiras)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SajatLeiras)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParamErtek)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParamTip)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastModified)
+                </td>
+                <td>
+                    <a class="btn btn-warning btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Edit" asp-route-id="@item.Id">Szerkeszt</a>
+                    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Details" asp-route-id="@item.Id">Részletek</a>
+                    <a class="btn btn-danger btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Delete" asp-route-id="@item.Id">Törlés</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

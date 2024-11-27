@@ -1,15 +1,13 @@
-﻿@model IEnumerable<Domain.cHUMVImodul>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<Domain.cHUMVImodul>
 
 @{
     ViewData["Title"] = "Index";
 }
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
 <h1>HUMVI modulkódok</h1>
 
-<p> 
-    <a href="#" onclick="showPage('createHumviModul')">Create New</a>
-</p>
+<a class="btn btn-primary my-2" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Create">Hozzáadás</a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -29,26 +27,27 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModulKod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Leiras)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastModified)
-            </td>
-            <td>
-                <a href="#" onclick="showPage('showHumviModulEdit', @item.Id)">Edit</a>
-                <a href="#" onclick="showPage('showHumviModulDetails', @item.Id)">Details</a>
-                <a href="#" onclick="showPage('showHumviModulDelete', @item.Id)">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModulKod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Leiras)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastModified)
+                </td>
+                <td>
+                    <a class="btn btn-warning btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Edit" asp-route-id="@item.Id">Szerkeszt</a>
+                    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Details" asp-route-id="@item.Id">Részletek</a>
+                    <a class="btn btn-danger btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Delete" asp-route-id="@item.Id">Törlés</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
