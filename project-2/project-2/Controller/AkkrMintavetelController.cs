@@ -113,11 +113,7 @@ namespace project_2.Controllers
                 };
                 _context.Add(newAkkrMintavetel);
                 await _context.SaveChangesAsync();
-                return Json(new
-                {
-                    success = true,
-                    tableName = "AkkrMintavetel"  // Adattábla neve, amit kezelünk
-                });
+                return RedirectToAction("Index");
             }
             return View(akkrMintavetelDto);
         }
@@ -172,11 +168,7 @@ namespace project_2.Controllers
                     throw;
                 }
 
-                return Json(new
-                {
-                    success = true,
-                    tableName = "AkkrMintavetel"  // Adattábla neve, amit kezelünk
-                });
+                return RedirectToAction("Index");
             }
             return PartialView("LoadEditPartial", akkrMintavetelDto);
         }
@@ -211,11 +203,7 @@ namespace project_2.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Json(new
-            {
-                success = true,
-                tableName = "AkkrMintavetel"  // Adattábla neve, amit kezelünk
-            });
+            return RedirectToAction("Index");
         }
 
         private bool cAkkrMintavetelExists(long id)

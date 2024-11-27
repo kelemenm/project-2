@@ -7,7 +7,7 @@
 
 <h1>Akkreditált mintavétel státusza</h1>
 
-<a class="btn btn-primary my-2" asp-area="" asp-controller="AkkrMintavetel" asp-action="Create">Hozzáadás</a>
+<a class="btn btn-primary my-2" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Create">Hozzáadás</a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -43,9 +43,9 @@
                     @Html.DisplayFor(modelItem => item.LastModified)
                 </td>
                 <td>
-                    <a class="btn btn-warning btn-sm" asp-area="" asp-controller="AkkrMintavetel" asp-action="Edit" asp-route-id="@item.Id">Szerkeszt</a>
-                    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="AkkrMintavetel" asp-action="Details" asp-route-id="@item.Id">Részletek</a>
-                    <a class="btn btn-danger btn-sm" asp-area="" asp-controller="AkkrMintavetel" asp-action="Delete" asp-route-id="@item.Id">Törlés</a>
+                    <a class="btn btn-warning btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Edit" asp-route-id="@item.Id">Szerkeszt</a>
+                    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Details" asp-route-id="@item.Id">Részletek</a>
+                    <a class="btn btn-danger btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Delete" asp-route-id="@item.Id">Törlés</a>
                 </td>
             </tr>
         }

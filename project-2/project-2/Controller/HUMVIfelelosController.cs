@@ -114,11 +114,7 @@ namespace project_2.Controllers
                 };
                 _context.Add(newHUMVIfelelos);
                 await _context.SaveChangesAsync();
-                return Json(new
-                {
-                    success = true,
-                    tableName = "HumviFelelos"  // Adattábla neve, amit kezelünk
-                });
+                return RedirectToAction("Index");
             }
             return View(hUMVIfelelosDto);
         }
@@ -173,11 +169,7 @@ namespace project_2.Controllers
                 {
                     throw;
                 }
-                return Json(new
-                {
-                    success = true,
-                    tableName = "HumviFelelos"  // Adattábla neve, amit kezelünk
-                });
+                return RedirectToAction("Index");
 
             }
             return View(hUMVIfelelosDto);
@@ -214,11 +206,7 @@ namespace project_2.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Json(new
-            {
-                success = true,
-                tableName = "HumviFelelos"  // Adattábla neve, amit kezelünk
-            });
+            return RedirectToAction("Index");
         }
 
         private bool cHUMVIfelelosExists(long id)
