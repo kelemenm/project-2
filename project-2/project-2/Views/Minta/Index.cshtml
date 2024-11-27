@@ -91,6 +91,14 @@
                 }
             </select>
         </div>
+        <div class="col-md-2">
+            <label for="humviexport" class="form-label">HUMVI Export</label>
+            <select name="humviexport" id="humviexport" class="form-control">
+                <option value="">-- Válasszon --</option>
+                <option value="true" @(ViewContext.HttpContext.Request.Query["humviexport"] == "true" ? "selected" : "")>Igen</option>
+                <option value="false" @(ViewContext.HttpContext.Request.Query["humviexport"] == "false" ? "selected" : "")>Nem</option>
+            </select>
+        </div>
     </div>
     <div class="row mt-3">
         <div class="col-md-2">
@@ -104,99 +112,117 @@
 
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Humvi export
-            </th>
-            <th>
-                Laborkód
-            </th>
-            <th>
-                Mintavétel dátuma
-            </th>
-            <th>
-                Mintaátvétel dátuma
-            </th>
-            <th>
-                Mintavétel oka
-            </th>
-            <th>
-                Mintavétel helye
-            </th>
-            <th>
-                Akkr. mintavétel
-            </th>
-            <th>
-                HUMVI felelős
-            </th>
-            <th>
-                Modul
-            </th>
-            <th>
-                Mintavevő
-            </th>
+<form id="mintaForm" method="post" action="/Minta/Export">
 
-            <th>
-                Vizsgálólabor
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.HUMVIexport)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LaborMintaKod)
-            </td>
-            <td>
-                @item.MvDatum.ToString("yyyy.MM.dd.")
-            </td>
-            <td>
-                @item.MintaAtvetel.ToString("yyyy.MM.dd.")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.cMvOka.Leiras)
-            </td>
-            <td class="minta_tabla_small-font">
-                @if (string.IsNullOrEmpty(item.cMvHely?.MvhKod) || item.cMvHely.MvhKod.ToLower() == "na")
-                {
-                    @Html.DisplayFor(modelItem => item.MvHely)
-                }
-                else
-                {
-                    @Html.DisplayFor(modelItem => item.cMvHely.NevSajat)
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.cAkkrMintavetel.AkkrMintavetelStatusz)
-            </td>
-            <td class="minta_tabla_small-font">
-                @Html.DisplayFor(modelItem => item.cHUMVIfelelos.Nev)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.cHUMVImodul.Leiras)
-            </td>
-            <td class="minta_tabla_small-font">
-                @Html.DisplayFor(modelItem => item.cMintavevo.Nev)
-            </td>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-success">Exportálás</button>
+    </div>
 
-            <td class="minta_tabla_small-font">
-                @Html.DisplayFor(modelItem => item.cVizsgaloLabor.Nev)
-            </td>
-            <td>
-<!--                <a href="#" onclick="showPage('showMintaEdit', @item.Id)">Edit</a>
-                <a href="#" onclick="showPage('showMintaDetails', @item.Id)">Details</a>
-                    <a href="#" onclick="showPage('showMintaDelete', @item.Id)">Delete</a>-->
-                <a href="/Minta/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a href="/Minta/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a href="/Minta/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="masterCheckbox" /></th>
+                <th>
+                    Humvi export
+                </th>
+                <th>
+                    Laborkód
+                </th>
+                <th>
+                    Mintavétel dátuma
+                </th>
+                <th>
+                    Mintaátvétel dátuma
+                </th>
+                <th>
+                    Mintavétel oka
+                </th>
+                <th>
+                    Mintavétel helye
+                </th>
+                <th>
+                    Akkr. mintavétel
+                </th>
+                <th>
+                    HUMVI felelős
+                </th>
+                <th>
+                    Modul
+                </th>
+                <th>
+                    Mintavevő
+                </th>
+
+                <th>
+                    Vizsgálólabor
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    <input type="checkbox" name="selectedIds" value="@item.Id" class="rowCheckbox" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HUMVIexport)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LaborMintaKod)
+                </td>
+                <td>
+                    @item.MvDatum.ToString("yyyy.MM.dd.")
+                </td>
+                <td>
+                    @item.MintaAtvetel.ToString("yyyy.MM.dd.")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cMvOka.Leiras)
+                </td>
+                <td class="minta_tabla_small-font">
+                    @if (string.IsNullOrEmpty(item.cMvHely?.MvhKod) || item.cMvHely.MvhKod.ToLower() == "na")
+                    {
+                        @Html.DisplayFor(modelItem => item.MvHely)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.cMvHely.NevSajat)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cAkkrMintavetel.AkkrMintavetelStatusz)
+                </td>
+                <td class="minta_tabla_small-font">
+                    @Html.DisplayFor(modelItem => item.cHUMVIfelelos.Nev)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cHUMVImodul.Leiras)
+                </td>
+                <td class="minta_tabla_small-font">
+                    @Html.DisplayFor(modelItem => item.cMintavevo.Nev)
+                </td>
+
+                <td class="minta_tabla_small-font">
+                    @Html.DisplayFor(modelItem => item.cVizsgaloLabor.Nev)
+                </td>
+                <td>
+        <!--                <a href="#" onclick="showPage('showMintaEdit', @item.Id)">Edit</a>
+                    <a href="#" onclick="showPage('showMintaDetails', @item.Id)">Details</a>
+                        <a href="#" onclick="showPage('showMintaDelete', @item.Id)">Delete</a>-->
+                    <a href="/Minta/Edit/@item.Id" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a href="/Minta/Details/@item.Id" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a href="/Minta/Delete/@item.Id" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</form>
+
+<script>
+    document.getElementById('masterCheckbox').addEventListener('change', function () {
+        const isChecked = this.checked;
+        document.querySelectorAll('.rowCheckbox').forEach(cb => cb.checked = isChecked);
+    });
+</script>
