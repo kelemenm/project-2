@@ -115,7 +115,7 @@
 <form id="mintaForm" method="post" action="/Minta/Export">
 
     <div class="mb-3">
-        <button type="submit" class="btn btn-success">Exportálás</button>
+        <button id="exportButton" type="submit" class="btn btn-success">Exportálás</button>
     </div>
 
     <table class="table">
@@ -220,9 +220,52 @@
     </table>
 </form>
 
+<!--
+    EZ A MAXIMUM KIJELÖLHETŐ ELEM NÉLKÜLI SZKRIPT
 <script>
     document.getElementById('masterCheckbox').addEventListener('change', function () {
         const isChecked = this.checked;
         document.querySelectorAll('.rowCheckbox').forEach(cb => cb.checked = isChecked);
     });
 </script>
+-->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const maxSelectableItems = '@ViewBag.maxSelectableItems';
+        const checkboxes = document.querySelectorAll('.rowCheckbox');
+        const masterCheckbox = document.getElementById('masterCheckbox');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const checkedCount = document.querySelectorAll('.rowCheckbox:checked').length;
+                if (checkedCount > maxSelectableItems) {
+                    alert(`Maximum ${maxSelectableItems} elem választható ki!`);
+                    this.checked = false; // A jelölés visszavonása
+                }
+            });
+        });
+
+        // Master checkbox szinkronizáció
+        masterCheckbox.addEventListener('change', function () {
+            const isChecked = this.checked;
+            let checkedCount = document.querySelectorAll('.rowCheckbox:checked').length;
+
+            checkboxes.forEach(cb => {
+                if (isChecked && checkedCount < maxSelectableItems) {
+                    cb.checked = true;
+                    checkedCount++;
+                } else if (!isChecked) {
+                    cb.checked = false;
+                }
+            });
+
+            if (checkedCount > maxSelectableItems) {
+                alert(`Csak ${maxSelectableItems} elemet választhat ki a kijelölő négyzetek használatával!`);
+                masterCheckbox.checked = false;
+            }
+        });
+
+    });
+</script>
+
