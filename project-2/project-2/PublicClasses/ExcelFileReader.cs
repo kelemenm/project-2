@@ -14,17 +14,19 @@ using System.ComponentModel;
 public class ExcelFileReader
 {
     private readonly LaborDbContext _context;
+    private readonly string _connectionString;
 
     // Konstruktor, amely megkapja a LaborDbContext példányt
-    public ExcelFileReader(LaborDbContext context)
+    public ExcelFileReader(LaborDbContext context, IConfiguration configuration)
     {
         _context = context;
+        _connectionString = configuration.GetConnectionString("LaborConnectionString");
     }
 
     public FileInfo ExcelFileUploader()
     {
-        string filePath = @".\Data\UploadedFiles\DB_minta_szamolas.xlsm";
-        //string filePath = @".\Data\UploadedFiles\DB_minta_hosszu.xlsm";
+        //string filePath = @".\Data\UploadedFiles\DB_minta_szamolas.xlsm";
+        string filePath = @".\Data\UploadedFiles\DB_minta_hosszu.xlsm";
 
         FileInfo file = new FileInfo(filePath);
 
@@ -355,7 +357,7 @@ public class ExcelFileReader
         List<string> rowData = new List<string>();
 
         // Kapcsolati string az MSSQL adatbázishoz
-        string connectionString = "Server=12400corei5\\SQLEXPRESS;Database=labor_teszt_VS;User Id=tesztadmin;Password=teszt;";
+        string connectionString = _connectionString;
 
         // SQL beszúró utasítás OUTPUT-tal
         string insertQuery = @"

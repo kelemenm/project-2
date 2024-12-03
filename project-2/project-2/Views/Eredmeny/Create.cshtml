@@ -1,0 +1,67 @@
+﻿@model Domain.cEredmeny
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>cEredmeny</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MintaId" class="control-label"></label>
+                <select asp-for="MintaId" class ="form-control" asp-items="ViewBag.MintaId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParKod" class="control-label"></label>
+                <select asp-for="ParKod" class ="form-control" asp-items="ViewBag.ParKod"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Megyseg" class="control-label"></label>
+                <select asp-for="Megyseg" class ="form-control" asp-items="ViewBag.Megyseg"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ertek" class="control-label"></label>
+                <input asp-for="Ertek" class="form-control" />
+                <span asp-validation-for="Ertek" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AlsoMh" class="control-label"></label>
+                <input asp-for="AlsoMh" class="form-control" />
+                <span asp-validation-for="AlsoMh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxRange" class="control-label"></label>
+                <input asp-for="MaxRange" class="form-control" />
+                <span asp-validation-for="MaxRange" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ErtekHozzarendelt" class="control-label"></label>
+                <input asp-for="ErtekHozzarendelt" class="form-control" />
+                <span asp-validation-for="ErtekHozzarendelt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Created" class="control-label"></label>
+                <input asp-for="Created" class="form-control" />
+                <span asp-validation-for="Created" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastModified" class="control-label"></label>
+                <input asp-for="LastModified" class="form-control" />
+                <span asp-validation-for="LastModified" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

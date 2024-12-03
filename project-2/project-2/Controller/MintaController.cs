@@ -18,12 +18,15 @@ namespace project_2.Controllers
     public class MintaController : Controller
     {
         private readonly LaborDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public MintaController(LaborDbContext context)
+        public MintaController(LaborDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
+        
         public IActionResult LoadIndexPartial()
         {
             var data = _context.Minta.ToList();
@@ -81,6 +84,7 @@ namespace project_2.Controllers
             ViewBag.MvOkList = await _context.MvOka.Select(o => o.MvOk).Distinct().ToListAsync();
             ViewBag.ModulKodList = await _context.HumviModul.Select(m => m.ModulKod).Distinct().ToListAsync();
 
+            ViewBag.maxSelectableItems = _configuration["Settings:maxSelectableItems"];
 
             var laborDbContext = _context.Minta
                 .Include(c => c.cAkkrMintavetel)
@@ -428,6 +432,7 @@ namespace project_2.Controllers
                 TempData["Error"] = "Nincs kiválasztott minta az exportáláshoz.";
                 return RedirectToAction("Index");
             }
+
 
             var kiválasztottMinták = _context.Minta
                 .Include(c => c.cAkkrMintavetel)

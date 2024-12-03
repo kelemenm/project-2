@@ -90,12 +90,8 @@ app.MapRazorPages();
 //Ha seedelt adattáblák üresek, akkor feltölti adatokkal
 DbInitializer.Seed(app);
 
-
-
-
 // Az Excel fájl beolvasása
 // Scoped szolgáltatásként kérjük le az ExcelFileReader-t
-
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

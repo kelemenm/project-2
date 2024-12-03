@@ -1,0 +1,72 @@
+﻿@model Domain.cEredmeny
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>cEredmeny</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Minta)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Minta.LaborMintaKod)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ertek)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ertek)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AlsoMh)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AlsoMh)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MaxRange)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MaxRange)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ErtekHozzarendelt)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ErtekHozzarendelt)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Parameter)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Parameter.HumviLeiras)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Mertekegyseg)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Mertekegyseg.HumviLeiras)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LastModified)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastModified)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
