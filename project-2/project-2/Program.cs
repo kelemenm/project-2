@@ -25,11 +25,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .Build();
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
