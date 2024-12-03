@@ -1,15 +1,13 @@
-﻿@model IEnumerable<Domain.cHUMVIfelelos>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<Domain.cHUMVIfelelos>
 
 @{
     ViewData["Title"] = "Index";
 }
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
 <h1>HUMVI felelősök</h1>
 
-<p>
-    <a href="#" onclick="showPage('createHumviFelelos')">Create New</a>
-</p>
+<a class="btn btn-primary my-2" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Create">Hozzáadás</a>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -32,29 +30,30 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Felelos)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nev)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cim)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastModified)
-            </td>
-            <td>
-                <a href="#" onclick="showPage('showHumviFelelosEdit', @item.Id)">Edit</a>
-                <a href="#" onclick="showPage('showHumviFelelosDetails', @item.Id)">Details</a>
-                <a href="#" onclick="showPage('showHumviFelelosDelete', @item.Id)">Delete</a>
-            </td>
-    </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Felelos)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nev)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cim)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastModified)
+                </td>
+                <td>
+                    <a class="btn btn-warning btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Edit" asp-route-id="@item.Id">Szerkeszt</a>
+                    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Details" asp-route-id="@item.Id">Részletek</a>
+                    <a class="btn btn-danger btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Delete" asp-route-id="@item.Id">Törlés</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

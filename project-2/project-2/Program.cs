@@ -41,46 +41,44 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=AkkrMintavetel}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "HUMVIfelelos",
-    pattern: "{controller=HUMVIfelelos}/{action=Index}/{id?}");
+        name: "HUMVIfelelos",
+        pattern: "{controller=HUMVIfelelos}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "HUMVImodul",
-    pattern: "{controller=HUMVImodul}/{action=Index}/{id?}");
+        name: "HUMVImodul",
+        pattern: "{controller=HUMVImodul}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "Mintavevo",
-    pattern: "{controller=Mintavevo}/{action=Index}/{id?}");
+        name: "Mintavevo",
+        pattern: "{controller=Mintavevo}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "MvHely",
-    pattern: "{controller=MvHely}/{action=Index}/{id?}");
+        name: "MvHely",
+        pattern: "{controller=MvHely}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "MvOka",
-    pattern: "{controller=MvOka}/{action=Index}/{id?}");
+        name: "MvOka",
+        pattern: "{controller=MvOka}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "MvTipus",
-    pattern: "{controller=MvTipus}/{action=Index}/{id?}");
+        name: "MvTipus",
+        pattern: "{controller=MvTipus}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "VizsgaloLabor",
-    pattern: "{controller=VizsgaloLabor}/{action=Index}/{id?}");
+        name: "VizsgaloLabor",
+        pattern: "{controller=VizsgaloLabor}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "Mertekegyseg",
-    pattern: "{controller=Mertekegyseg}/{action=Index}/{id?}");
+        name: "Mertekegyseg",
+        pattern: "{controller=Mertekegyseg}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "Parameter",
-    pattern: "{controller=Parameter}/{action=Index}/{id?}");
+        name: "Parameter",
+        pattern: "{controller=Parameter}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-    name: "Minta",
-    pattern: "{controller=Minta}/{action=Index}/{id?}");
-
-
+        name: "Minta",
+        pattern: "{controller=Minta}/{action=Index}/{id?}");
 });
 
 

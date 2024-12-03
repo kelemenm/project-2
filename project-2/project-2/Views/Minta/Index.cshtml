@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Domain.cMinta>
+@model IEnumerable<Domain.cMinta>
 
 @{
     ViewData["Title"] = "Index";
@@ -220,16 +220,6 @@
     </table>
 </form>
 
-<!--
-    EZ A MAXIMUM KIJELÖLHETŐ ELEM NÉLKÜLI SZKRIPT
-<script>
-    document.getElementById('masterCheckbox').addEventListener('change', function () {
-        const isChecked = this.checked;
-        document.querySelectorAll('.rowCheckbox').forEach(cb => cb.checked = isChecked);
-    });
-</script>
--->
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const maxSelectableItems = '@ViewBag.maxSelectableItems';
@@ -268,4 +258,3 @@
 
     });
 </script>
-

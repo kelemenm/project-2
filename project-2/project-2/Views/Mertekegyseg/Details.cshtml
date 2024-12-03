@@ -1,10 +1,9 @@
-﻿@model Domain.cMertekegyseg
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Domain.cMertekegyseg
 
 @{
     ViewData["Title"] = "Details";
 }
-
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 
 <h1>Mértékegységek</h1>
 
@@ -45,6 +44,6 @@
     </dl>
 </div>
 <div>
-    <a href="/Mertekegyseg/Edit/@Model?.Id" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a href="/Mertekegyseg/Index" asp-action="Index">Back to List</a>
+    <a class="btn btn-warning" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Edit" asp-route-id="@Model.Id">Szerkeszt</a>
+    <a class="btn btn-secondary" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Index">Mégsem</a>
 </div>

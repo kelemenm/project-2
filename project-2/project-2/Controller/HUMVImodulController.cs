@@ -114,11 +114,7 @@ namespace project_2.Controllers
                 };
                 _context.Add(newHUMVImodul);
                 await _context.SaveChangesAsync();
-                return Json(new
-                {
-                    success = true,
-                    tableName = "HumviModul"  // Adattábla neve, amit kezelünk
-                });
+                return RedirectToAction("Index");
             }
             return View(hUMVImodulDto);
         }
@@ -172,11 +168,7 @@ namespace project_2.Controllers
                 {
                     throw;
                 }
-                return Json(new
-                {
-                    success = true,
-                    tableName = "HumviModul"  // Adattábla neve, amit kezelünk
-                });
+                return RedirectToAction("Index");
             }
             return View(hUMVImodulDto);
 
@@ -212,11 +204,7 @@ namespace project_2.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return Json(new
-            {
-                success = true,
-                tableName = "HumviModul"  // Adattábla neve, amit kezelünk
-            });
+            return RedirectToAction("Index");
         }
 
         private bool cHumviModulExists(long id)
