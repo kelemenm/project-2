@@ -21,6 +21,19 @@ body {
   margin-bottom: 60px;
 }
 
+.stickyheader thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+}
+
+.minta_tabla_small-font {
+    font-size: 10px;
+}
+
+.minta_tabla_medium-font {
+    font-size: 12px;
+}
 /*
 body {
     font-family: Arial, sans-serif;

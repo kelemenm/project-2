@@ -2,13 +2,11 @@
 @model IEnumerable<Domain.cMvTipus>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Mintavétel típusa";
 }
+<partial name="_ListingHeader" model="Model.Count()" />
 
-<h1>Mintavétel típusa</h1>
-
-<a class="btn btn-primary my-2" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Create">Hozzáadás</a>
-<table class="table table-striped">
+<table class="table table-striped stickyheader">
     <thead>
         <tr>
             <th>
