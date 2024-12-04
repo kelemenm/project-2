@@ -21,7 +21,7 @@ namespace project_2.Controllers
         }
 
         // GET: Eredmeny
-        public async Task<IActionResult> Index(DateTime? fromDate, DateTime? toDate, string? mvhKod, string? vizBazis, string? telepules, string? parameterId = "309")
+        public async Task<IActionResult> Index(DateTime? fromDate, DateTime? toDate, string? mvhKod, string? vizBazis, string? telepules, string? parameterId = "309", string? parameterSearch = "")
         {
             ViewBag.ParameterList = _context.Parameter
                 .Select(p => new SelectListItem

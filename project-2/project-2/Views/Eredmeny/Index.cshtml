@@ -35,14 +35,29 @@
 
                     <div class="col-md-8">
                         <label for="parameterSearch" class="form-label">Paraméter:</label>
-                        <input list="parameterOptions" id="parameterSearch" class="form-control" placeholder="Írja be a paraméter nevét...">
-                        <input type="hidden" id="parameterId" name="parameterId" />
+
+                        @{
+                            var parameterSearchValue = ViewContext.HttpContext.Request.Query["parameterSearch"].FirstOrDefault();
+                            var parameterIdValue = ViewContext.HttpContext.Request.Query["parameterId"].FirstOrDefault();
+                        }
+
+                        <input list="parameterOptions" 
+                               id="parameterSearch" 
+                               name="parameterSearch" 
+                               class="form-control" 
+                               placeholder="Írja be a paraméter nevét..." 
+                               value="@parameterSearchValue" />
+
+                        <input type="hidden" 
+                               id="parameterId" 
+                               name="parameterId" 
+                               value="@parameterIdValue" />
 
                         <datalist id="parameterOptions">
                             @foreach (var item in (List<SelectListItem>)ViewBag.ParameterList)
                             {
                                 <option value="@item.Text" data-id="@item.Value"></option>
-                            }                                                    }
+                            }
                         </datalist>
                     </div>
 
@@ -187,6 +202,9 @@ var data = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(x 
 var labels = data.map(function(item) { return item.LaborMintaKod; });
 var values = data.map(function(item) { return item.ErtekHozzarendelt; });
 
+//minden érték 0-e... e nélkül rosszul kezelte
+var allZero = values.every(value => value === 0);
+
 // Számoljuk ki az átlagot és a szórást
 function calculateAverage(values) {
     var sum = values.reduce(function(a, b) { return a + b; }, 0);
@@ -214,8 +232,8 @@ var minValue = Math.min(...values);
 var maxValue = Math.max(...values);
 
 // Y tengely dinamikus határai 10%-os ráhagyással
-var yMin = Math.min(minValue, minus3sd) * 0.9;
-var yMax = Math.max(maxValue, plus3sd) * 1.1;
+var yMin = allZero ? 0 : Math.min(minValue, minus3sd) * 0.9;
+var yMax = allZero ? 1 : Math.max(maxValue, plus3sd) * 1.1;
 
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
