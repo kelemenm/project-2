@@ -21,7 +21,7 @@
             <th>
                 Utolsó módosítás
             </th>
-            <th></th>
+            <th class="actioncol"></th>
         </tr>
     </thead>
     <tbody>
@@ -40,10 +40,8 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.LastModified)
                 </td>
-                <td>
-                    <a class="btn btn-warning btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Edit" asp-route-id="@item.Id">Szerkeszt</a>
-                    <a class="btn btn-primary btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Details" asp-route-id="@item.Id">Részletek</a>
-                    <a class="btn btn-danger btn-sm" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Delete" asp-route-id="@item.Id">Törlés</a>
+                <td class="actioncol">
+                    <partial name="_ListingActions" model="@item.Id" />
                 </td>
             </tr>
         }

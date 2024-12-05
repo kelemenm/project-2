@@ -4,124 +4,106 @@
     ViewData["Title"] = "Vizsgálati eredmények";
 }
 
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@latest"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.4/jstat.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
+<section class="border rounded-3 shadow-sm">
 
-<!DOCTYPE html>
-<html lang="hu">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div style="max-height: 81vh" class="split-container">
+        <div id="filter" class="split-left p-4">
+            <form method="get" asp-action="Index" class="mb-3">
 
-    <style>
-        .container > .row{ border:1px solid red;min-height:30%; }
-        .container > .row > .col-md-6 > .row{ border:1px solid red;min-height:50%; }
-    </style>
-</head>
+                <div class="row">
+                    <label for="parameterSearch" class="form-label">Paraméter:</label>
 
-<body>
-<section class="">
+                    @{
+                        var parameterSearchValue = ViewContext.HttpContext.Request.Query["parameterSearch"].FirstOrDefault();
+                        var parameterIdValue = ViewContext.HttpContext.Request.Query["parameterId"].FirstOrDefault();
+                    }
 
-    <div class="container-fluid">
-        <div class="row">
-            <div id = "filter" class="col-lg-3 vh-100 bg-danger">
-                <form method="get" asp-action="Index" class="mb-3">
+                    <input list="parameterOptions"
+                           id="parameterSearch"
+                           name="parameterSearch"
+                           class="form-control"
+                           placeholder="Írja be a paraméter nevét..."
+                           value="@parameterSearchValue" />
 
-                    <div class="col-md-8">
-                        <label for="parameterSearch" class="form-label">Paraméter:</label>
+                    <input type="hidden"
+                           id="parameterId"
+                           name="parameterId"
+                           value="@parameterIdValue" />
 
-                        @{
-                            var parameterSearchValue = ViewContext.HttpContext.Request.Query["parameterSearch"].FirstOrDefault();
-                            var parameterIdValue = ViewContext.HttpContext.Request.Query["parameterId"].FirstOrDefault();
+                    <datalist id="parameterOptions">
+                        @foreach (var item in (List<SelectListItem>)ViewBag.ParameterList)
+                        {
+                            <option value="@item.Text" data-id="@item.Value"></option>
                         }
-
-                        <input list="parameterOptions" 
-                               id="parameterSearch" 
-                               name="parameterSearch" 
-                               class="form-control" 
-                               placeholder="Írja be a paraméter nevét..." 
-                               value="@parameterSearchValue" />
-
-                        <input type="hidden" 
-                               id="parameterId" 
-                               name="parameterId" 
-                               value="@parameterIdValue" />
-
-                        <datalist id="parameterOptions">
-                            @foreach (var item in (List<SelectListItem>)ViewBag.ParameterList)
-                            {
-                                <option value="@item.Text" data-id="@item.Value"></option>
-                            }
-                        </datalist>
-                    </div>
-
-                    <div class="col-md-8">
-                        <label for="mvhKod" class="form-label">Mintavételi hely</label>
-                        <select name="mvhKod" id="mvhKod" class="form-control">
-                            <option value="">-- Válasszon --</option>
-                                @if (ViewBag.MvhKodList != null)
-                                {
-                                    foreach (var item in (IEnumerable<SelectListItem>)ViewBag.MvhKodList)
-                                    {
-                                        <option value="@item.Value" @(item.Value == @ViewContext.HttpContext.Request.Query["mvhkod"] ? "selected" : "")>
-                                            @item.Text
-                                        </option>
-                                    }
-                                }                
-                        </select>
-                    </div>
-
-                    <div class="col-md-8">
-                        <label for="vizBazis" class="form-label">Víz bázis</label>
-                        <select name="vizBazis" id="vizBazis" class="form-control">
-                            <option value="">-- Válasszon --</option>
-                                @foreach (var item in ViewBag.VizBazisList)
-                                {
-                                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["vizBazis"] ? "selected" : "")>@item</option>
-                                }
-                        </select>
-                    </div>
-
-                    <div class="col-md-8">
-                        <label for="telepules" class="form-label">Település</label>
-                        <select name="telepules" id="telepules" class="form-control">
-                            <option value="">-- Válasszon --</option>
-                                @foreach (var item in ViewBag.TelepulesList)
-                                {
-                                    <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["telepules"] ? "selected" : "")>@item</option>
-                                }
-                        </select>
-                    </div>
-
-                    <div class="col-md-8">
-                        <label for="fromDate" class="form-label mt-3">Mintavételi dátum - Tól:</label>
-                        <input type="date" id="fromDate" name="fromDate" class="form-control" value="@ViewContext.HttpContext.Request.Query["fromDate"]" />
-                    </div>
-
-                    <div class="col-md-8">
-                        <label for="toDate" class="form-label mt-3">Mintavételi dátum - Ig:</label>
-                        <input type="date" id="toDate" name="toDate" class="form-control" value="@ViewContext.HttpContext.Request.Query["toDate"]" />
-                    </div>
-
-                    <button type="submit" class="btn btn-primary mt-2">Szűrés</button>
-                </form>
-
-                <div id="statistics-summary" class="mt-3 p-3 border bg-light">
-                    <h4>Statisztikai összefoglaló</h4>
-                    <p id="summary"></p>
+                    </datalist>
                 </div>
-            </div>
 
-            <div class="col-lg-9 vh-100">
-               <div id="adatok" class="row h-50 bg-primary table-responsive">
-                    <div class="overflow-hidden">
-                        <table class="table">
+                <div class="row">
+                    <label for="mvhKod" class="form-label">Mintavételi hely</label>
+                    <select name="mvhKod" id="mvhKod" class="form-control">
+                        <option value="">-- Válasszon --</option>
+                        @if (ViewBag.MvhKodList != null)
+                        {
+                            foreach (var item in (IEnumerable<SelectListItem>)ViewBag.MvhKodList)
+                            {
+                                <option value="@item.Value" @(item.Value == @ViewContext.HttpContext.Request.Query["mvhkod"] ? "selected" : "")>
+                                    @item.Text
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="row">
+                    <label for="vizBazis" class="form-label">Víz bázis</label>
+                    <select name="vizBazis" id="vizBazis" class="form-control">
+                        <option value="">-- Válasszon --</option>
+                        @foreach (var item in ViewBag.VizBazisList)
+                        {
+                            <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["vizBazis"] ? "selected" : "")>@item</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="row">
+                    <label for="telepules" class="form-label">Település</label>
+                    <select name="telepules" id="telepules" class="form-control">
+                        <option value="">-- Válasszon --</option>
+                        @foreach (var item in ViewBag.TelepulesList)
+                        {
+                            <option value="@item" @(item == @ViewContext.HttpContext.Request.Query["telepules"] ? "selected" : "")>@item</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="row">
+                    <label for="fromDate" class="form-label mt-3">Mintavételi dátum - Tól:</label>
+                    <input type="date" id="fromDate" name="fromDate" class="form-control" value="@ViewContext.HttpContext.Request.Query["fromDate"]" />
+                </div>
+
+                <div class="row">
+                    <label for="toDate" class="form-label mt-3">Mintavételi dátum - Ig:</label>
+                    <input type="date" id="toDate" name="toDate" class="form-control" value="@ViewContext.HttpContext.Request.Query["toDate"]" />
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-2">Szűrés</button>
+            </form>
+
+            <div id="statistics-summary" class="mt-3 p-3 border bg-light">
+                <h4>Statisztikai összefoglaló</h4>
+                <p id="summary"></p>
+            </div>
+        </div>
+        <div class="split-slider split-vertical align-content-center"><i class="bi bi-grip-vertical"></i></div>
+        <div id="eredmenyJobb" class="split-right">
+            <div class="split-container split-container-horizontal">
+                <div id="adatok" class="split-top">
+                    <div class="">
+                        <table class="table table-striped stickyheader">
                             <thead>
                                 <tr>
                                     <th>Minta</th>
@@ -140,259 +122,257 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                <tr>
-                                    <td>@Html.DisplayFor(modelItem => item.Minta.LaborMintaKod)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Minta.cMvHely.NevSajat)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Minta.cMvHely.Telepules)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Minta.cMvHely.VizBazis)</td>
-                                    <td>@item.Minta.MvDatum.ToString("yyyy.MM.dd.")</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Parameter.SajatLeiras)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Mertekegyseg.SajatLeiras)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.Ertek)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.AlsoMh)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.MaxRange)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.ErtekHozzarendelt)</td>
-                                </tr>
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.Minta.LaborMintaKod)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Minta.cMvHely.NevSajat)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Minta.cMvHely.Telepules)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Minta.cMvHely.VizBazis)</td>
+                                        <td>@item.Minta.MvDatum.ToString("yyyy.MM.dd.")</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Parameter.SajatLeiras)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Mertekegyseg.SajatLeiras)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Ertek)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.AlsoMh)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.MaxRange)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ErtekHozzarendelt)</td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
 
                     </div>
-               </div>
-               <div class="row h-50">
-                    <canvas id="myChart" width="300px" height="90%"></canvas>
-               </div>
+                </div>
+                <div class="split-slider split-horizontal text-center"><i class="bi bi-grip-horizontal"></i></div>
+                <div class="split-bottom p-3">
+                    <canvas id="myChart" width="300" height="90%"></canvas>
+                </div>
             </div>
         </div>
     </div>
 
 </section>
 
-</body>
-</html>
-
 <script>
-    //paraméter kereső automatikus kiegészítés
-    document.getElementById("parameterSearch").addEventListener("input", function () {
-        var input = this.value;
-        var datalist = document.getElementById("parameterOptions").options;
-        var parameterIdField = document.getElementById("parameterId");
+        //paraméter kereső automatikus kiegészítés
+        document.getElementById("parameterSearch").addEventListener("input", function () {
+            var input = this.value;
+            var datalist = document.getElementById("parameterOptions").options;
+            var parameterIdField = document.getElementById("parameterId");
 
-        parameterIdField.value = ""; 
+            parameterIdField.value = "";
 
-        for (var i = 0; i < datalist.length; i++) {
-            if (datalist[i].value === input) {
-                parameterIdField.value = datalist[i].dataset.id;
-                break;
+            for (var i = 0; i < datalist.length; i++) {
+                if (datalist[i].value === input) {
+                    parameterIdField.value = datalist[i].dataset.id;
+                    break;
+                }
             }
-        }
-    });
+        });
 
-// Paraméter neve és mértékegység gyűjtése (feltételezve, hogy az első sor 6. és 7. oszlopában vannak)
-var parameterName = document.querySelector("table tr:first-child td:nth-child(6)").innerText;
-var unit = document.querySelector("table tr:first-child td:nth-child(7)").innerText;
+    // Paraméter neve és mértékegység gyűjtése (feltételezve, hogy az első sor 6. és 7. oszlopában vannak)
+    var parameterName = document.querySelector("table tr:first-child td:nth-child(6)").innerText;
+    var unit = document.querySelector("table tr:first-child td:nth-child(7)").innerText;
 
-// Grafikon cím beállítása
-var chartTitle = `${parameterName} [${unit}]`;
+    // Grafikon cím beállítása
+    var chartTitle = `${parameterName} [${unit}]`;
 
-// Az Eredmények ErtekHozzarendelt adatainak összegyűjtése a Chart.js számára
-var data = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(x => new { x.Minta.LaborMintaKod, x.ErtekHozzarendelt })));
+    // Az Eredmények ErtekHozzarendelt adatainak összegyűjtése a Chart.js számára
+    var data = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(x => new { x.Minta.LaborMintaKod, x.ErtekHozzarendelt })));
 
-// Kivonatoljuk a labor mintakódokat és az értékeket
-var labels = data.map(function(item) { return item.LaborMintaKod; });
-var values = data.map(function(item) { return item.ErtekHozzarendelt; });
+    // Kivonatoljuk a labor mintakódokat és az értékeket
+    var labels = data.map(function(item) { return item.LaborMintaKod; });
+    var values = data.map(function(item) { return item.ErtekHozzarendelt; });
 
-//minden érték 0-e... e nélkül rosszul kezelte
-var allZero = values.every(value => value === 0);
+    //minden érték 0-e... e nélkül rosszul kezelte
+    var allZero = values.every(value => value === 0);
 
-// Számoljuk ki az átlagot és a szórást
-function calculateAverage(values) {
-    var sum = values.reduce(function(a, b) { return a + b; }, 0);
-    return sum / values.length;
-}
+    // Számoljuk ki az átlagot és a szórást
+    function calculateAverage(values) {
+        var sum = values.reduce(function(a, b) { return a + b; }, 0);
+        return sum / values.length;
+    }
 
-function calculateStandardDeviation(values, average) {
-    var squareDiffs = values.map(function(value) {
-        var diff = value - average;
-        return diff * diff;
-    });
-    var avgSquareDiff = calculateAverage(squareDiffs);
-    return Math.sqrt(avgSquareDiff);
-}
+    function calculateStandardDeviation(values, average) {
+        var squareDiffs = values.map(function(value) {
+            var diff = value - average;
+            return diff * diff;
+        });
+        var avgSquareDiff = calculateAverage(squareDiffs);
+        return Math.sqrt(avgSquareDiff);
+    }
 
-var average = calculateAverage(values);
-var standardDeviation = calculateStandardDeviation(values, average);
+    var average = calculateAverage(values);
+    var standardDeviation = calculateStandardDeviation(values, average);
 
-// Kiszámolt átlag és szórás alapú határok
-var plus3sd = average + 3 * standardDeviation;
-var minus3sd = average - 3 * standardDeviation;
+    // Kiszámolt átlag és szórás alapú határok
+    var plus3sd = average + 3 * standardDeviation;
+    var minus3sd = average - 3 * standardDeviation;
 
-// Dataset minimum és maximum
-var minValue = Math.min(...values);
-var maxValue = Math.max(...values);
+    // Dataset minimum és maximum
+    var minValue = Math.min(...values);
+    var maxValue = Math.max(...values);
 
-// Y tengely dinamikus határai 10%-os ráhagyással
-var yMin = allZero ? 0 : Math.min(minValue, minus3sd) * 0.9;
-var yMax = allZero ? 1 : Math.max(maxValue, plus3sd) * 1.1;
+    // Y tengely dinamikus határai 10%-os ráhagyással
+    var yMin = allZero ? 0 : Math.min(minValue, minus3sd) * 0.9;
+    var yMax = allZero ? 1 : Math.max(maxValue, plus3sd) * 1.1;
 
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: 'Hozzárendelt értékek',
-            data: values,
-            fill: false,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            tension: 0.1,
-            borderWidth: 2
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: false,
-                min: yMin, // Dinamikusan kiszámított minimum érték
-                max: yMax  // Dinamikusan kiszámított maximum érték
-            }
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Hozzárendelt értékek',
+                data: values,
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1,
+                borderWidth: 2
+            }]
         },
-        plugins: {
-            legend: {
-                display:false
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: yMin, // Dinamikusan kiszámított minimum érték
+                    max: yMax  // Dinamikusan kiszámított maximum érték
+                }
             },
-            title: {
-                display: true,
-                text: chartTitle, 
-                font: {
-                    size: 16
-                }                
-            },
-            annotation: {
-                annotations: {
-                    // Zöld vízszintes vonal az átlaghoz
-                    averageLine: {
-                        type: 'line',
-                        yMin: average,
-                        yMax: average,
-                        borderColor: 'green',
-                        borderWidth: 2,
-                        label: {
-                            content: 'Átlag',
-                            enabled: true,
-                            position: 'center'
-                        }
-                    },
-                    // Sárga vonalak a ±2 szóráshoz
-                    plus2sdLine: {
-                        type: 'line',
-                        yMin: average + 2 * standardDeviation,
-                        yMax: average + 2 * standardDeviation,
-                        borderColor: 'yellow',
-                        borderWidth: 2,
-                        label: {
-                            content: '+2 Szórás',
-                            enabled: true,
-                            position: 'center'
-                        }
-                    },
-                    minus2sdLine: {
-                        type: 'line',
-                        yMin: average - 2 * standardDeviation,
-                        yMax: average - 2 * standardDeviation,
-                        borderColor: 'yellow',
-                        borderWidth: 2,
-                        label: {
-                            content: '-2 Szórás',
-                            enabled: true,
-                            position: 'center'
-                        }
-                    },
-                    // Piros vonalak a ±3 szóráshoz
-                    plus3sdLine: {
-                        type: 'line',
-                        yMin: plus3sd,
-                        yMax: plus3sd,
-                        borderColor: 'red',
-                        borderWidth: 2,
-                        label: {
-                            content: '+3 Szórás',
-                            enabled: true,
-                            position: 'center'
-                        }
-                    },
-                    minus3sdLine: {
-                        type: 'line',
-                        yMin: minus3sd,
-                        yMax: minus3sd,
-                        borderColor: 'red',
-                        borderWidth: 2,
-                        label: {
-                            content: '-3 Szórás',
-                            enabled: true,
-                            position: 'center'
+            plugins: {
+                legend: {
+                    display:false
+                },
+                title: {
+                    display: true,
+                    text: chartTitle,
+                    font: {
+                        size: 16
+                    }
+                },
+                annotation: {
+                    annotations: {
+                        // Zöld vízszintes vonal az átlaghoz
+                        averageLine: {
+                            type: 'line',
+                            yMin: average,
+                            yMax: average,
+                            borderColor: 'green',
+                            borderWidth: 2,
+                            label: {
+                                content: 'Átlag',
+                                enabled: true,
+                                position: 'center'
+                            }
+                        },
+                        // Sárga vonalak a ±2 szóráshoz
+                        plus2sdLine: {
+                            type: 'line',
+                            yMin: average + 2 * standardDeviation,
+                            yMax: average + 2 * standardDeviation,
+                            borderColor: 'yellow',
+                            borderWidth: 2,
+                            label: {
+                                content: '+2 Szórás',
+                                enabled: true,
+                                position: 'center'
+                            }
+                        },
+                        minus2sdLine: {
+                            type: 'line',
+                            yMin: average - 2 * standardDeviation,
+                            yMax: average - 2 * standardDeviation,
+                            borderColor: 'yellow',
+                            borderWidth: 2,
+                            label: {
+                                content: '-2 Szórás',
+                                enabled: true,
+                                position: 'center'
+                            }
+                        },
+                        // Piros vonalak a ±3 szóráshoz
+                        plus3sdLine: {
+                            type: 'line',
+                            yMin: plus3sd,
+                            yMax: plus3sd,
+                            borderColor: 'red',
+                            borderWidth: 2,
+                            label: {
+                                content: '+3 Szórás',
+                                enabled: true,
+                                position: 'center'
+                            }
+                        },
+                        minus3sdLine: {
+                            type: 'line',
+                            yMin: minus3sd,
+                            yMax: minus3sd,
+                            borderColor: 'red',
+                            borderWidth: 2,
+                            label: {
+                                content: '-3 Szórás',
+                                enabled: true,
+                                position: 'center'
+                            }
                         }
                     }
                 }
             }
         }
-    }
-});
+    });
 
-//statisztika blokk
-// Az adatok gyűjtése a táblázat cellákból
-var tableValues = Array.from(document.querySelectorAll("td:nth-child(11)")).map(td => {
-    // Számok tisztítása, vessző-pont konverzió és szóköz eltávolítás
-    var value = td.innerText.replace(',', '.').trim();
-    return parseFloat(value);
-}).filter(v => !isNaN(v));
+    //statisztika blokk
+    // Az adatok gyűjtése a táblázat cellákból
+    var tableValues = Array.from(document.querySelectorAll("td:nth-child(11)")).map(td => {
+        // Számok tisztítása, vessző-pont konverzió és szóköz eltávolítás
+        var value = td.innerText.replace(',', '.').trim();
+        return parseFloat(value);
+    }).filter(v => !isNaN(v));
 
-if (tableValues.length > 0) {
-    // Átlag számítása
-    var average = tableValues.reduce((sum, value) => sum + value, 0) / tableValues.length;
+    if (tableValues.length > 0) {
+        // Átlag számítása
+        var average = tableValues.reduce((sum, value) => sum + value, 0) / tableValues.length;
 
-    // Szórás számítása
-    var variance = tableValues.reduce((sum, value) => sum + Math.pow(value - average, 2), 0) / (tableValues.length - 1);
-    var standardDeviation = Math.sqrt(variance);
+        // Szórás számítása
+        var variance = tableValues.reduce((sum, value) => sum + Math.pow(value - average, 2), 0) / (tableValues.length - 1);
+        var standardDeviation = Math.sqrt(variance);
 
-    // Mintanagyság
-    var sampleSize = tableValues.length;
+        // Mintanagyság
+        var sampleSize = tableValues.length;
 
-    // Relatív szórás
-    var relativeStdDev = (standardDeviation / average) * 100;
+        // Relatív szórás
+        var relativeStdDev = (standardDeviation / average) * 100;
 
-    // Konfidenciaintervallum számítása
-    var ciLower, ciUpper, ciMethod;
+        // Konfidenciaintervallum számítása
+        var ciLower, ciUpper, ciMethod;
 
-    if (sampleSize >= 30) {
-        // Normális eloszlás Z-értéke
-        var zValue = 1.96;
-        ciMethod = "Z-eloszlás (n ≥ 30)";
+        if (sampleSize >= 30) {
+            // Normális eloszlás Z-értéke
+            var zValue = 1.96;
+            ciMethod = "Z-eloszlás (n ≥ 30)";
+        } else {
+            // t-eloszlás értéke a jStat könyvtár segítségével
+            var tValue = jStat.studentt.inv(0.975, sampleSize - 1);
+            zValue = tValue;
+            ciMethod = `t-eloszlás (n < 30, szabadságfok: ${sampleSize - 1})`;
+        }
+
+        var marginOfError = zValue * (standardDeviation / Math.sqrt(sampleSize));
+        ciLower = average - marginOfError;
+        ciUpper = average + marginOfError;
+
+        // ± formátumú megjelenítés
+        var ciMarginFormatted = marginOfError.toFixed(2);
+        var ciFormatted = `${average.toFixed(2)} ± ${ciMarginFormatted}`;
+
+        // Eredmények megjelenítése
+        document.getElementById("summary").innerHTML = `
+            <strong>Mintanagyság:</strong> ${sampleSize}<br>
+            <strong>Átlag:</strong> ${average.toFixed(2)}<br>
+            <strong>Relatív szórás:</strong> ${relativeStdDev.toFixed(2)}%<br>
+            <strong>95%-os konfidenciaintervallum:</strong> ${ciFormatted} [${ciLower.toFixed(2)} - ${ciUpper.toFixed(2)}] (${ciMethod})<br>
+        `;
     } else {
-        // t-eloszlás értéke a jStat könyvtár segítségével
-        var tValue = jStat.studentt.inv(0.975, sampleSize - 1);
-        zValue = tValue;
-        ciMethod = `t-eloszlás (n < 30, szabadságfok: ${sampleSize - 1})`;
+        document.getElementById("summary").innerText = "Nincsenek érvényes adatok.";
     }
-
-    var marginOfError = zValue * (standardDeviation / Math.sqrt(sampleSize));
-    ciLower = average - marginOfError;
-    ciUpper = average + marginOfError;
-
-    // ± formátumú megjelenítés
-    var ciMarginFormatted = marginOfError.toFixed(2);
-    var ciFormatted = `${average.toFixed(2)} ± ${ciMarginFormatted}`;
-
-    // Eredmények megjelenítése
-    document.getElementById("summary").innerHTML = `
-        <strong>Mintanagyság:</strong> ${sampleSize}<br>
-        <strong>Átlag:</strong> ${average.toFixed(2)}<br>
-        <strong>Relatív szórás:</strong> ${relativeStdDev.toFixed(2)}%<br>
-        <strong>95%-os konfidenciaintervallum:</strong> ${ciFormatted} [${ciLower.toFixed(2)} - ${ciUpper.toFixed(2)}] (${ciMethod})<br>
-    `;
-} else {
-    document.getElementById("summary").innerText = "Nincsenek érvényes adatok.";
-}
 
 </script>

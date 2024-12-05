@@ -1,0 +1,19 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model long
+<div class="d-flex gap-2">
+    <a class="btn btn-warning btn-sm"
+    asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Edit" asp-route-id="@Model"
+    data-bs-toggle="tooltip" data-bs-title="Szerkesztés">
+        <i class="bi bi-pencil"></i>
+        </a>
+    <a class="btn btn-primary btn-sm"
+    asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Details" asp-route-id="@Model"
+    data-bs-toggle="tooltip" data-bs-title="Részletek">
+        <i class="bi bi-three-dots"></i>
+        </a>
+    <a class="btn btn-danger btn-sm"
+    asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Delete" asp-route-id="@Model"
+    data-bs-toggle="tooltip" data-bs-title="Törlés">
+        <i class="bi bi-trash"></i>
+        </a>
+</div>

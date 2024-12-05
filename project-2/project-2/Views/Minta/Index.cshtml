@@ -80,13 +80,12 @@
                 <option value="false" selected="@(ViewContext.HttpContext.Request.Query["humviexport"] == "false" ? "selected" : null)">Nem</option>
             </select>
         </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100">Szűrés</button>
+        <div class="col-md-2"></div>
+        <div class="col-md-2 align-content-end">
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel"></i> Szűrés</button>
         </div>
-        <div class="col-md-2">
-            <a href="/Minta/Index" class="btn btn-secondary w-100">Szűrők törlése</a>
+        <div class="col-md-2 align-content-end">
+            <a asp-action="Index" class="btn btn-secondary w-100"><i class="bi bi-x-lg"></i> Szűrők törlése</a>
         </div>
     </div>
 </form>
@@ -99,7 +98,7 @@
         <button id="exportButton" type="submit" class="btn btn-success">Exportálás</button>
     </div>
 
-    <table class="table table-striped table-bordered stickyheader">
+    <table class="table table-striped stickyheader">
         <thead>
             <tr>
                 <th><input type="checkbox" id="masterCheckbox" /></th>
@@ -133,11 +132,10 @@
                 <th>
                     Mintavevő
                 </th>
-
                 <th>
                     Vizsgálólabor
                 </th>
-                <th></th>
+                <th class="actioncol"></th>
             </tr>
         </thead>
         <tbody>
@@ -188,10 +186,8 @@
                     <td class="minta_tabla_small-font">
                         @Html.DisplayFor(modelItem => item.cVizsgaloLabor.Nev)
                     </td>
-                    <td>
-                        <a asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <td class="actioncol">
+                        <partial name="_ListingActions" model="@item.Id" />
                     </td>
                 </tr>
             }
