@@ -495,6 +495,7 @@ namespace project_2.Controllers
                             TempData["Success"] = "Exportálás sikeres!";
                             return Task.CompletedTask;
                         });
+                        TempData.Remove("SelectedIds");
                         return File(xmlStream, "application/xml", fileName);
                     }
                     else
