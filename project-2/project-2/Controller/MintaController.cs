@@ -12,6 +12,12 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using project_2.Dtos;
 using Microsoft.IdentityModel.Tokens;
+using System.Xml.Linq;
+using System.Text;
+using System.IO;
+using System.IO.Pipes;
+using System.Globalization;
+using System.Net.Security;
 
 namespace project_2.Controllers
 {
@@ -83,6 +89,12 @@ namespace project_2.Controllers
             ViewBag.TelepulesList = await _context.MvHely.Select(h => h.Telepules).Distinct().ToListAsync();
             ViewBag.MvOkList = await _context.MvOka.Select(o => o.MvOk).Distinct().ToListAsync();
             ViewBag.ModulKodList = await _context.HumviModul.Select(m => m.ModulKod).Distinct().ToListAsync();
+
+            var selectedIds = TempData["SelectedIds"] as string;
+            if (selectedIds != null)
+            {
+                ViewBag.SelectedIds = selectedIds.Split(',').Select(long.Parse).ToList();
+            }
 
             ViewBag.maxSelectableItems = _configuration["Settings:maxSelectableItems"];
 
@@ -425,7 +437,7 @@ namespace project_2.Controllers
 
         //Minták exportálása
         [HttpPost]
-        public IActionResult Export(List<long> selectedIds)
+        public IActionResult Export(List<long> selectedIds, string exportAction)
         {
             if (selectedIds == null || !selectedIds.Any())
             {
@@ -433,8 +445,10 @@ namespace project_2.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Tároljuk el a kijelölt mintákat TempData-ba, hogy később vissza tudjuk olvasni.
+            TempData["SelectedIds"] = string.Join(",", selectedIds);
 
-            var kiválasztottMinták = _context.Minta
+            var kivalasztottMintak = _context.Minta
                 .Include(c => c.cAkkrMintavetel)
                 .Include(c => c.cHUMVIfelelos)
                 .Include(c => c.cHUMVImodul)
@@ -451,7 +465,98 @@ namespace project_2.Controllers
                 .Where(m => selectedIds.Contains(m.Id))
                 .ToList();
 
-            return View("ExportResult", kiválasztottMinták);
+            switch (exportAction)
+            {
+                case "preview":
+                    var xmlContent = DownloadXml(kivalasztottMintak);
+                    if (xmlContent != null && xmlContent.Length > 0)
+                    {
+                        // XML tartalom átadása a nézetnek
+                        string xmlString = System.Text.Encoding.UTF8.GetString(xmlContent.ToArray());
+                        return View("ExportResult", model: xmlString);  // Az XML stringet átadjuk a nézetnek
+                    }
+                    else
+                    {
+                        TempData["Error"] = "A fájl generálása nem sikerült.";
+                        return RedirectToAction("Index");
+                    }
+                case "xml":
+                    string fileName = "HUMVI_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".xml";
+                    var xmlStream = DownloadXml(kivalasztottMintak);
+                    if (xmlStream != null && xmlStream.Length > 0)
+                    {
+                        foreach (var minta in kivalasztottMintak)
+                        {
+                            minta.HUMVIexport = true;
+                        }
+                        _context.SaveChanges();
+                        Response.OnCompleted(() =>
+                        {
+                            TempData["Success"] = "Exportálás sikeres!";
+                            return Task.CompletedTask;
+                        });
+                        return File(xmlStream, "application/xml", fileName);
+                    }
+                    else
+                    {
+                        TempData["Error"] = "A fájl generálása nem sikerült.";
+                        return RedirectToAction("Index");
+                    }
+
+                case "excel":
+                    // Excel fájl exportálása
+         /*           var excelContent = GenerateExcel(kivalasztottMintak);
+                    var excelBytes = System.Text.Encoding.UTF8.GetBytes(excelContent);
+                    var excelStream = new System.IO.MemoryStream(excelBytes);
+                    return File(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "mintak.xlsx");
+         */
+                default:
+                    TempData["Error"] = "Ismeretlen exportálási típus.";
+                    return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
         }
+
+        public MemoryStream DownloadXml(List<cMinta> kivalasztottMintak)
+        { 
+            XElement xmlTree = new XElement("humvi_vizminta",
+                kivalasztottMintak.Select(minta =>
+                    new XElement("minta",
+                        new XElement("mintafej",
+                            new XElement("modulkod", minta.cHUMVImodul.ModulKod),
+                            new XElement("felelos", minta.cHUMVIfelelos.Felelos),
+                            new XElement("mvtipus", minta.cMvTipus.MvTipusNev),
+                            new XElement("mvdatum", minta.MvDatum.ToString("yyyy-MM-dd")),
+                            new XElement("labor", minta.cVizsgaloLabor.Labor),
+                            new XElement("labormintakod", minta.LaborMintaKod),
+                            new XElement("mvoka", minta.cMvOka.MvOk),
+                            new XElement("mvhkod", minta.cMvHely.MvhKod)
+                        ),
+                        minta.Eredmenyek.Select(eredmeny =>
+                            new XElement("param",
+                                new XElement("parkod", eredmeny.Parameter.ParKod),
+                                new XElement("ertek", eredmeny.AlsoMh.HasValue ? "MHA" : eredmeny.Ertek.Replace(".", ",")),
+                                new XElement("megyseg", eredmeny.Mertekegyseg.Megyseg),
+                                eredmeny.AlsoMh.HasValue ? new XElement("alsomh", eredmeny.AlsoMh.Value.ToString("0.00", new CultureInfo("hu-HU"))) : null
+                            )
+                        )
+                    )
+                )
+            );
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes(xmlTree.ToString());
+            var fileStream = new System.IO.MemoryStream(bytes);
+            return fileStream;
+        }
+
+        /*
+        [HttpGet]
+        public IActionResult DownloadExcel()
+        {
+            // Excel generálása pl. EPPlus vagy más könyvtár segítségével
+            byte[] excelBytes = GenerateExcelFile(); // Saját metódus
+            return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "mintak.xlsx");
+        }*/
     }
 }
