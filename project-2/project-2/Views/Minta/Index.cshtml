@@ -21,7 +21,6 @@
 <h1>Vízminták</h1>
 
 <p>
-  <!--  <a href="#" onclick="showPage('createMinta')">Create New</a>-->
     <a href="/Minta/Create" asp-action="Create">Create New</a>
 </p>
 
@@ -119,7 +118,7 @@
 
         <button type="submit" name="exportAction" value="xml" class="btn btn-success">XML Letöltése</button>
 
-        <button type="submit" name="exportAction" value="excel" class="btn btn-primary">Excel Exportálása</button>
+        <button type="submit" name="exportAction" value="excel" class="btn btn-success">Excel Exportálása</button>
     </div>
 
     <table class="table">
@@ -265,11 +264,5 @@
         });
 
     });
-
-    // Az Index oldalra átirányítás sikeres xml letöltés után
-        if (window.location.href.indexOf('Export') > -1) {
-        window.location.href = '@Url.Action("Index", "Minta")';  
-    }
-
 
 </script>
