@@ -1,4 +1,9 @@
 using Domain;
+using System.Globalization;
+
+var cultureInfo = new CultureInfo("hu-HU");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -204,18 +204,6 @@
                 <span asp-validation-for="HUMVIexport" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Created" class="control-label">Létrehozva</label>
-                <input asp-for="Created" class="form-control" id="Created" name="Created" value="@Model.Created" readonly />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="LastModified" class="control-label">Utolsó módosítás</label>
-                <input asp-for="LastModified" class="form-control" id="LastModified" name="LastModified" value="@Model.LastModified" readonly />
-                <span asp-validation-for="LastModified" class="text-danger"></span>
-            </div>
-
             <!-- Hidden fields for Created, LastModified -->
             <div class="form-group" style="display:none;">
                 <label for="Created">Created</label>
