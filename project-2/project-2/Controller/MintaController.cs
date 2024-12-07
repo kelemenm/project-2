@@ -18,6 +18,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Globalization;
 using System.Net.Security;
+using OfficeOpenXml;
 
 namespace project_2.Controllers
 {
@@ -495,6 +496,7 @@ namespace project_2.Controllers
                             TempData["Success"] = "Exportálás sikeres!";
                             return Task.CompletedTask;
                         });
+                        TempData.Remove("SelectedIds");
                         return File(xmlStream, "application/xml", fileName);
                     }
                     else
@@ -505,11 +507,106 @@ namespace project_2.Controllers
 
                 case "excel":
                     // Excel fájl exportálása
-         /*           var excelContent = GenerateExcel(kivalasztottMintak);
-                    var excelBytes = System.Text.Encoding.UTF8.GetBytes(excelContent);
-                    var excelStream = new System.IO.MemoryStream(excelBytes);
-                    return File(excelStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "mintak.xlsx");
-         */
+                    ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                    using (var package = new ExcelPackage())
+                    {
+                        var worksheet = package.Workbook.Worksheets.Add("Minta Export");
+
+                        // Oszlopindex inicializálása
+                        int columnIndex = 1;
+                        int rowIndex = 1;
+
+                        // 1. A `cMinta` oszlopok fejlécének beállítása
+                        var mintaHeaders = new[] {  "Laborkód",
+                                                        "Modul",
+                                                        "HUMVI Felelős",
+                                                        "MvTipus",
+                                                        "Mintavétel dátuma",
+                                                        "Labor",
+                                                        "Mintátvétel dátuma",
+                                                        "Vizsgálat kezdete",
+                                                        "Vizsgálat vége",
+                                                        "Mv. ok kód",
+                                                        "Mintavétel oka",
+                                                        "Mintavétel helye",
+                                                        "Vízbázis",
+                                                        "Település"
+                            };
+
+                        foreach (var header in mintaHeaders)
+                        {
+                            worksheet.Cells[rowIndex, columnIndex].Value = header;
+                            columnIndex++;
+                        }
+
+                        // 2. A `cEredmeny` oszlopok fejlécének beállítása
+                        var uniqueParameters = kivalasztottMintak
+                            .SelectMany(m => m.Eredmenyek)
+                            .Select(e => new { e.Parameter.ParKod, e.Mertekegyseg.Megyseg })
+                            .Distinct()
+                            .ToList();
+
+                        foreach (var param in uniqueParameters)
+                        {
+                            worksheet.Cells[rowIndex, columnIndex].Value = param.ParKod; // Első szint: ParKod
+                            worksheet.Cells[rowIndex + 1, columnIndex].Value = param.Megyseg; // Második szint: Megyseg
+                            columnIndex++;
+                        }
+
+                        // 3. Az adatok kitöltése
+                        rowIndex = 3; // Adatok kezdősora
+                        foreach (var minta in kivalasztottMintak)
+                        {
+                            columnIndex = 1;
+
+                            // `cMinta` mezők hozzáadása                                                      
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.LaborMintaKod;
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.cHUMVImodul?.ModulKod;
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.cHUMVIfelelos?.Nev;
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.cMvTipus?.MvTipusNev;
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.MvDatum.ToString("yyyy-MM-dd");
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.cVizsgaloLabor?.Labor;
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.MintaAtvetel.ToString("yyyy-MM-dd");
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.VizsgalatKezdete.ToString("yyyy-MM-dd");
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.VizsgalatVege.ToString("yyyy-MM-dd");
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.cMvOka?.MvOk;
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.MvOkaEgyeb;
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.cMvHely?.NevSajat == "na" ? minta.MvHely : minta.cMvHely?.NevSajat;
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.cMvHely?.VizBazis;
+                            worksheet.Cells[rowIndex, columnIndex++].Value = minta.cMvHely?.Telepules;
+
+                            // `cEredmeny` mezők hozzáadása
+                            foreach (var param in uniqueParameters)
+                            {
+                                var eredmeny = minta.Eredmenyek.FirstOrDefault(e => e.Parameter.ParKod == param.ParKod);
+                                if (double.TryParse(eredmeny?.Ertek?.Replace(".", ","), out double numericValue))
+                                {
+                                    worksheet.Cells[rowIndex, columnIndex++].Value = numericValue; // Számként tároljuk
+                                }
+                                else
+                                {
+                                    worksheet.Cells[rowIndex, columnIndex++].Value = eredmeny?.Ertek; // Szövegként tároljuk
+                                }
+                            }
+
+                            rowIndex++;
+                        }
+
+                        // 4. Formázás: automatikus méretezés
+                        worksheet.Cells.AutoFitColumns();
+
+                        // Fájl generálása és visszaadása
+                        var stream = new MemoryStream();
+                        package.SaveAs(stream);
+                        stream.Position = 0;
+
+                        TempData.Remove("SelectedIds");
+
+                        string excelFileName = $"MintaExport_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.xlsx";
+                        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelFileName);
+                    }
+
+
                 default:
                     TempData["Error"] = "Ismeretlen exportálási típus.";
                     return RedirectToAction("Index");
@@ -550,13 +647,5 @@ namespace project_2.Controllers
             return fileStream;
         }
 
-        /*
-        [HttpGet]
-        public IActionResult DownloadExcel()
-        {
-            // Excel generálása pl. EPPlus vagy más könyvtár segítségével
-            byte[] excelBytes = GenerateExcelFile(); // Saját metódus
-            return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "mintak.xlsx");
-        }*/
     }
 }

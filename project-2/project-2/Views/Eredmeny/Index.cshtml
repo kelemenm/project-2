@@ -16,12 +16,10 @@
 
                 <div class="row">
                     <label for="parameterSearch" class="form-label">Paraméter:</label>
-
                     @{
                         var parameterSearchValue = ViewContext.HttpContext.Request.Query["parameterSearch"].FirstOrDefault();
                         var parameterIdValue = ViewContext.HttpContext.Request.Query["parameterId"].FirstOrDefault();
                     }
-
                     <input list="parameterOptions"
                            id="parameterSearch"
                            name="parameterSearch"
@@ -97,6 +95,7 @@
                 <h4>Statisztikai összefoglaló</h4>
                 <p id="summary"></p>
             </div>
+
         </div>
         <div class="split-slider split-vertical align-content-center"><i class="bi bi-grip-vertical"></i></div>
         <div id="eredmenyJobb" class="split-right">

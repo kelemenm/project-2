@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Vízminták";
 }
+
 <partial name="_ListingHeader" model="Model.Count()" />
 
 <form method="get" asp-action="Index" class="mb-4">
@@ -96,7 +97,7 @@
 
         <button type="submit" name="exportAction" value="xml" class="btn btn-success">XML Letöltése</button>
 
-        <button type="submit" name="exportAction" value="excel" class="btn btn-primary">Excel Exportálása</button>
+        <button type="submit" name="exportAction" value="excel" class="btn btn-success">Excel Exportálása</button>
     </div>
 
     <table class="table table-striped stickyheader">
@@ -236,11 +237,5 @@
         });
 
     });
-
-    // Az Index oldalra átirányítás sikeres xml letöltés után
-        if (window.location.href.indexOf('Export') > -1) {
-        window.location.href = '@Url.Action("Index", "Minta")';  
-    }
-
 
 </script>
