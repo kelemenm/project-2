@@ -1,4 +1,5 @@
 using Domain;
+using project_2;
 using System.Globalization;
 
 var cultureInfo = new CultureInfo("hu-HU");
@@ -113,6 +114,5 @@ using (var scope = app.Services.CreateScope())
         reader.ProcessLines(excelData, headerColumns);
     }
 }
-
 
 app.Run();
