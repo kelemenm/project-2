@@ -1,4 +1,3 @@
-using Domain;
 using project_2;
 using System.Globalization;
 
@@ -20,6 +19,7 @@ builder.Services.AddControllersWithViews()
 
 // Adjuk hozzá az ExcelFileReader-t is a DI konténerhez
 builder.Services.AddScoped<ExcelFileReader>();
+builder.Services.AddScoped<IRepository, Repository>();
 
 var app = builder.Build();
 
@@ -86,7 +86,6 @@ app.UseEndpoints(endpoints =>
         name: "Minta",
         pattern: "{controller=Minta}/{action=Index}/{id?}");
 });
-
 
 app.UseAuthorization();
 
