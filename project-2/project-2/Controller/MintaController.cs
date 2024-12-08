@@ -4,61 +4,24 @@ using OfficeOpenXml;
 
 namespace project_2.Controllers;
 
-[Route("[contoller]")]
+[Route("[controller]")]
 public class MintaController : Controller
 {
     private readonly LaborDbContext _context;
     private readonly IConfiguration _configuration;
+    private readonly IExcelFileReader _excelFileReader;
 
-    public MintaController(LaborDbContext context, IConfiguration configuration)
+    public MintaController(
+        LaborDbContext context, 
+        IConfiguration configuration, 
+        IExcelFileReader excelFileReader)
     {
         _context = context;
         _configuration = configuration;
+        _excelFileReader = excelFileReader;
     }
 
-    
-    public IActionResult LoadIndexPartial()
-    {
-        var data = _context.Minta.ToList();
-        return PartialView("Index", data);
-    }
-    public IActionResult LoadDetailsPartial(int id)
-    {
-        var model = _context.Minta.FirstOrDefault(m => m.Id == id);
-        if (model == null)
-        {
-            return NotFound();
-        }
-        return PartialView("Details", model);
-    }
-
-    public IActionResult LoadEditPartial(int id)
-    {
-        var model = _context.Minta.FirstOrDefault(m => m.Id == id);
-        if (model == null)
-        {
-            return NotFound();
-        }
-        return PartialView("Edit", model);
-    }
-
-    public IActionResult LoadCreatePartial()
-    {
-        var model = new cMinta();
-        return PartialView("Create", model);
-    }
-
-    public IActionResult LoadDeletePartial(int id)
-    {
-        var model = _context.Minta.FirstOrDefault(m => m.Id == id);
-        if (model == null)
-        {
-            return NotFound();
-        }
-        return PartialView("Delete", model);
-    }
-
-    // GET: Minta
+    [HttpGet]
     public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate, string? mvhKod, string? vizBazis, string? telepules, string? mvOk, string? modulKod, string? humviexport)
     {
         var mvHelyek = await _context.MvHely.ToListAsync();
@@ -92,7 +55,7 @@ public class MintaController : Controller
             .AsQueryable();
 
         // Szűrési feltételek
-        
+
         if (startDate.HasValue)
         {
             laborDbContext = laborDbContext.Where(m => m.MvDatum >= startDate.Value);
@@ -130,7 +93,7 @@ public class MintaController : Controller
         return View(await laborDbContext.ToListAsync());
     }
 
-    // GET: Minta/Details/5
+    [HttpGet("Details/{id}")]
     public async Task<IActionResult> Details(long? id)
     {
         if (id == null)
@@ -161,7 +124,7 @@ public class MintaController : Controller
     }
 
 
-    // GET: Minta/Create
+    [HttpGet("Create")]
     public async Task<IActionResult> Create()
     {
         var modulok = await _context.HumviModul.ToListAsync();
@@ -216,10 +179,9 @@ public class MintaController : Controller
         return View(new cMinta());
     }
 
-    // POST: Minta/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
+    [HttpPost("Create")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("LaborMintaKod,ModulKod,Felelos,MvTipus,MvDatum,Labor,MintaAtvetel,VizsgalatKezdete,VizsgalatVege,MvOk,MvOkaEgyeb,MvhKod,MvHely,AkkrMintavetel,Mintavevo,HUMVIexport")] MintaDto mintaDto)
     {
@@ -254,7 +216,7 @@ public class MintaController : Controller
         return View(mintaDto);
     }
 
-    // GET: Minta/Edit/5
+    [HttpGet("Edit/{id}")]
     public async Task<IActionResult> Edit(long? id)
     {
         if (id == null)
@@ -270,15 +232,15 @@ public class MintaController : Controller
 
         var modulok = await _context.HumviModul.ToListAsync();
         ViewBag.ModulKod = modulok.Select(modul => new SelectListItem
-            {
-                Value = modul.Id.ToString(),
-                Text = $" {modul.ModulKod} - {modul.Leiras}"
+        {
+            Value = modul.Id.ToString(),
+            Text = $" {modul.ModulKod} - {modul.Leiras}"
         }).ToList();
         var felelosok = await _context.HumviFelelos.ToListAsync();
         ViewBag.Felelos = felelosok.Select(felelos => new SelectListItem
         {
             Value = felelos.Id.ToString(),
-            Text = felelos.Nev 
+            Text = felelos.Nev
         }).ToList();
         var mvTipusok = await _context.MvTipus.ToListAsync();
         ViewBag.MvTipus = mvTipusok.Select(mvTipus => new SelectListItem
@@ -320,10 +282,9 @@ public class MintaController : Controller
         return View(cMinta);
     }
 
-    // POST: Minta/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
+    [HttpPost("Edit/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(long id, [Bind("Id,LaborMintaKod,ModulKod,Felelos,MvTipus,MvDatum,Labor,MintaAtvetel,VizsgalatKezdete,VizsgalatVege,MvOk,MvOkaEgyeb,MvhKod,MvHely,AkkrMintavetel,Mintavevo,HUMVIexport")] MintaDto mintaDto)
     {
@@ -333,45 +294,39 @@ public class MintaController : Controller
         }
         if (ModelState.IsValid)
         {
-            try
+            var minta = await _context.Minta.FirstOrDefaultAsync(x => x.Id == mintaDto.Id);
+            if (minta != null)
             {
-                var minta = await _context.Minta.FirstOrDefaultAsync(x => x.Id == mintaDto.Id);
-                if (minta != null)
-                {
-                    minta.LaborMintaKod = mintaDto.LaborMintaKod;
-                    minta.ModulKod = mintaDto.ModulKod;
-                    minta.Felelos = mintaDto.Felelos;
-                    minta.MvTipus = mintaDto.MvTipus;
-                    minta.MvDatum = mintaDto.MvDatum;
-                    minta.Labor = mintaDto.Labor;
-                    minta.MintaAtvetel = mintaDto.MintaAtvetel;
-                    minta.VizsgalatKezdete = mintaDto.VizsgalatKezdete;
-                    minta.VizsgalatVege = mintaDto.VizsgalatVege;
-                    minta.MvOk = mintaDto.MvOk;
-                    minta.MvOkaEgyeb = mintaDto.MvOkaEgyeb;
-                    minta.MvhKod = mintaDto.MvhKod;
-                    minta.MvHely = mintaDto.MvHely;
-                    minta.AkkrMintavetel = mintaDto.AkkrMintavetel;
-                    minta.Mintavevo = mintaDto.Mintavevo;
-                    minta.HUMVIexport = mintaDto.HUMVIexport;                      
-                    minta.LastModified = DateTime.UtcNow;
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    return NotFound();
-                }
+                minta.LaborMintaKod = mintaDto.LaborMintaKod;
+                minta.ModulKod = mintaDto.ModulKod;
+                minta.Felelos = mintaDto.Felelos;
+                minta.MvTipus = mintaDto.MvTipus;
+                minta.MvDatum = mintaDto.MvDatum;
+                minta.Labor = mintaDto.Labor;
+                minta.MintaAtvetel = mintaDto.MintaAtvetel;
+                minta.VizsgalatKezdete = mintaDto.VizsgalatKezdete;
+                minta.VizsgalatVege = mintaDto.VizsgalatVege;
+                minta.MvOk = mintaDto.MvOk;
+                minta.MvOkaEgyeb = mintaDto.MvOkaEgyeb;
+                minta.MvhKod = mintaDto.MvhKod;
+                minta.MvHely = mintaDto.MvHely;
+                minta.AkkrMintavetel = mintaDto.AkkrMintavetel;
+                minta.Mintavevo = mintaDto.Mintavevo;
+                minta.HUMVIexport = mintaDto.HUMVIexport;
+                minta.LastModified = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
             }
-            catch (Exception)
+            else
             {
-                throw;
+                return NotFound();
             }
+
             return RedirectToAction("Index");
         }
         return View(mintaDto);
     }
 
-    // GET: Minta/Delete/5
+    [HttpGet("Delete/{id}")]
     public async Task<IActionResult> Delete(long? id)
     {
         if (id == null)
@@ -397,8 +352,7 @@ public class MintaController : Controller
         return View(cMinta);
     }
 
-    // POST: Minta/Delete/5
-    [HttpPost, ActionName("Delete")]
+    [HttpPost("Delete/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(long id)
     {
@@ -409,16 +363,11 @@ public class MintaController : Controller
         }
 
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+
+        return RedirectToAction("Index");
     }
 
-    private bool cMintaExists(long id)
-    {
-        return _context.Minta.Any(e => e.Id == id);
-    }
-
-    //Minták exportálása
-    [HttpPost]
+    [HttpPost("Export")]
     public IActionResult Export(List<long> selectedIds, string exportAction)
     {
         if (selectedIds == null || !selectedIds.Any())
@@ -488,7 +437,7 @@ public class MintaController : Controller
 
             case "excel":
                 // Excel fájl exportálása
-                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using (var package = new ExcelPackage())
                 {
                     var worksheet = package.Workbook.Worksheets.Add("Minta Export");
@@ -596,8 +545,31 @@ public class MintaController : Controller
         return RedirectToAction("Index");
     }
 
+    [HttpGet("Import")]
+    public IActionResult Import()
+    {
+        return View();
+    }
+
+    [HttpPost("Import")]
+    public IActionResult Import(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest("Nincs fájl kiválasztva!");
+        }
+
+        var stream = file.OpenReadStream();
+        
+        Dictionary<string, int> headerColumns = _excelFileReader.HeaderCols(stream, ExcelFileReader.SheetName, ExcelFileReader.HeaderRow);
+        List<List<string>> excelData = _excelFileReader.ReadExcelSheet(stream, ExcelFileReader.SheetName, headerColumns);
+        _excelFileReader.ProcessLines(excelData, headerColumns);
+        
+        return Ok();
+    }
+
     public MemoryStream DownloadXml(List<cMinta> kivalasztottMintak)
-    { 
+    {
         XElement xmlTree = new XElement("humvi_vizminta",
             kivalasztottMintak.Select(minta =>
                 new XElement("minta",

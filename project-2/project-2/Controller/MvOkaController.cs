@@ -1,6 +1,6 @@
 ﻿namespace project_2.Controllers;
 
-[Route("[contoller]")]
+[Route("[controller]")]
 public class MvOkaController(IRepository repository) : BaseController<cMvOka, MvOkaDto>(repository)
 {
     protected override cMvOka CreateEntity(MvOkaDto dto)

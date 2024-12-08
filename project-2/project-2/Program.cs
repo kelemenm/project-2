@@ -18,7 +18,7 @@ builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation();
 
 // Adjuk hozzá az ExcelFileReader-t is a DI konténerhez
-builder.Services.AddScoped<ExcelFileReader>();
+builder.Services.AddScoped<IExcelFileReader, ExcelFileReader>();
 builder.Services.AddScoped<IRepository, Repository>();
 
 var app = builder.Build();
@@ -104,12 +104,11 @@ using (var scope = app.Services.CreateScope())
 
     if (!context.Minta.Any())
     { 
-        var reader = scope.ServiceProvider.GetRequiredService<ExcelFileReader>(); // Scoped példány kérése
+        var reader = scope.ServiceProvider.GetRequiredService<IExcelFileReader>(); // Scoped példány kérése
         FileInfo uploadedFile = reader.ExcelFileUploader();
-        string sheetName = "HUMVI";
-        int headerRow = 2;
-        Dictionary<string, int> headerColumns = reader.HeaderCols(uploadedFile, sheetName, headerRow);
-        List<List<string>> excelData = reader.ReadExcelSheet(uploadedFile, sheetName, headerColumns);
+
+        Dictionary<string, int> headerColumns = reader.HeaderCols(uploadedFile, ExcelFileReader.SheetName, ExcelFileReader.HeaderRow);
+        List<List<string>> excelData = reader.ReadExcelSheet(uploadedFile, ExcelFileReader.SheetName, headerColumns);
         reader.ProcessLines(excelData, headerColumns);
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace project_2.Controllers;
 
+[Route("[controller]")]
 public class EredmenyController : Controller
 {
     private readonly LaborDbContext _context;
@@ -9,7 +10,7 @@ public class EredmenyController : Controller
         _context = context;
     }
 
-    // GET: Eredmeny
+    [HttpGet]
     public async Task<IActionResult> Index(DateTime? fromDate, DateTime? toDate, string? mvhKod, string? vizBazis, string? telepules, string? parameterId = "309", string? parameterSearch = "")
     {
         ViewBag.ParameterList = _context.Parameter
@@ -65,7 +66,7 @@ public class EredmenyController : Controller
         return View(await eredmenyek.ToListAsync());
     }
 
-    // GET: Eredmeny/Details/5
+    [HttpGet("Details/{id}")]
     public async Task<IActionResult> Details(long? id)
     {
         if (id == null)
@@ -86,7 +87,7 @@ public class EredmenyController : Controller
         return View(cEredmeny);
     }
 
-    // GET: Eredmeny/Create
+    [HttpGet("Create")]
     public IActionResult Create()
     {
         ViewData["Megyseg"] = new SelectList(_context.Mertekegyseg, "Id", "HumviLeiras");
@@ -99,7 +100,7 @@ public class EredmenyController : Controller
     // POST: Eredmeny/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
+    [HttpPost("Create")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("MintaId,ParKod,Megyseg,Ertek,AlsoMh,MaxRange,ErtekHozzarendelt,Id,Created,LastModified")] cEredmeny cEredmeny)
     {
@@ -116,7 +117,7 @@ public class EredmenyController : Controller
         return View(cEredmeny);
     }
 
-    // GET: Eredmeny/Edit/5
+    [HttpGet("Edit/{id}")]
     public async Task<IActionResult> Edit(long? id)
     {
         if (id == null)
@@ -136,10 +137,9 @@ public class EredmenyController : Controller
         return View(cEredmeny);
     }
 
-    // POST: Eredmeny/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
+    [HttpPost("Edit/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(long id, [Bind("MintaId,ParKod,Megyseg,Ertek,AlsoMh,MaxRange,ErtekHozzarendelt,Id,Created,LastModified")] cEredmeny cEredmeny)
     {
@@ -175,7 +175,7 @@ public class EredmenyController : Controller
         return View(cEredmeny);
     }
 
-    // GET: Eredmeny/Delete/5
+    [HttpGet("Delete/{id}")]
     public async Task<IActionResult> Delete(long? id)
     {
         if (id == null)
@@ -196,8 +196,7 @@ public class EredmenyController : Controller
         return View(cEredmeny);
     }
 
-    // POST: Eredmeny/Delete/5
-    [HttpPost, ActionName("Delete")]
+    [HttpPost("Delete/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(long id)
     {

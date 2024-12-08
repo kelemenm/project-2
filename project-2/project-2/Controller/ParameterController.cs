@@ -1,6 +1,6 @@
 ﻿namespace project_2.Controllers;
 
-[Route("[contoller]")]
+[Route("[controller]")]
 public class ParameterController(IRepository repository) : BaseController<cParameter, ParameterDto>(repository)
 {
     protected override cParameter CreateEntity(ParameterDto dto)

@@ -1,11 +1,12 @@
 ﻿using OfficeOpenXml;
-using Domain;
 using System.Linq.Expressions;
 
 namespace project_2;
 
-public class ExcelFileReader
+public class ExcelFileReader : IExcelFileReader
 {
+    public const string SheetName = "HUMVI";
+    public const int HeaderRow = 2;
     private readonly LaborDbContext _context;
 
     public ExcelFileReader(LaborDbContext context)
@@ -21,9 +22,41 @@ public class ExcelFileReader
         return new FileInfo(filePath);
     }
 
+    public Dictionary<string, int> HeaderCols(Stream file, string sheetName, int headerRow)
+    {
+        var fieldToColumnMapping = CreateDefaultFieldToColumnMapping(headerRow);
+
+        if (file.Length == 0)
+        {
+            Console.WriteLine("A fájl üres");
+            return fieldToColumnMapping;
+        }
+
+        using var package = new ExcelPackage(file);
+
+        return ProcessRows(package, sheetName, headerRow, fieldToColumnMapping);
+    }
+
     public Dictionary<string, int> HeaderCols(FileInfo fileInfo, string sheetName, int headerRow)
     {
-        var fieldToColumnMapping = new Dictionary<string, int>()
+        var fieldToColumnMapping = CreateDefaultFieldToColumnMapping(headerRow);
+
+        // Ellenőrizzük, hogy a fájl létezik-e
+        if (!fileInfo.Exists)
+        {
+            Console.WriteLine("A fájl nem található.");
+            return fieldToColumnMapping;  // Üres dictionary visszaadása, ha a fájl nem található
+        }
+
+        // A fájl beolvasása Excel formátumban
+        using var package = new ExcelPackage(fileInfo);
+
+        return ProcessRows(package, sheetName, headerRow, fieldToColumnMapping);
+    }
+
+    private static Dictionary<string, int> CreateDefaultFieldToColumnMapping(int headerRow)
+    {
+        return new Dictionary<string, int>()
         {
             {"headerRow", headerRow },
             {"labormintakod", 0 },
@@ -48,116 +81,124 @@ public class ExcelFileReader
             {"rowFirstMinta", 0 },
             {"rowLastMinta", 0 }
         };
+    }
 
-        // Ellenőrizzük, hogy a fájl létezik-e
-        if (!fileInfo.Exists)
-        {
-            Console.WriteLine("A fájl nem található.");
-            return fieldToColumnMapping;  // Üres dictionary visszaadása, ha a fájl nem található
-        }
-
+    private static Dictionary<string, int> ProcessRows(ExcelPackage package, string sheetName, int headerRow, Dictionary<string, int> fieldToColumnMapping)
+    {
         var rowData = new List<string>();
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        var worksheet = package.Workbook.Worksheets[sheetName];
 
-        // A fájl beolvasása Excel formátumban
-        using (var package = new ExcelPackage(fileInfo))
+        if (worksheet == null)
         {
-            // Megkeressük a kívánt munkalapot
-            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-            var worksheet = package.Workbook.Worksheets[sheetName];
-
-            if (worksheet == null)
-            {
-                Console.WriteLine($"A '{sheetName}' nevű munkalap nem található.");
-                return fieldToColumnMapping;  // Üres dictionary visszaadása, ha a munkalap nem található
-            }
-
-            //adatok beolvasása
-            int col = 1;
-            while (worksheet.Cells[headerRow, col].Text != "vege")
-            {
-                var cellValue = worksheet.Cells[headerRow, col].Text;
-                rowData.Add(cellValue);
-                col++;
-            }
-
-            // Az oszlopszámok frissítése a rowData alapján
-            for (int i = 0; i < rowData.Count; i++)
-            {
-                string currentElement = rowData[i];
-
-                // Ha a rowData eleme egyezik a dictionary valamelyik kulcsával
-                if (fieldToColumnMapping.ContainsKey(currentElement))
-                {
-                    // Az oszlopszám frissítése, figyeljünk arra, hogy a sorszámozás 1-től kezdődjön!
-                    fieldToColumnMapping[currentElement] = i + 1;  // i + 1, mivel a sorszám 1-től kell induljon
-                }
-                // Az első paraméter oszlop COLIFORM kell hogy legyen
-                if (currentElement == "COLIFORM")
-                {
-                    fieldToColumnMapping["colFirstParam"] = i + 1;
-                }
-            }
-            fieldToColumnMapping["colLastParam"] = rowData.Count;
-
-            //az első oszlop beolvasása
-            //adatok beolvasása
-            int row = headerRow + 1;
-            while (worksheet.Cells[row, 1].Text != "vege")
-            {
-                var cellValue = worksheet.Cells[row, 1].Text;
-                if (cellValue.Trim() == "labormintakod")
-                {
-                    fieldToColumnMapping["rowFirstMinta"] = row + 1;
-                }
-                row++;
-            }
-            fieldToColumnMapping["rowLastMinta"] = row - 1;
-
+            Console.WriteLine($"A '{sheetName}' nevű munkalap nem található.");
+            return fieldToColumnMapping;  // Üres dictionary visszaadása, ha a munkalap nem található
         }
+
+        //adatok beolvasása
+        int col = 1;
+        while (worksheet.Cells[headerRow, col].Text != "vege")
+        {
+            var cellValue = worksheet.Cells[headerRow, col].Text;
+            rowData.Add(cellValue);
+            col++;
+        }
+
+        // Az oszlopszámok frissítése a rowData alapján
+        for (int i = 0; i < rowData.Count; i++)
+        {
+            string currentElement = rowData[i];
+
+            // Ha a rowData eleme egyezik a dictionary valamelyik kulcsával
+            if (fieldToColumnMapping.ContainsKey(currentElement))
+            {
+                // Az oszlopszám frissítése, figyeljünk arra, hogy a sorszámozás 1-től kezdődjön!
+                fieldToColumnMapping[currentElement] = i + 1;  // i + 1, mivel a sorszám 1-től kell induljon
+            }
+            // Az első paraméter oszlop COLIFORM kell hogy legyen
+            if (currentElement == "COLIFORM")
+            {
+                fieldToColumnMapping["colFirstParam"] = i + 1;
+            }
+        }
+        fieldToColumnMapping["colLastParam"] = rowData.Count;
+
+        //az első oszlop beolvasása
+        //adatok beolvasása
+        int row = headerRow + 1;
+        while (worksheet.Cells[row, 1].Text != "vege")
+        {
+            var cellValue = worksheet.Cells[row, 1].Text;
+            if (cellValue.Trim() == "labormintakod")
+            {
+                fieldToColumnMapping["rowFirstMinta"] = row + 1;
+            }
+            row++;
+        }
+        fieldToColumnMapping["rowLastMinta"] = row - 1;
+
         return fieldToColumnMapping;
     }
 
+    public List<List<string>> ReadExcelSheet(Stream file, string sheetName, Dictionary<string, int> headerCols)
+    {
+        var sheetData = new List<List<string>>();
+
+        if (file.Length == 0)
+        {
+            Console.WriteLine("A fájl üres.");
+            return sheetData;
+        }
+
+        file.Position = 0;
+        using var package = new ExcelPackage(file);
+
+        return ProcessSheet(sheetName, headerCols, sheetData, package);
+    }
 
     public List<List<string>> ReadExcelSheet(FileInfo fileInfo, string sheetName, Dictionary<string, int> headerCols)
     {
-        // A változó, ami a beolvasott adatokat tárolja
         var sheetData = new List<List<string>>();
 
-        // Ellenőrizzük, hogy a fájl létezik-e
         if (!fileInfo.Exists)
         {
             Console.WriteLine("A fájl nem található.");
-            return sheetData;  // Üres lista visszaadása, ha a fájl nem található
+            return sheetData;
         }
 
-        // A fájl beolvasása Excel formátumban
-        using (var package = new ExcelPackage(fileInfo))
+        using var package = new ExcelPackage(fileInfo);
+
+        return ProcessSheet(sheetName, headerCols, sheetData, package);
+    }
+
+    private static List<List<string>> ProcessSheet(string sheetName, Dictionary<string, int> headerCols, List<List<string>> sheetData, ExcelPackage package)
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        if (package.Workbook.Worksheets[sheetName] is not ExcelWorksheet worksheet)
         {
-            if (package.Workbook.Worksheets[sheetName] is not ExcelWorksheet worksheet)
+            Console.WriteLine($"A '{sheetName}' nevű munkalap nem található.");
+            return sheetData;  // Üres lista visszaadása, ha a munkalap nem található
+        }
+
+        // Munkalap adatainak beolvasása
+        int rowCount = headerCols["rowLastMinta"];
+        int colCount = headerCols["colLastParam"];
+
+        // Minden sort beolvassuk
+        for (int row = headerCols["headerRow"]; row <= rowCount; row++)
+        {
+            var rowData = new List<string>();
+
+            // Minden oszlopot beolvassuk az adott sorban
+            for (int col = 1; col <= colCount; col++)
             {
-                Console.WriteLine($"A '{sheetName}' nevű munkalap nem található.");
-                return sheetData;  // Üres lista visszaadása, ha a munkalap nem található
+                var cellValue = worksheet.Cells[row, col].Text;
+                rowData.Add(cellValue);
             }
 
-            // Munkalap adatainak beolvasása
-            int rowCount = headerCols["rowLastMinta"];
-            int colCount = headerCols["colLastParam"];
-
-            // Minden sort beolvassuk
-            for (int row = headerCols["headerRow"]; row <= rowCount; row++)
-            {
-                var rowData = new List<string>();
-
-                // Minden oszlopot beolvassuk az adott sorban
-                for (int col = 1; col <= colCount; col++)
-                {
-                    var cellValue = worksheet.Cells[row, col].Text;
-                    rowData.Add(cellValue);
-                }
-
-                // Sor adatainak hozzáadása a sheetData listához
-                sheetData.Add(rowData);
-            }
+            // Sor adatainak hozzáadása a sheetData listához
+            sheetData.Add(rowData);
         }
 
         return sheetData;

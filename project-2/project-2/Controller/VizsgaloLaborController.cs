@@ -1,6 +1,6 @@
 ﻿namespace project_2.Controllers;
 
-[Route("[contoller]")]
+[Route("[controller]")]
 public class VizsgaloLaborController(IRepository repository) : BaseController<cVizsgaloLabor, VizsgaloLaborDto>(repository)
 {
     protected override cVizsgaloLabor CreateEntity(VizsgaloLaborDto dto)

@@ -1,6 +1,6 @@
 ﻿namespace project_2.Controllers;
 
-[Route("[contoller]")]
+[Route("[controller]")]
 public class HUMVIModulController(IRepository repository) : BaseController<cHUMVImodul, HUMVImodulDto>(repository)
 {
     protected override cHUMVImodul CreateEntity(HUMVImodulDto dto)

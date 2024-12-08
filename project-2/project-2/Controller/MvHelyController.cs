@@ -1,6 +1,6 @@
 ﻿namespace project_2.Controllers;
 
-[Route("[contoller]")]
+[Route("[controller]")]
 public class MvHelyController(IRepository repository) : BaseController<cMvHely, MvHelyDto>(repository)
 {
     protected override cMvHely CreateEntity(MvHelyDto dto)

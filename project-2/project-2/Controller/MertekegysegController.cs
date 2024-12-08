@@ -1,6 +1,6 @@
 ﻿namespace project_2.Controllers;
 
-[Route("[contoller]")]
+[Route("[controller]")]
 public class MertekegysegController(IRepository repository) : BaseController<cMertekegyseg, MertekegysegDto>(repository)
 {
     protected override cMertekegyseg CreateEntity(MertekegysegDto dto)

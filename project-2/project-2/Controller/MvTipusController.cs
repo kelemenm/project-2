@@ -1,6 +1,6 @@
 ﻿namespace project_2.Controllers;
 
-[Route("[contoller]")]
+[Route("[controller]")]
 public class MvTipusController(IRepository repository) : BaseController<cMvTipus, MvTipusDto>(repository)
 {
     protected override cMvTipus CreateEntity(MvTipusDto dto)

@@ -1,6 +1,6 @@
 ﻿namespace project_2.Controllers;
 
-[Route("[contoller]")]
+[Route("[controller]")]
 public class MintavevoController(IRepository repository) : BaseController<cMintavevo, MintavevoDto>(repository)
 {
     protected override cMintavevo CreateEntity(MintavevoDto dto)
