@@ -170,7 +170,10 @@ public class ExcelFileReader
             var rowData = sheetData[i];
 
             var minta = CreateMinta(rowData, headerCols);
-            long newMintaId = _context.Minta.Add(minta).Entity.Id;
+            _context.Minta.Add(minta);
+            _context.SaveChanges();
+
+            long newMintaId = minta.Id;
 
             for (int j = headerCols["colFirstParam"] - 1; j <= headerCols["colLastParam"] - 1; j++)
             {
