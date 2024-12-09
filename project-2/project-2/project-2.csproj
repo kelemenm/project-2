@@ -35,11 +35,4 @@
       <None Include="wwwroot\img\map.webp" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Update="Pages\TimeSeries.cshtml">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
-    </ItemGroup>
-
 </Project>
