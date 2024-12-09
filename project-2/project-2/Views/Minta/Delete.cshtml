@@ -8,7 +8,7 @@
 <h1>Vízminták</h1>
 
 <div>
-    <h4>Biztosan törölni akarja a rekordot?</h4>
+    <h4>Biztosan törölni akarja a rekordot? A minta törlése az összes kapcsolódó vizsgálati eredményt is törli!</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -124,7 +124,7 @@
     <form asp-action="Delete" method="post">
         @Html.AntiForgeryToken() <!-- Ensure CSRF token is included for security -->
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Törlés" class="btn btn-danger" />
+        <input type="submit" value="Törlés" onclick="return confirm('Biztosan törölni akarja a rekordot?')" class="btn btn-danger" />
         <a class="btn btn-secondary" asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Index">Mégsem</a>
     </form>
 
